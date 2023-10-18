@@ -21,7 +21,7 @@ public class ValidateInput {
         // Checks if login page has fourm
         // if page has login fourm -> return true
         // else set valid to false and return false
-        System.out.println(String.format("A login fourm cannot be found from url %s", url));
+        System.out.println(String.format("A login form cannot be found from url %s", url));
         return false;
     }
 
