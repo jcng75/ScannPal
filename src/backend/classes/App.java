@@ -8,7 +8,7 @@ public class App {
     public static void main(String args[]) {
         System.setProperty("webdriver.chrome.driver", "/home/ec2-user/ScannPal/chromedriver-linux64/chromedriver");
         ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.setBinary("/home/ec2-user/ScannPal/chromedriver-linux64/headless-chromium");
+        chromeOptions.setBinary("/home/ec2-user/ScannPal/chrome-headless-shell-linux64/chrome-headless-shell");
         chromeOptions.addArguments("--headless");
         WebDriver driver = new ChromeDriver(chromeOptions);
         driver.get("https://www.amazon.com/");
