@@ -11,7 +11,8 @@ public class App {
         chromeOptions.setBinary("/home/ec2-user/ScannPal/chrome-linux64/chrome");
         chromeOptions.addArguments("--headless");
         WebDriver driver = new ChromeDriver(chromeOptions);
-        driver.get("https://www.amazon.com/");
+        //driver.get("https://www.amazon.com/");
+        driver.get("http://localhost:8080/WebGoat/login");
         System.out.println("Page title is : " + driver.getTitle());
         driver.close();
     }
