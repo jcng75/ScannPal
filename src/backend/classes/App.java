@@ -26,6 +26,9 @@ public class App {
         password.sendKeys("abc123");
         login.click();
 
+        String expectedURL = driver.getCurrentUrl();
+        System.out.println("URL after login attempt: " + expectedURL);
+
         driver.close();
     }
 }
