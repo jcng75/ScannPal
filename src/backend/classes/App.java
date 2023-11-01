@@ -20,11 +20,12 @@ public class App {
 
         WebElement username = driver.findElement(By.id("exampleInputEmail1"));
         WebElement password = driver.findElement(By.id("exampleInputPassword1"));
-        WebElement login = driver.findElement(By.tagName("button"));
+        // WebElement login = driver.findElement(By.tagName("button"));
 
-        username.sendKeys("abc@gmail.com");
+        username.sendKeys("johnny");
         password.sendKeys("abc123");
-        login.click();
+        password.submit();
+        //login.click();
 
         String expectedURL = driver.getCurrentUrl();
         System.out.println("URL after login attempt: " + expectedURL);
