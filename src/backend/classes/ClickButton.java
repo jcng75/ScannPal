@@ -1,6 +1,6 @@
 package backend.classes;
 
-import org.openqa.selenium.By;
+// import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 public class ClickButton extends TestAction {
