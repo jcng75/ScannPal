@@ -17,6 +17,6 @@ public class ClickButton extends TestAction {
    }
 
    public void execute() {
-      button.click();
+      this.button.click();
    } 
 }

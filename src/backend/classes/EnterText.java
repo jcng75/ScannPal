@@ -33,11 +33,14 @@ public class EnterText extends TestAction {
    }
 
    /* get the textbox by ID, set the WebElement class variable to the textbox */
-   public void getTextbox() {
+   public void setTextbox() {
+      String id = getID();
       this.textbox = driver.findElement(By.id(id));
    }
 
    public void execute() {
+      String text = getText();
+      setTextbox();
       textbox.sendKeys(text);
       // System.out.println(String.format("This enters text %s", getText()));
    }
