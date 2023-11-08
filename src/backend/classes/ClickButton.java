@@ -1,6 +1,6 @@
 package backend.classes;
 
-// import org.openqa.selenium.By;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 public class ClickButton extends TestAction {
@@ -13,8 +13,7 @@ public class ClickButton extends TestAction {
    }
 
    public void setButton(String tagName) {
-      //this.button = driver.findElement(By.tagName(tagName));
-      this.button = null;
+      this.button = driver.findElement(By.tagName(tagName));
    }
 
    public void execute() {

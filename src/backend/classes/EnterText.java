@@ -1,6 +1,6 @@
 package backend.classes;
 
-// import org.openqa.selenium.By;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 public class EnterText extends TestAction {
@@ -34,8 +34,7 @@ public class EnterText extends TestAction {
 
    /* get the textbox by ID, set the WebElement class variable to the textbox */
    public void getTextbox() {
-      //this.textbox = driver.findElement(By.id(id));
-      this.textbox = null;
+      this.textbox = driver.findElement(By.id(id));
    }
 
    public void execute() {
