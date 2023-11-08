@@ -13,7 +13,8 @@ public class ClickButton extends TestAction {
    }
 
    public void setButton(String tagName) {
-      this.button = driver.findElement(By.tagName(tagName));
+      //this.button = driver.findElement(By.tagName(tagName));
+      this.button = null;
    }
 
    public void execute() {

@@ -6,10 +6,12 @@ import org.openqa.selenium.chrome.ChromeOptions;
 
 public class App {
 
-    public static ChromeOptions chromeOptions = new ChromeOptions();
-    public static WebDriver driver = new ChromeDriver(chromeOptions);
+    //public static ChromeOptions chromeOptions = new ChromeOptions();
+    //public static WebDriver driver = new ChromeDriver(chromeOptions);
     public static void main(String args[]) {
-
+    
+        ChromeOptions chromeOptions = new ChromeOptions();
+        WebDriver driver = new ChromeDriver(chromeOptions);
         System.setProperty("webdriver.chrome.driver", "/home/ec2-user/ScannPal/chromedriver-linux64/chromedriver");
         chromeOptions.setBinary("/home/ec2-user/ScannPal/chrome-linux64/chrome");
         chromeOptions.addArguments("--headless");

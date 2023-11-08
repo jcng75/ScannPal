@@ -34,7 +34,8 @@ public class EnterText extends TestAction {
 
    /* get the textbox by ID, set the WebElement class variable to the textbox */
    public void getTextbox() {
-      this.textbox = driver.findElement(By.id(id));
+      //this.textbox = driver.findElement(By.id(id));
+      this.textbox = null;
    }
 
    public void execute() {
