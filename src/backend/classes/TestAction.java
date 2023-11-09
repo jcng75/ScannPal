@@ -1,5 +1,5 @@
 package backend.classes;
 
-public abstract class TestAction extends App {
+public abstract class TestAction {
     abstract void execute();
 }

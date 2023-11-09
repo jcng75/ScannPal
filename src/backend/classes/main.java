@@ -5,19 +5,18 @@ import org.openqa.selenium.chrome.ChromeDriver;
 
 // For Local Tests
 public class Main {
-
-    public static WebDriver driver = new ChromeDriver();
     public static void main(String args[]) {
         System.setProperty("webdriver.chrome.driver", "chromedriver-mac-x64/chromedriver");
 
-        driver.get("http://52.55.91.26:8080/WebGoat/login");
+        WebDriver driver = new ChromeDriver();
+        driver.get("http://35.175.186.100:8080/WebGoat/login");
         System.out.println("Page title is: " + driver.getTitle());
         System.out.println("Page URL is: " + driver.getCurrentUrl());
 
         // enter text into username field
         String usernameID = "exampleInputEmail1";
         String usernameText = "johnny";
-        EnterText enterText = new EnterText(usernameID, usernameText);
+        EnterText enterText = new EnterText(driver, usernameID, usernameText);
         enterText.execute();
 
         // enter text into password field
@@ -25,20 +24,15 @@ public class Main {
         String passwordText = "abc123";
         enterText.setID(passwordID);
         enterText.setText(passwordText);
+        enterText.setTextbox(passwordID);
+        enterText.execute();
 
         // click the button
         String tagName = "button";
-        ClickButton clickButton = new ClickButton(tagName);
+        ClickButton clickButton = new ClickButton(driver, tagName);
         clickButton.execute();
 
-        // WebElement username = driver.findElement(By.id("exampleInputEmail1"));
-        // WebElement password = driver.findElement(By.id("exampleInputPassword1"));
-        // WebElement login = driver.findElement(By.tagName("button"));
-
-        // username.sendKeys("johnny");
-        // password.sendKeys("abc123");
-        // login.click();
-
+        // check the updated URL
         String expectedURL = driver.getCurrentUrl();
         System.out.println("URL after login attempt: " + expectedURL);
 
