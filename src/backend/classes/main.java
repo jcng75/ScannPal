@@ -4,12 +4,12 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 // For Local Tests
-public class Main {
+public class main {
     public static void main(String args[]) {
-        System.setProperty("webdriver.chrome.driver", "chromedriver-mac-x64/chromedriver");
+        System.setProperty("webdriver.chrome.driver", "C:\\Users\\Justin Ng\\Downloads\\Installers\\chromedriver-win64\\chromedriver-win64\\chromedriver.exe");
 
         WebDriver driver = new ChromeDriver();
-        driver.get("http://35.175.186.100:8080/WebGoat/login");
+        driver.get("http://localhost:8080/WebGoat/login");
         System.out.println("Page title is: " + driver.getTitle());
         System.out.println("Page URL is: " + driver.getCurrentUrl());
 

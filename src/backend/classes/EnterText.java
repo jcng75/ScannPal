@@ -9,7 +9,6 @@ public class EnterText extends TestAction {
    private String id;
    private String text;
    private WebElement textbox;
-   private WebDriver driver;
 
    /* Constructor */
    public EnterText(WebDriver driver, String id, String text) {
@@ -20,13 +19,6 @@ public class EnterText extends TestAction {
    }
 
    /* Getter and Setter Methods */
-   public void setDriver(WebDriver driver) {
-      this.driver = driver;
-   }
-
-   public WebDriver getDriver() {
-      return this.driver;
-   }
 
    public void setID(String id) {
       this.id = id;
