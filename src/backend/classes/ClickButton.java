@@ -14,9 +14,21 @@ public class ClickButton extends TestAction {
       setButton(tagName);
    }
 
-   public void setButton(String tagName) {
+   public ClickButton(WebDriver driver) {
+      setDriver(driver);
+      setButton();
+   }
+
+   // If we know the id
+   public void setButton(String idName) {
       WebDriver driver = this.getDriver();
-      this.button = driver.findElement(By.tagName(tagName));
+      this.button = driver.findElement(By.id(idName));
+   }
+
+   // If we are looking for a button just find a button
+   public void setButton() {
+      WebDriver driver = this.getDriver();
+      this.button = driver.findElement(By.tagName("button"));
    }
 
    public WebElement getButton() {

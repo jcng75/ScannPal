@@ -28,13 +28,17 @@ public class main {
         enterText.execute();
 
         // click the button
-        String tagName = "button";
-        ClickButton clickButton = new ClickButton(driver, tagName);
+        ClickButton clickButton = new ClickButton(driver);
         clickButton.execute();
 
         // check the updated URL
         String expectedURL = driver.getCurrentUrl();
         System.out.println("URL after login attempt: " + expectedURL);
+
+        // Testing clicking button
+        String idName = "webwolf-button";
+        ClickButton clickButton2 = new ClickButton(driver, idName);
+        clickButton2.execute();
 
         driver.close();
     }
