@@ -36,9 +36,13 @@ public class main {
         System.out.println("URL after login attempt: " + expectedURL);
 
         // Testing clicking button
-        String idName = "webwolf-button";
-        ClickButton clickButton2 = new ClickButton(driver, idName);
-        clickButton2.execute();
+        // String idName = "webwolf-button";
+        // ClickButton clickButton2 = new ClickButton(driver, idName);
+        // clickButton2.execute();
+
+        String fileName = "screenshot.jpg";
+        TakeScreenshot screenshot = new TakeScreenshot(driver, fileName);
+        screenshot.execute();
 
         driver.close();
     }
