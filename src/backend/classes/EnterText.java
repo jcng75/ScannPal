@@ -1,23 +1,62 @@
 package backend.classes;
 
-public class EnterText extends TestAction{
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
-   String text;
+public class EnterText extends TestAction {
 
-   EnterText(String text){
+   private String id;
+   private String text;
+   private WebElement textbox;
+   private WebDriver driver;
+
+   /* Constructor */
+   public EnterText(WebDriver driver, String id, String text) {
+      setDriver(driver);
+      setID(id);
       setText(text);
+      setTextbox(id);
    }
 
-   String getText(){
-      return this.text;
+   /* Getter and Setter Methods */
+   public void setDriver(WebDriver driver) {
+      this.driver = driver;
    }
 
-   void setText(String text){
+   public WebDriver getDriver() {
+      return this.driver;
+   }
+
+   public void setID(String id) {
+      this.id = id;
+   }
+
+   public String getID() {
+      return this.id;
+   }
+
+   public void setText(String text) {
       this.text = text;
    }
 
-   public void execute(){
-      System.out.println(String.format("This enters text %s", getText()));
-      return;
-   } 
+   public String getText() {
+      return this.text;
+   }
+
+   /* get the textbox by ID, set the WebElement class variable to the textbox */
+   public void setTextbox(String id) {
+      WebDriver driver = this.getDriver();
+      this.textbox = driver.findElement(By.id(id));
+   }
+
+   public WebElement getTextbox() {
+      return this.textbox;
+   }
+
+   public void execute() {
+      String text = this.getText();
+      WebElement textbox = this.getTextbox();
+      textbox.sendKeys(text);
+   }
 }
