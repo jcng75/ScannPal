@@ -1,14 +1,19 @@
 package backend.classes;
 
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.WebElement;
 
 // For Local Tests
 public class main {
     public static void main(String args[]) {
         System.setProperty("webdriver.chrome.driver", "C:\\Users\\Justin Ng\\Downloads\\Installers\\chromedriver-win64\\chromedriver-win64\\chromedriver.exe");
 
-        WebDriver driver = new ChromeDriver();
+        // WebDriver driver = new ChromeDriver();
+        WebDriver driver = MyWebDriver.getDriver();
         driver.get("http://localhost:8080/WebGoat/login");
         System.out.println("Page title is: " + driver.getTitle());
         System.out.println("Page URL is: " + driver.getCurrentUrl());
@@ -16,7 +21,7 @@ public class main {
         // enter text into username field
         String usernameID = "exampleInputEmail1";
         String usernameText = "johnny";
-        EnterText enterText = new EnterText(driver, usernameID, usernameText);
+        EnterText enterText = new EnterText(usernameID, usernameText);
         enterText.execute();
 
         // enter text into password field
@@ -28,7 +33,7 @@ public class main {
         enterText.execute();
 
         // click the button
-        ClickButton clickButton = new ClickButton(driver);
+        ClickButton clickButton = new ClickButton();
         clickButton.execute();
 
         // check the updated URL
@@ -41,8 +46,13 @@ public class main {
         // clickButton2.execute();
 
         String fileName = "screenshot.jpg";
-        TakeScreenshot screenshot = new TakeScreenshot(driver, fileName);
+
+        TakeScreenshot screenshot = new TakeScreenshot(fileName);
         screenshot.execute();
+
+        // List<WebElement> el = driver.findElements(By.tagName("a"));
+        // el.get(9).click();
+        
 
         driver.close();
     }

@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 
 import org.openqa.selenium.OutputType;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.io.FileHandler;
 
@@ -12,10 +11,9 @@ public class TakeScreenshot extends TestAction {
 
    String fileName;
    
-   public TakeScreenshot(WebDriver driver, String fileName){
+   public TakeScreenshot(String fileName){
       setFileName(fileName);
-      setDriver(driver);
-      driver.manage().window().maximize();
+      MyWebDriver.getDriver().manage().window().maximize();
    }
 
    public void setFileName(String fileName){
@@ -27,7 +25,7 @@ public class TakeScreenshot extends TestAction {
    }
 
    public void execute(){
-      File src = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+      File src = ((TakesScreenshot)MyWebDriver.getDriver()).getScreenshotAs(OutputType.FILE);
       String filePath = "photos/" + fileName;
       File newFile = new File(filePath);
       try {
