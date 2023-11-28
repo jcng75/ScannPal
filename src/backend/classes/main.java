@@ -12,6 +12,9 @@ public class main {
     public static void main(String args[]) {
         System.setProperty("webdriver.chrome.driver", "C:\\Users\\Justin Ng\\Downloads\\Installers\\chromedriver-win64\\chromedriver-win64\\chromedriver.exe");
 
+        TestHttpRequest tRequest = new TestHttpRequest("http://localhost:8080/WebGoat/login"); 
+        tRequest.getRequest();
+
         // WebDriver driver = new ChromeDriver();
         WebDriver driver = MyWebDriver.getDriver();
         driver.get("http://localhost:8080/WebGoat/login");

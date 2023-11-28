@@ -7,9 +7,9 @@ public class WebCrawler {
     String password;
 
     public WebCrawler(String url, String username, String password){
-        this.url = url;
-        this.username = username;
-        this.password = password;
+        setUrl(url);
+        setUsername(username);
+        setPassword(password);
     }
 
     public void setUrl(String url){
