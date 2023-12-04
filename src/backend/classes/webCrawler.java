@@ -1,5 +1,16 @@
 package backend.classes;
 
+import java.time.Duration;
+import java.util.List;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.locators.RelativeLocator;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
+
+
 public class WebCrawler {
     
     String url;
@@ -24,17 +35,49 @@ public class WebCrawler {
         this.password = password;
     }
 
-    public boolean crawl(String url, String username, String password){
-        // fancy function what does it do?
-        ValidateInput validInput = new ValidateInput();
-        // If the validations fail, end the crawl instantly
-        if(!validInput.isValid(url, username, password)){
-            System.out.println("Inputted parameters are not valid, terminating crawl...");
-            return false;
-        }
-        // Otherwise start crawl
+    private void loginUser(){
+        // Enter username field
+        EnterText enterUser = new EnterText("exampleInputEmail1" , username);
+        enterUser.execute();
+        // Enter password field
+        EnterText enterPass = new EnterText("exampleInputPassword1", password);
+        enterPass.execute();
+        // Click on login button
+        ClickButton loginButton = new ClickButton();
+        loginButton.execute();
+    }
+
+    private boolean isStale(WebElement element){
+        return ExpectedConditions.stalenessOf(element).apply(MyWebDriver.getDriver());
+    }
+
+    public boolean crawl(int depth){
+
         String s = String.format("Crawling for website: %s", url);
         System.out.println(s);
+
+        WebDriver driver = MyWebDriver.getDriver();
+
+        driver.get(this.url);
+
+        loginUser();
+        System.out.println(String.format("Logged into website: %s", driver.getTitle()));
+
+         List<WebElement> elements = MyWebDriver.getDriver().findElements(By.tagName("a"));
+
+        int nonStaticLink = 0;
+        for (WebElement element : elements){
+
+            if (isStale(element)){
+                continue;
+            }
+            nonStaticLink += 1;
+        }
+        if (nonStaticLink > 0){
+            System.out.println("Could not find any links. Ending crawl...");
+            return false;
+        }
+
         // run crawler and then store information
         return true;
     }
