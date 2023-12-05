@@ -9,8 +9,8 @@ public class ClickButton extends TestAction {
    private WebElement button;
 
    /* Constructor */
-   public ClickButton(String tagName) {
-      setButton(tagName);
+   public ClickButton(String idName) {
+      setButton(idName);
    }
 
    public ClickButton() {
@@ -20,7 +20,13 @@ public class ClickButton extends TestAction {
    // If we know the id
    public void setButton(String idName) {
       WebDriver driver = MyWebDriver.getDriver();
-      this.button = driver.findElement(By.id(idName));
+      try {
+         this.button = driver.findElement(By.id(idName));
+      }
+      catch (Exception e){
+         System.out.println("Could not locate using id, trying with name instead...");
+         this.button = driver.findElement(By.name(idName));
+      }
    }
 
    // If we are looking for a button just find a button
