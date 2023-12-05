@@ -36,7 +36,13 @@ public class EnterText extends TestAction {
 
    /* get the textbox by ID, set the WebElement class variable to the textbox */
    public void setTextbox(String id) {
-      this.textbox = MyWebDriver.getDriver().findElement(By.id(id));
+      try {
+         this.textbox = MyWebDriver.getDriver().findElement(By.id(id));
+      } 
+      catch (Exception e) {
+         System.out.println("Id didn't work trying to search by name...");
+         this.textbox = MyWebDriver.getDriver().findElement(By.name(id));
+      }
    }
 
    public WebElement getTextbox() {
