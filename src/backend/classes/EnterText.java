@@ -55,3 +55,4 @@ public class EnterText extends TestAction {
       textbox.sendKeys(text);
    }
 }
+

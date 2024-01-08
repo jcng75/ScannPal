@@ -17,7 +17,7 @@ public class ClickButton extends TestAction {
       setButton();
    }
 
-   // If we know the id
+   // If we know the id beforehand
    public void setButton(String idName) {
       WebDriver driver = MyWebDriver.getDriver();
       try {
