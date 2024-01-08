@@ -20,15 +20,21 @@ public class WebCrawler {
     String url;
     String username;
     String password;
+    String parsedUrl;
 
     public WebCrawler(String url, String username, String password){
         setUrl(url);
+        setParsedUrl();
         setUsername(username);
         setPassword(password);
     }
 
     public void setUrl(String url){
         this.url = url;
+    }
+
+    public void setParsedUrl(){
+        this.parsedUrl = parseURLHost(this.url);
     }
 
     public void setUsername(String user){
@@ -51,10 +57,7 @@ public class WebCrawler {
         loginButton.execute();
     }
 
-    private boolean isStale(WebElement element){
-        return ExpectedConditions.stalenessOf(element).apply(MyWebDriver.getDriver());
-    }
-
+    
     private String parseURLHost(String url){
         try {
             URL fullUrl = new URL(url);
@@ -64,9 +67,9 @@ public class WebCrawler {
             e.printStackTrace();
         }
         return url;
-
+        
     }
-
+    
     private String parseURLPath(String url){
         try {
             URL fullUrl = new URL(url);
@@ -78,6 +81,40 @@ public class WebCrawler {
         return url;
     }
 
+    private boolean isStale(WebElement element){
+        return ExpectedConditions.stalenessOf(element).apply(MyWebDriver.getDriver());
+    }
+
+    private boolean isDifferentWebsite(WebElement element) {
+        String link = element.getAttribute("href");
+        return !this.parsedUrl.equals(parseURLHost(link));
+    }
+
+    private boolean isSameLink(WebElement element, String currentLink){
+        String link = element.getAttribute("href");
+        return link == currentLink; 
+    }
+
+    private boolean isLogout(WebElement element){
+
+        LinkedList<String> bannedList = new LinkedList<String>(Arrays.asList("logout", "signout", "log out", "sign out"));
+        String elementText = element.getText().toLowerCase();
+        return bannedList.contains(elementText);
+        
+    }
+
+    private boolean heuristicsCheck(WebElement element, String currentLink){
+        
+        // if any of the heuristics hold, we can skip the web element within the crawl function
+        if (isStale(element)) return true;
+        if (isDifferentWebsite(element)) return true;
+        if (isSameLink(element, currentLink)) return true;
+        if (isLogout(element)) return true;
+
+        return false;
+    }
+
+
     public boolean crawl(int depth){
 
         System.out.println(parseURLPath(url));
@@ -85,15 +122,14 @@ public class WebCrawler {
         System.out.println(s);
 
         WebDriver driver = MyWebDriver.getDriver();
-        driver.get(this.url);
-        driver.manage().window().maximize();
+        VisitUrl visitUrl = new VisitUrl(this.url);
+        visitUrl.execute();
 
         loginUser();
         System.out.println(String.format("Logged into website: %s", driver.getTitle()));
         System.out.println(String.format("Current URL: %s", driver.getCurrentUrl()));
 
         String currentURL = driver.getCurrentUrl();
-        String parseURL = parseURLHost(currentURL);
 
         // Initialize web element list that will contain all possible action paths
         LinkedList<LinkedList<String>> elementList = new LinkedList<LinkedList<String>>();
@@ -104,8 +140,6 @@ public class WebCrawler {
         linkQueue.add(initialLink);
         elementList.add(initialLink);
 
-        LinkedList<String> bannedList = new LinkedList<String>(Arrays.asList("logout", "signout", "log out", "sign out"));
-
         // Need a depth counter to make sure we go the specified depth of the user
         int depthCounter = 0;
         // The currLinkCounter is used to track the total links from each "layer"
@@ -113,23 +147,20 @@ public class WebCrawler {
         int currLinkCounter = 1;
         int newLinkCounter = 0;
         while (depthCounter != depth && !linkQueue.isEmpty()){
-            // System.out.println("Current depth: " + depthCounter);
+            System.out.println("Current depth: " + depthCounter);
             // System.out.println("Current element queue: " + linkQueue);
             // Extract the first element of queue and the link associated with the element
             LinkedList<String> currentList = linkQueue.poll();
             String currentLink = currentList.getLast();
+            // System.out.println(currentLink);
             // Go to new link
             List<WebElement> elements = MyWebDriver.getDriver().findElements(By.tagName("a"));
-            System.out.println("Current queue: " + linkQueue);
+            // System.out.println("Current queue: " + linkQueue);
             for (WebElement element : elements){
-                if (isStale(element)) continue;
-                String link = element.getAttribute("href");
-                if (bannedList.contains(element.getText().toLowerCase())) continue;
-                if (link == currentLink) continue;
-                String parsedLink = parseURLHost(link);
-                if (!parseURL.equals(parsedLink)) continue;
+                String newLink = element.getAttribute("href");
+                if (heuristicsCheck(element, currentLink)) continue;
                 LinkedList<String> newList = new LinkedList<String>(currentList);
-                newList.add(link);
+                newList.add(newLink);
                 linkQueue.add(newList);
                 elementList.add(newList);
                 newLinkCounter++;
