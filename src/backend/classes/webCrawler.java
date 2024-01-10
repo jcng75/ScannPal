@@ -181,4 +181,82 @@ public class WebCrawler {
         return true;
     }
 
+    public boolean crawl2(int depth){
+
+        System.out.println(parseURLPath(url));
+        String s = String.format("Crawling for website: %s", url);
+        System.out.println(s);
+
+        WebDriver driver = MyWebDriver.getDriver();
+        VisitUrl visitUrl = new VisitUrl(this.url);
+        visitUrl.execute();
+
+        loginUser();
+        System.out.println(String.format("Logged into website: %s", driver.getTitle()));
+        System.out.println(String.format("Current URL: %s", driver.getCurrentUrl()));
+
+        String currentURL = driver.getCurrentUrl();
+
+        // Initialize web element list that will contain all possible action paths
+        LinkedList<LinkedList<TestAction>> elementList = new LinkedList<LinkedList<TestAction>>();
+        // Initalize link elements queue that will help us navigate through webpage
+        // Add the starting link to the queue
+        Queue<LinkedList<String>> linkQueue = new LinkedList<LinkedList<String>>();
+        // Create the login action
+        EnterText enterUser = new EnterText("username", this.username);
+        EnterText enterPassword = new EnterText("password", this.password);
+        ClickButton loginButton = new ClickButton("Login");
+        LinkedList<TestAction> initialLogin = new LinkedList<TestAction>(Arrays.asList(enterUser, enterPassword, loginButton));
+        LinkedList<String> initialLink = new LinkedList<String>(Arrays.asList(currentURL));
+        elementList.add(initialLogin);
+        linkQueue.add(initialLink);
+        /* TODO 
+         * Remade the elementList to store TestActions, now implement the testactions instead of strings into the list
+         * Current questions:
+         * - Very easy to make the websites visit the next link on the page using VisitUrl.execute(), but how can we do this for clicking buttons?
+         * - If we enter text into a web element (EX: input) how do we find the button associated with it to click?
+         * -> idea: use releative locations
+         * - How should I store the queue?  In the original test, I used strings to go to the next element, but should i store the queue as testactions instead? 
+         */
+        // Need a depth counter to make sure we go the specified depth of the user
+        int depthCounter = 0;
+        // The currLinkCounter is used to track the total links from each "layer"
+        // The newLinkCounter tracks it for the next layer
+        int currLinkCounter = 1;
+        int newLinkCounter = 0;
+        while (depthCounter != depth && !linkQueue.isEmpty()){
+            System.out.println("Current depth: " + depthCounter);
+            // System.out.println("Current element queue: " + linkQueue);
+            // Extract the first element of queue and the link associated with the element
+            LinkedList<String> currentList = linkQueue.poll();
+            String currentLink = currentList.getLast();
+            // System.out.println(currentLink);
+            // Go to new link
+            List<WebElement> elements = MyWebDriver.getDriver().findElements(By.tagName("a"));
+            // System.out.println("Current queue: " + linkQueue);
+            for (WebElement element : elements){
+                String newLink = element.getAttribute("href");
+                if (heuristicsCheck(element, currentLink)) continue;
+                LinkedList<String> newList = new LinkedList<String>(currentList);
+                newList.add(newLink);
+                linkQueue.add(newList);
+                // elementList.add(newList);
+                newLinkCounter++;
+            }
+            currLinkCounter--;
+            // If the current link counter reaches 0 we must go to the next depth of scanning
+            if (currLinkCounter == 0){
+                depthCounter++;
+                currLinkCounter = newLinkCounter;
+                newLinkCounter = 0;
+            }
+            
+        }
+
+        System.out.println(elementList);
+
+        // run crawler and then store information
+        return true;
+    }
+
 }
