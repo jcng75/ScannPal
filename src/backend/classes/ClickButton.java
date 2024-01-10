@@ -6,26 +6,32 @@ import org.openqa.selenium.WebElement;
 
 public class ClickButton extends TestAction {
 
-   private WebDriver driver;
    private WebElement button;
 
    /* Constructor */
-   public ClickButton(WebDriver driver, String tagName) {
-      setDriver(driver);
-      setButton(tagName);
+   public ClickButton(String idName) {
+      setButton(idName);
    }
 
-   public void setDriver(WebDriver driver) {
-      this.driver = driver;
+   public ClickButton() {
+      setButton();
    }
 
-   public WebDriver getDriver() {
-      return this.driver;
+   // If we know the id beforehand
+   public void setButton(String idName) {
+      WebDriver driver = MyWebDriver.getDriver();
+      try {
+         this.button = driver.findElement(By.id(idName));
+      }
+      catch (Exception e){
+         System.out.println("Could not locate using id, trying with name instead...");
+         this.button = driver.findElement(By.name(idName));
+      }
    }
 
-   public void setButton(String tagName) {
-      WebDriver driver = this.getDriver();
-      this.button = driver.findElement(By.tagName(tagName));
+   // If we are looking for a button just find a button
+   public void setButton() {
+      this.button = MyWebDriver.getDriver().findElement(By.tagName("button"));
    }
 
    public WebElement getButton() {

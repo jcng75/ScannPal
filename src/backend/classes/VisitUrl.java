@@ -1,23 +1,26 @@
 package backend.classes;
 
-public class VisitUrl extends TestAction {
+import org.openqa.selenium.WebDriver;
 
-   String url;
+public class VisitUrl extends TestAction{
+    
+    private String url;
 
-   VisitUrl(String url) {
-      setUrl(url);
-   }
+    public VisitUrl(String url) {
+        setURL(url);
+    }
 
-   String getUrl() {
-      return this.url;
-   }
+    private void setURL(String url) {
+        this.url = url;
+    }
 
-   void setUrl(String url) {
-      this.url = url;
-   }
+    private String getURL() {
+        return this.url;
+    }
 
-   void execute(){
-      System.out.println(String.format("This visits url %s", getUrl()));
-      return;
-   } 
+    public void execute() {
+        WebDriver driver = MyWebDriver.getDriver();
+        driver.get(this.getURL());
+        driver.manage().window().maximize();
+    }
 }

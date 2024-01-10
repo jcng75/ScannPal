@@ -1,7 +1,6 @@
 package backend.classes;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 public class EnterText extends TestAction {
@@ -9,24 +8,15 @@ public class EnterText extends TestAction {
    private String id;
    private String text;
    private WebElement textbox;
-   private WebDriver driver;
 
    /* Constructor */
-   public EnterText(WebDriver driver, String id, String text) {
-      setDriver(driver);
+   public EnterText(String id, String text) {
       setID(id);
       setText(text);
       setTextbox(id);
    }
 
    /* Getter and Setter Methods */
-   public void setDriver(WebDriver driver) {
-      this.driver = driver;
-   }
-
-   public WebDriver getDriver() {
-      return this.driver;
-   }
 
    public void setID(String id) {
       this.id = id;
@@ -46,8 +36,13 @@ public class EnterText extends TestAction {
 
    /* get the textbox by ID, set the WebElement class variable to the textbox */
    public void setTextbox(String id) {
-      WebDriver driver = this.getDriver();
-      this.textbox = driver.findElement(By.id(id));
+      try {
+         this.textbox = MyWebDriver.getDriver().findElement(By.id(id));
+      } 
+      catch (Exception e) {
+         System.out.println("Id didn't work trying to search by name...");
+         this.textbox = MyWebDriver.getDriver().findElement(By.name(id));
+      }
    }
 
    public WebElement getTextbox() {

@@ -7,7 +7,7 @@ public class TestCase implements Serializable {
     private List<TestAction> testCases;
 
     public TestCase() {
-        testCases = new ArrayList<TestAction>();
+        this.testCases = new ArrayList<TestAction>();
     }
 
     public List<TestAction> getTestCase() {

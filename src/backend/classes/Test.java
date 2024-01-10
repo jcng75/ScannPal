@@ -7,22 +7,21 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 
 public class Test {
     public static void main(String[] args) {
         System.setProperty("webdriver.chrome.driver", "chromedriver-mac-x64/chromedriver");
 
-        WebDriver driver = new ChromeDriver();
+        WebDriver driver = MyWebDriver.getDriver();
         driver.get("http://localhost:8080/WebGoat/login");
         System.out.println("Page title is: " + driver.getTitle());
         System.out.println("Page URL is: " + driver.getCurrentUrl());
 
         // Create first TestAction
-        EnterText username = new EnterText(driver, "exampleInputEmail1", "matteo");
+        EnterText username = new EnterText("exampleInputEmail1", "matteo");
 
         // Create second TestAction
-        EnterText password = new EnterText(driver, "exampleInputPassword1", "abc123");
+        EnterText password = new EnterText("exampleInputPassword1", "abc123");
 
         // Serialization
         TestCase object = new TestCase();
@@ -46,7 +45,7 @@ public class Test {
             System.out.println("TestCase object has been serialized");
         }
         catch(IOException ex) {
-            System.out.println("IOException is caught");
+            System.out.printf("IOException '%s' is caught\n", ex);
         }
 
         // Deserialization
@@ -68,10 +67,10 @@ public class Test {
             object2.display();
         }
         catch(IOException ex) {
-            System.out.println("IOException is caught");
+            System.out.printf("IOException '%s' is caught\n", ex);
         }
         catch(ClassNotFoundException ex) {
-            System.out.println("ClassNotFoundException is caught");
+            System.out.printf("ClassNotFoundException '%s' is caught\n", ex);
         }
     }
 }

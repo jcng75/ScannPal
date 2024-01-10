@@ -1,14 +1,13 @@
 package backend.classes;
 
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 
 // For Local Tests
 public class Main {
     public static void main(String args[]) {
         System.setProperty("webdriver.chrome.driver", "chromedriver-mac-x64/chromedriver");
 
-        WebDriver driver = new ChromeDriver();
+        WebDriver driver = MyWebDriver.getDriver();
         driver.get("http://35.175.186.100:8080/WebGoat/login");
         System.out.println("Page title is: " + driver.getTitle());
         System.out.println("Page URL is: " + driver.getCurrentUrl());
@@ -16,7 +15,7 @@ public class Main {
         // enter text into username field
         String usernameID = "exampleInputEmail1";
         String usernameText = "johnny";
-        EnterText enterText = new EnterText(driver, usernameID, usernameText);
+        EnterText enterText = new EnterText(usernameID, usernameText);
         enterText.execute();
 
         // enter text into password field
@@ -29,7 +28,7 @@ public class Main {
 
         // click the button
         String tagName = "button";
-        ClickButton clickButton = new ClickButton(driver, tagName);
+        ClickButton clickButton = new ClickButton(tagName);
         clickButton.execute();
 
         // check the updated URL
