@@ -1,5 +1,7 @@
 package backend.classes;
 
-public abstract class TestAction {
+import java.io.Serializable;
+
+public abstract class TestAction implements Serializable {
     abstract void execute();
 }
