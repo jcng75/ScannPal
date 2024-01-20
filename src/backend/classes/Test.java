@@ -10,23 +10,26 @@ import org.openqa.selenium.WebDriver;
 
 public class Test {
     public static void main(String[] args) {
-        System.setProperty("webdriver.chrome.driver", "chromedriver-mac-x64/chromedriver");
+        System.setProperty("webdriver.chrome.driver", "C:\\Users\\Justin Ng\\Downloads\\Installers\\chromedriver-win64\\chromedriver-win64\\chromedriver.exe");
 
         WebDriver driver = MyWebDriver.getDriver();
-        driver.get("http://localhost:8080/WebGoat/login");
+        driver.get("http://localhost/login.php");
         System.out.println("Page title is: " + driver.getTitle());
         System.out.println("Page URL is: " + driver.getCurrentUrl());
 
         // Create first TestAction
-        EnterText username = new EnterText("exampleInputEmail1", "matteo");
+        EnterText username = new EnterText("username", "admin");
 
         // Create second TestAction
-        EnterText password = new EnterText("exampleInputPassword1", "abc123");
+        EnterText password = new EnterText("password", "password");
+
+        ClickButton button = new ClickButton();
 
         // Serialization
         TestCase object = new TestCase();
         object.append(username);
         object.append(password);
+        object.append(button);
         object.display();
         String filename = "testCase.ser";
 
