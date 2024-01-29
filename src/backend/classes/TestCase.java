@@ -20,12 +20,15 @@ public class TestCase implements Serializable {
         return this.testCases;
     }
 
-    public void append(TestAction action, HashSet<String> hashSet) {
+    // Needs working on, must return list of resulting test cases
+    public List<TestCase> append(TestAction action, HashSet<String> hashSet) {
         HeuristicsCheck hc = new HeuristicsCheck();
         // Modify this later on
         if (!hc.heuristicsCheck(null, null, hashSet)){
             this.testCases.add(action);
+            return new ArrayList<TestCase>();
         }
+        return new ArrayList<TestCase>();
     }
 
     public void display() {
