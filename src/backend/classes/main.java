@@ -23,7 +23,6 @@ public class Main {
         String passwordText = "abc123";
         enterText.setID(passwordID);
         enterText.setText(passwordText);
-        enterText.setTextbox(passwordID);
         enterText.execute();
 
         // click the button

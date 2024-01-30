@@ -10,6 +10,10 @@ public class TestCase implements Serializable {
         this.testCases = new ArrayList<TestAction>();
     }
 
+    public TestCase(List<TestAction> actions) {
+        this.testCases = actions;
+    }
+
     public List<TestAction> getTestCase() {
         return this.testCases;
     }
