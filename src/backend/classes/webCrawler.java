@@ -166,7 +166,7 @@ public class WebCrawler {
             currentQueue = nextQueue;
             nextQueue = null;
             for (TestCase tc : currentQueue){
-                //List<TestCase> updatedTC = tc.append(tc, hashSet); 
+                //List<TestCase> updatedTC = tc.extend(tc, hashSet); 
                 //nextQueue.addAll(updatedTC);
             }
         }
