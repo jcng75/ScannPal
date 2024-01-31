@@ -3,7 +3,7 @@ package backend.classes;
 // For Local Tests
 public class main {
     public static void main(String args[]) {
-        System.setProperty("webdriver.chrome.driver", "C:\\Users\\Justin Ng\\Downloads\\Installers\\chromedriver-win64\\chromedriver-win64\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "C:\\Users\\adamr\\Downloads\\chromedriver-win64\\chromedriver-win64\\chromedriver.exe");
 
         TestHttpRequest tRequest = new TestHttpRequest("http://localhost/login.php"); 
         tRequest.getRequest();

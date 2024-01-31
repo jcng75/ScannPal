@@ -148,7 +148,7 @@ public class WebCrawler {
         int newLinkCounter = 0;
         while (depthCounter != depth && !linkQueue.isEmpty()){
             System.out.println("Current depth: " + depthCounter);
-            // System.out.println("Current element queue: " + linkQueue);
+            System.out.println("Current element queue: " + linkQueue);
             // Extract the first element of queue and the link associated with the element
             LinkedList<String> currentList = linkQueue.poll();
             String currentLink = currentList.getLast();
@@ -159,6 +159,7 @@ public class WebCrawler {
             for (WebElement element : elements){
                 String newLink = element.getAttribute("href");
                 if (heuristicsCheck(element, currentLink)) continue;
+                // System.out.println(newLink);
                 LinkedList<String> newList = new LinkedList<String>(currentList);
                 newList.add(newLink);
                 linkQueue.add(newList);
