@@ -22,21 +22,15 @@ public class WebCrawler {
     String url;
     String username;
     String password;
-    String parsedUrl;
 
     public WebCrawler(String url, String username, String password){
         setUrl(url);
-        setParsedUrl();
         setUsername(username);
         setPassword(password);
     }
 
     public void setUrl(String url){
         this.url = url;
-    }
-
-    public void setParsedUrl(){
-        this.parsedUrl = parseURLHost(this.url);
     }
 
     public void setUsername(String user){
@@ -156,22 +150,29 @@ public class WebCrawler {
         EnterText enterUser = new EnterText("username", this.username);
         EnterText enterPassword = new EnterText("password", this.password);
         ClickButton loginButton = new ClickButton("Login");
-        List<TestAction> initialLogin = new ArrayList<TestAction>(Arrays.asList(enterUser, enterPassword, loginButton));
+        VisitUrl visitHome = new VisitUrl(currentURL);
+        List<TestAction> initialLogin = new ArrayList<TestAction>(Arrays.asList(enterUser, enterPassword, loginButton, visitHome));
         TestCase initialTestCase = new TestCase(initialLogin);
         
         nextQueue.add(initialTestCase);
         
         for (int i = 0; i < depth ; i++){
-            currentQueue = nextQueue;
-            nextQueue = null;
+            System.out.println("Current Depth: " + i);
+            currentQueue = new LinkedList<>(nextQueue);
+            nextQueue.clear();
             for (TestCase tc : currentQueue){
-                //List<TestCase> updatedTC = tc.append(tc, hashSet); 
-                //nextQueue.addAll(updatedTC);
+                List<TestCase> updatedTC = tc.extend(tc, hashSet); 
+                // System.out.println(updatedTC);
+                for (TestCase testy : updatedTC){
+                    testy.display();
+                }
+                nextQueue.addAll(updatedTC);
             }
         }
 
         // Return information
         List<TestCase> resultList = (List) currentQueue;
+        System.out.println(resultList);
         return resultList;
     }
 
