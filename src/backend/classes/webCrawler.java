@@ -171,7 +171,7 @@ public class WebCrawler {
         }
 
         // Return information
-        List<TestCase> resultList = (List) currentQueue;
+        List<TestCase> resultList = new ArrayList<TestCase>(currentQueue);
         System.out.println(resultList);
         return resultList;
     }
