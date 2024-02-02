@@ -3,6 +3,8 @@ package backend.classes;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
+
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import java.net.MalformedURLException;
@@ -17,8 +19,9 @@ public class HeuristicsCheck {
         return ExpectedConditions.stalenessOf(element).apply(MyWebDriver.getDriver());
     }
 
-    private boolean isDifferentWebsite(String parsedUrl, WebElement element) {
+    private boolean isDifferentWebsite(String currentWebsite, WebElement element) {
         String link = element.getAttribute("href");
+        String parsedUrl = parseURLHost(currentWebsite);
         return parsedUrl.equals(parseURLHost(link));
     }
 
@@ -43,6 +46,10 @@ public class HeuristicsCheck {
         if (isMarked(currentLink, hashSet)) return true;
 
         return false;
+    }
+
+    public boolean canExtend(TestCase tc){
+        return tc.getLast().getClass() == VisitUrl.class;
     }
 
     public String parseURLHost(String url){
