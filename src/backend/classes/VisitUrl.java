@@ -14,7 +14,7 @@ public class VisitUrl extends TestAction{
         this.url = url;
     }
 
-    private String getURL(String url){
+    public String getURL(){
         return this.url;
     }
 
