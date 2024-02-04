@@ -157,14 +157,14 @@ public class WebCrawler {
         nextQueue.add(initialTestCase);
         
         for (int i = 0; i < depth ; i++){
-            System.out.println("Current Depth: " + i);
+            System.out.println("Current Depth: " + (i+1));
             currentQueue = new LinkedList<>(nextQueue);
             nextQueue.clear();
             for (TestCase tc : currentQueue){
                 List<TestCase> updatedTC = tc.extend(tc, hashSet); 
-                // System.out.println(updatedTC);
                 for (TestCase testy : updatedTC){
                     testy.display();
+                    System.out.println("\n");
                 }
                 nextQueue.addAll(updatedTC);
             }
@@ -172,7 +172,7 @@ public class WebCrawler {
 
         // Return information
         List<TestCase> resultList = new ArrayList<TestCase>(currentQueue);
-        System.out.println(resultList);
+        // System.out.println(resultList);
         return resultList;
     }
 
