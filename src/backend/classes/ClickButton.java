@@ -1,5 +1,7 @@
 package backend.classes;
 
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -25,7 +27,39 @@ public class ClickButton extends TestAction {
    public WebElement getButton() {
       WebDriver driver = MyWebDriver.getDriver();
       if (this.idName.isEmpty()){
-         return driver.findElement(By.tagName("button")); 
+         WebElement theChosenOne = null;
+         try {
+            List<WebElement> buttons = driver.findElements(By.xpath("//input[@type='submit']"));
+            for (WebElement element : buttons){
+               if (element.getAttribute("id").isEmpty() && element.getAttribute("name").isEmpty()){
+                  theChosenOne = element;
+                  break;
+               }
+            }
+            return theChosenOne;
+         } 
+         catch (Exception e) {
+            List<WebElement> buttons = driver.findElements(By.tagName("button")); 
+            try {            
+               for (WebElement element : buttons){
+                  if (element.getAttribute("id").isEmpty() && element.getAttribute("name").isEmpty()){
+                     theChosenOne = element;
+                     break;
+                  }
+               }
+               return theChosenOne;
+            } 
+            catch (Exception e1){           
+               List<WebElement> inputButtons = driver.findElements(By.xpath("//input[@type='button']"));
+               for (WebElement element : inputButtons){
+                  if (element.getAttribute("id").isEmpty() && element.getAttribute("name").isEmpty()){
+                     theChosenOne = element;
+                     break;
+                  }
+               }
+               return theChosenOne;
+            }
+         }
       } else {
          try {
             return driver.findElement(By.id(idName));
