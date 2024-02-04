@@ -66,46 +66,48 @@ public class TestCase implements Serializable {
                     VisitUrl newAction = new VisitUrl(newPage);
                     // TestCase newTestCase = new TestCase(testCase.getTestCase());
                     TestCase newTestCase = testCase.clone();
-                    System.out.println("\n");
+                    // System.out.println("\n");
                     newTestCase.append(newAction);
-                    newTestCase.display();
+                    // newTestCase.display();
                     newTestCases.add(newTestCase);
                 }
             }
             // Add all textboxes to test case 
-            // List<WebElement> pageInputs = driver.findElements(By.xpath("//input[@type='text']"));
+            List<WebElement> pageInputs = new ArrayList<>();
+            pageInputs.addAll(driver.findElements(By.xpath("//input[@type='text']"))); 
+            pageInputs.addAll(driver.findElements(By.xpath("//input[@type='password']"))); 
             /*
             [h, 1] [i1, i2, i3]
             [[h, 1, i1, i2, i3]]
-             */
-            // TestCase newInputTestBaseCase = new TestCase(testCase.getTestCase());
-            // for (WebElement textElement : pageInputs){
-            //     String identifierString = textElement.getAttribute("id");
-            //     if (identifierString.isEmpty()){
-            //         identifierString = textElement.getAttribute("name");
-            //     }
-            //     // Ask what to do if empty here?
-            //     EnterText newEnterTextAction = new EnterText(identifierString, ":))");
-            //     newInputTestBaseCase.append(newEnterTextAction);
-            // }
-            // // Get all possible buttons from the page
-            // List<WebElement> pageButtons = new ArrayList<WebElement>();
-            // pageButtons.addAll(driver.findElements(By.tagName("button")));
-            // pageButtons.addAll(driver.findElements(By.xpath("//input[@type='button']")));
-            // pageButtons.addAll(driver.findElements(By.xpath("//input[@type='submit']")));
-            // // Add one button per end of a test case
-            // for (WebElement buttonElement : pageButtons){
-            //     String identifierButtonString = buttonElement.getAttribute("id");
-            //     if (identifierButtonString.isEmpty()){
-            //         identifierButtonString = buttonElement.getAttribute("name");
-            //     }
-            //     // Ask what to do if empty here?
-            //     ClickButton newButtonAction = new ClickButton(identifierButtonString);
-            //     TestCase newInputTestCase = new TestCase(newInputTestBaseCase.getTestCase());
-            //     // newInputTestCase.display();
-            //     newInputTestCase.append(newButtonAction);
-            //     newTestCases.add(newInputTestCase);
-            // }
+            */
+            TestCase newInputTestBaseCase = testCase.clone();
+            for (WebElement textElement : pageInputs){
+                String identifierString = textElement.getAttribute("id");
+                if (identifierString.isEmpty()){
+                    identifierString = textElement.getAttribute("name");
+                }
+                // Ask what to do if empty here?
+                EnterText newEnterTextAction = new EnterText(identifierString, ":))");
+                newInputTestBaseCase.append(newEnterTextAction);
+            }
+            // Get all possible buttons from the page
+            List<WebElement> pageButtons = new ArrayList<WebElement>();
+            pageButtons.addAll(driver.findElements(By.tagName("button")));
+            pageButtons.addAll(driver.findElements(By.xpath("//input[@type='button']")));
+            pageButtons.addAll(driver.findElements(By.xpath("//input[@type='submit']")));
+            // Add one button per end of a test case
+            for (WebElement buttonElement : pageButtons){
+                String identifierButtonString = buttonElement.getAttribute("id");
+                if (identifierButtonString.isEmpty()){
+                    identifierButtonString = buttonElement.getAttribute("name");
+                }
+                // Ask what to do if empty here?
+                ClickButton newButtonAction = new ClickButton(identifierButtonString);
+                TestCase newInputTestCase = newInputTestBaseCase.clone();
+                // newInputTestCase.display();
+                newInputTestCase.append(newButtonAction);
+                newTestCases.add(newInputTestCase);
+            }
 
         }
         return newTestCases;
