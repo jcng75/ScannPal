@@ -26,7 +26,8 @@ public class VisitUrl extends TestAction{
 
     @Override
     public String toString(){
-        return url;
+        String returnString = String.format("VisitUrl, url = %s", url);
+        return returnString;
     }
 
 }

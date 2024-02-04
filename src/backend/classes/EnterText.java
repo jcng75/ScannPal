@@ -52,7 +52,7 @@ public class EnterText extends TestAction {
 
    @Override
    public String toString(){
-      String returnString = String.format("%s | %s", id, text);
+      String returnString = String.format("EnterText, id = %s ; text = %s", id, text);
       return returnString;
    }
 }

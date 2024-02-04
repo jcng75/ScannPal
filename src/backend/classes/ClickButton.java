@@ -44,6 +44,7 @@ public class ClickButton extends TestAction {
 
    @Override
     public String toString(){
-      return idName;
+      String returnString = String.format("ClickButton, idName = %s", idName);
+      return returnString;
     }
 }
