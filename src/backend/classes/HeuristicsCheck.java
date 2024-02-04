@@ -20,10 +20,14 @@ public class HeuristicsCheck {
     }
 
     private boolean isDifferentWebsite(String currentWebsite, WebElement element) {
-        System.out.println("Checking if website is different...");
         String link = element.getAttribute("href");
         String parsedUrl = parseURLHost(currentWebsite);
         return !parsedUrl.equals(parseURLHost(link));
+    }
+
+    private boolean isNull(WebElement element){
+        String currentLink = element.getAttribute("href");
+        return currentLink == null || "".equals(currentLink);
     }
 
     private boolean isLogout(WebElement element){
@@ -42,6 +46,7 @@ public class HeuristicsCheck {
         
         // if any of the heuristics hold, we can skip the web element within the crawl function
         if (isStale(element)) return true;
+        if (isNull(element)) return true;
         if (isDifferentWebsite(currentLink, element)) return true;
         if (isLogout(element)) return true;
         if (isMarked(currentLink, hashSet)) return true;
@@ -59,6 +64,7 @@ public class HeuristicsCheck {
             String startUrl = fullUrl.getHost();
             return startUrl;
         } catch (MalformedURLException e) {
+            System.out.println(url);
             e.printStackTrace();
         }
         return url;
