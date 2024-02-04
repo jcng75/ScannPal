@@ -143,7 +143,7 @@ public class WebCrawler {
         System.out.println(String.format("Logged into website: %s", driver.getTitle()));
         System.out.println(String.format("Current URL: %s", driver.getCurrentUrl()));
         
-        String currentURL = driver.getCurrentUrl();
+        // String currentURL = driver.getCurrentUrl();
         
         // Add the starting link to the first queue
         Queue<TestCase> currentQueue = new LinkedList<TestCase>();
@@ -163,16 +163,16 @@ public class WebCrawler {
         nextQueue.add(initialTestCase);
         
         for (int i = 0; i < depth ; i++){
-            currentQueue = nextQueue;
-            nextQueue = null;
+            currentQueue = new LinkedList<>(nextQueue);
+            nextQueue.clear();
             for (TestCase tc : currentQueue){
-                //List<TestCase> updatedTC = tc.extend(tc, hashSet); 
-                //nextQueue.addAll(updatedTC);
+                List<TestCase> updatedTC = tc.extend(tc, hashSet); 
+                nextQueue.addAll(updatedTC);
             }
         }
 
         // Return information
-        List<TestCase> resultList = (List) currentQueue;
+        List<TestCase> resultList = new ArrayList<TestCase>(currentQueue);
         return resultList;
     }
 }

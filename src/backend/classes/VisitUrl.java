@@ -10,11 +10,11 @@ public class VisitUrl extends TestAction{
         setURL(url);
     }
 
-    private void setURL(String url) {
+    public void setURL(String url) {
         this.url = url;
     }
 
-    private String getURL() {
+    public String getURL() {
         return this.url;
     }
 

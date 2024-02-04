@@ -24,11 +24,13 @@ public class TestCase implements Serializable {
     }
 
     // Needs working on, must return list of resulting test cases
-    public List<TestCase> extend(TestAction action, HashSet<String> hashSet) {
+    public List<TestCase> extend(TestCase tc, HashSet<String> hashSet) {
         HeuristicsCheck hc = new HeuristicsCheck();
+
         // Modify this later on
         if (!hc.heuristicsCheck(null, null, hashSet)) {
-            this.append(action);
+            // this.append(tc);
+            
             return new ArrayList<TestCase>();
         }
         return new ArrayList<TestCase>();
