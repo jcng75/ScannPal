@@ -20,9 +20,10 @@ public class HeuristicsCheck {
     }
 
     private boolean isDifferentWebsite(String currentWebsite, WebElement element) {
+        System.out.println("Checking if website is different...");
         String link = element.getAttribute("href");
         String parsedUrl = parseURLHost(currentWebsite);
-        return parsedUrl.equals(parseURLHost(link));
+        return !parsedUrl.equals(parseURLHost(link));
     }
 
     private boolean isLogout(WebElement element){
