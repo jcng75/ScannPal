@@ -41,4 +41,9 @@ public class ClickButton extends TestAction {
       WebElement button = this.getButton();
       button.click();
    } 
+
+   @Override
+    public String toString(){
+      return idName;
+    }
 }

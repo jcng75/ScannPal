@@ -49,5 +49,11 @@ public class EnterText extends TestAction {
       WebElement textbox = this.getTextbox();
       textbox.sendKeys(text);
    }
+
+   @Override
+   public String toString(){
+      String returnString = String.format("%s | %s", id, text);
+      return returnString;
+   }
 }
 

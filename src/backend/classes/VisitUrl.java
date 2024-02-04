@@ -24,4 +24,9 @@ public class VisitUrl extends TestAction{
         driver.manage().window().maximize();
     }
 
+    @Override
+    public String toString(){
+        return url;
+    }
+
 }
