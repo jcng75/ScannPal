@@ -1,5 +1,7 @@
 package backend.classes;
 
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -13,6 +15,9 @@ public class ClickButton extends TestAction {
       setIdName(idName);
    }
 
+   public ClickButton() {
+   }
+
    public void setIdName(String idName) {
       this.idName = idName;
    }
@@ -22,16 +27,47 @@ public class ClickButton extends TestAction {
    public WebElement getButton() {
       WebDriver driver = MyWebDriver.getDriver();
       if (this.idName.isEmpty()) {
-         return driver.findElement(By.tagName("button")); 
-      } 
-      else {
+         WebElement theChosenOne = null;
+         try {
+            List<WebElement> buttons = driver.findElements(By.xpath("//input[@type='submit']"));
+            for (WebElement element : buttons){
+               if (element.getAttribute("id").isEmpty() && element.getAttribute("name").isEmpty()){
+                  theChosenOne = element;
+                  break;
+               }
+            }
+            return theChosenOne;
+         } 
+         catch (Exception e) {
+            List<WebElement> buttons = driver.findElements(By.tagName("button")); 
+            try {            
+               for (WebElement element : buttons){
+                  if (element.getAttribute("id").isEmpty() && element.getAttribute("name").isEmpty()){
+                     theChosenOne = element;
+                     break;
+                  }
+               }
+               return theChosenOne;
+            } 
+            catch (Exception e1) {           
+               List<WebElement> inputButtons = driver.findElements(By.xpath("//input[@type='button']"));
+               for (WebElement element : inputButtons) {
+                  if (element.getAttribute("id").isEmpty() && element.getAttribute("name").isEmpty()){
+                     theChosenOne = element;
+                     break;
+                  }
+               }
+               return theChosenOne;
+            }
+         }
+      } else {
          try {
             return driver.findElement(By.id(idName));
          }
          catch (Exception e) {
             System.out.println("Could not locate using id, trying with name instead...");
             return driver.findElement(By.name(idName));
-         }
+         }   
       }
    }
 
@@ -39,4 +75,10 @@ public class ClickButton extends TestAction {
       WebElement button = this.getButton();
       button.click();
    } 
+
+   @Override
+    public String toString() {
+      String returnString = String.format("ClickButton, idName = %s", idName);
+      return returnString;
+    }
 }
