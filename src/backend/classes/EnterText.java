@@ -15,7 +15,6 @@ public class EnterText extends TestAction {
    }
 
    /* Getter and Setter Methods */
-
    public void setID(String id) {
       this.id = id;
    }
@@ -48,5 +47,11 @@ public class EnterText extends TestAction {
       String text = this.getText();
       WebElement textbox = this.getTextbox();
       textbox.sendKeys(text);
+   }
+
+   @Override
+   public String toString() {
+      String returnString = String.format("EnterText, id = %s ; text = %s", id, text);
+      return returnString;
    }
 }
