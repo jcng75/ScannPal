@@ -2,15 +2,15 @@ package backend.classes;
 
 import org.openqa.selenium.WebDriver;
 
-public class VisitUrl extends TestAction{
+public class VisitUrl extends TestAction {
     
-    private String url;
+    String url;
 
     public VisitUrl(String url) {
         setURL(url);
     }
 
-    public void setURL(String url) {
+    private void setURL(String url) {
         this.url = url;
     }
 
@@ -20,7 +20,13 @@ public class VisitUrl extends TestAction{
 
     public void execute() {
         WebDriver driver = MyWebDriver.getDriver();
-        driver.get(this.getURL());
+        driver.get(this.url);
         driver.manage().window().maximize();
+    }
+
+    @Override
+    public String toString() {
+        String returnString = String.format("VisitUrl, url = %s", url);
+        return returnString;
     }
 }
