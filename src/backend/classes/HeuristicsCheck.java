@@ -3,6 +3,7 @@ package backend.classes;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
+
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import java.net.MalformedURLException;
@@ -17,17 +18,21 @@ public class HeuristicsCheck {
         return ExpectedConditions.stalenessOf(element).apply(MyWebDriver.getDriver());
     }
 
-    private boolean isDifferentWebsite(String parsedUrl, WebElement element) {
+    private boolean isDifferentWebsite(String currentWebsite, WebElement element) {
         String link = element.getAttribute("href");
-        return parsedUrl.equals(parseURLHost(link));
+        String parsedUrl = parseURLHost(currentWebsite);
+        return !parsedUrl.equals(parseURLHost(link));
+    }
+
+    private boolean isNull(WebElement element) {
+        String currentLink = element.getAttribute("href");
+        return currentLink == null || "".equals(currentLink);
     }
 
     private boolean isLogout(WebElement element) {
-
         LinkedList<String> bannedList = new LinkedList<String>(Arrays.asList("logout", "signout", "log out", "sign out"));
         String elementText = element.getText().toLowerCase();
         return bannedList.contains(elementText);
-        
     }
 
     private boolean isMarked(String link, HashSet<String> hashSet) {
@@ -38,11 +43,16 @@ public class HeuristicsCheck {
         
         // if any of the heuristics hold, we can skip the web element within the crawl function
         if (isStale(element)) return true;
+        if (isNull(element)) return true;
         if (isDifferentWebsite(currentLink, element)) return true;
         if (isLogout(element)) return true;
         if (isMarked(currentLink, hashSet)) return true;
 
         return false;
+    }
+
+    public boolean canExtend(TestCase tc) {
+        return tc.getLast().getClass() == VisitUrl.class;
     }
 
     public String parseURLHost(String url) {
@@ -51,6 +61,7 @@ public class HeuristicsCheck {
             String startUrl = fullUrl.getHost();
             return startUrl;
         } catch (MalformedURLException e) {
+            System.out.println(url);
             e.printStackTrace();
         }
         return url;
