@@ -14,22 +14,15 @@ public class WebCrawler {
     String url;
     String username;
     String password;
-    String parsedUrl;
 
     public WebCrawler(String url, String username, String password) {
         setUrl(url);
-        setParsedUrl();
         setUsername(username);
         setPassword(password);
     }
 
     public void setUrl(String url) {
         this.url = url;
-    }
-
-    public void setParsedUrl() {
-        HeuristicsCheck hc = new HeuristicsCheck();
-        this.parsedUrl = hc.parseURLHost(this.url);
     }
 
     public void setUsername(String user) {
@@ -85,7 +78,7 @@ public class WebCrawler {
         // The newLinkCounter tracks it for the next layer
         int currLinkCounter = 1;
         int newLinkCounter = 0;
-        while (depthCounter != depth && !linkQueue.isEmpty()){
+        while (depthCounter != depth && !linkQueue.isEmpty()) {
             System.out.println("Current depth: " + depthCounter);
             // System.out.println("Current element queue: " + linkQueue);
             // Extract the first element of queue and the link associated with the element
@@ -95,7 +88,7 @@ public class WebCrawler {
             // Go to new link
             List<WebElement> elements = MyWebDriver.getDriver().findElements(By.tagName("a"));
             // System.out.println("Current queue: " + linkQueue);
-            for (WebElement element : elements){
+            for (WebElement element : elements) {
                 String newLink = element.getAttribute("href");
                 if (heuristicsCheck(element, currentLink)) continue;
                 LinkedList<String> newList = new LinkedList<String>(currentList);
@@ -106,7 +99,7 @@ public class WebCrawler {
             }
             currLinkCounter--;
             // If the current link counter reaches 0 we must go to the next depth of scanning
-            if (currLinkCounter == 0){
+            if (currLinkCounter == 0) {
                 depthCounter++;
                 currLinkCounter = newLinkCounter;
                 newLinkCounter = 0;
@@ -135,7 +128,7 @@ public class WebCrawler {
         System.out.println(String.format("Logged into website: %s", driver.getTitle()));
         System.out.println(String.format("Current URL: %s", driver.getCurrentUrl()));
         
-        // String currentURL = driver.getCurrentUrl();
+        String currentURL = driver.getCurrentUrl();
         
         // Add the starting link to the first queue
         Queue<TestCase> currentQueue = new LinkedList<TestCase>();
@@ -149,22 +142,29 @@ public class WebCrawler {
         EnterText enterUser = new EnterText("username", this.username);
         EnterText enterPassword = new EnterText("password", this.password);
         ClickButton loginButton = new ClickButton("Login");
-        List<TestAction> initialLogin = new ArrayList<TestAction>(Arrays.asList(enterUser, enterPassword, loginButton));
+        VisitUrl visitHome = new VisitUrl(currentURL);
+        List<TestAction> initialLogin = new ArrayList<TestAction>(Arrays.asList(enterUser, enterPassword, loginButton, visitHome));
         TestCase initialTestCase = new TestCase(initialLogin);
         
         nextQueue.add(initialTestCase);
         
-        for (int i = 0; i < depth ; i++){
+        for (int i = 0; i < depth ; i++) {
+            System.out.println("Current Depth: " + (i+1));
             currentQueue = new LinkedList<>(nextQueue);
             nextQueue.clear();
-            for (TestCase tc : currentQueue){
+            for (TestCase tc : currentQueue) {
                 List<TestCase> updatedTC = tc.extend(tc, hashSet); 
+                for (TestCase testy : updatedTC) {
+                    testy.display();
+                    System.out.println("\n");
+                }
                 nextQueue.addAll(updatedTC);
             }
         }
 
         // Return information
         List<TestCase> resultList = new ArrayList<TestCase>(currentQueue);
+        // System.out.println(resultList);
         return resultList;
     }
 }
