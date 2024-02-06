@@ -14,7 +14,7 @@ public class VisitUrl extends TestAction{
         this.url = url;
     }
 
-    private String getURL(String url){
+    public String getURL(){
         return this.url;
     }
 
@@ -22,6 +22,12 @@ public class VisitUrl extends TestAction{
         WebDriver driver = MyWebDriver.getDriver();
         driver.get(this.url);
         driver.manage().window().maximize();
+    }
+
+    @Override
+    public String toString(){
+        String returnString = String.format("VisitUrl, url = %s", url);
+        return returnString;
     }
 
 }

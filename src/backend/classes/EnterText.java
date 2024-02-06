@@ -7,13 +7,11 @@ public class EnterText extends TestAction {
 
    private String id;
    private String text;
-   private WebElement textbox;
 
    /* Constructor */
    public EnterText(String id, String text) {
       setID(id);
       setText(text);
-      setTextbox(id);
    }
 
    /* Getter and Setter Methods */
@@ -34,25 +32,28 @@ public class EnterText extends TestAction {
       return this.text;
    }
 
-   /* get the textbox by ID, set the WebElement class variable to the textbox */
-   public void setTextbox(String id) {
+   public WebElement getTextbox() {
       try {
-         this.textbox = MyWebDriver.getDriver().findElement(By.id(id));
+         WebElement textbox = MyWebDriver.getDriver().findElement(By.id(id));
+         return textbox;
       } 
       catch (Exception e) {
          System.out.println("Id didn't work trying to search by name...");
-         this.textbox = MyWebDriver.getDriver().findElement(By.name(id));
+         WebElement textbox = MyWebDriver.getDriver().findElement(By.name(id));
+         return textbox;
       }
-   }
-
-   public WebElement getTextbox() {
-      return this.textbox;
    }
 
    public void execute() {
       String text = this.getText();
       WebElement textbox = this.getTextbox();
       textbox.sendKeys(text);
+   }
+
+   @Override
+   public String toString(){
+      String returnString = String.format("EnterText, id = %s ; text = %s", id, text);
+      return returnString;
    }
 }
 

@@ -1,45 +1,84 @@
 package backend.classes;
 
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 public class ClickButton extends TestAction {
 
-   private WebElement button;
+   String idName;
 
    /* Constructor */
    public ClickButton(String idName) {
-      setButton(idName);
+      setIdName(idName);
    }
 
-   public ClickButton() {
-      setButton();
+   public ClickButton(){
    }
 
-   // If we know the id beforehand
-   public void setButton(String idName) {
-      WebDriver driver = MyWebDriver.getDriver();
-      try {
-         this.button = driver.findElement(By.id(idName));
-      }
-      catch (Exception e){
-         System.out.println("Could not locate using id, trying with name instead...");
-         this.button = driver.findElement(By.name(idName));
-      }
+   public void setIdName(String idName){
+      this.idName = idName;
    }
 
-   // If we are looking for a button just find a button
-   public void setButton() {
-      this.button = MyWebDriver.getDriver().findElement(By.tagName("button"));
-   }
-
+   // If we don't know the id, search for it using findElement by tagname
+   // Otherwise, use the id to get the element using findElement by id/name
    public WebElement getButton() {
-      return this.button;
+      WebDriver driver = MyWebDriver.getDriver();
+      if (this.idName.isEmpty()){
+         WebElement theChosenOne = null;
+         try {
+            List<WebElement> buttons = driver.findElements(By.xpath("//input[@type='submit']"));
+            for (WebElement element : buttons){
+               if (element.getAttribute("id").isEmpty() && element.getAttribute("name").isEmpty()){
+                  theChosenOne = element;
+                  break;
+               }
+            }
+            return theChosenOne;
+         } 
+         catch (Exception e) {
+            List<WebElement> buttons = driver.findElements(By.tagName("button")); 
+            try {            
+               for (WebElement element : buttons){
+                  if (element.getAttribute("id").isEmpty() && element.getAttribute("name").isEmpty()){
+                     theChosenOne = element;
+                     break;
+                  }
+               }
+               return theChosenOne;
+            } 
+            catch (Exception e1){           
+               List<WebElement> inputButtons = driver.findElements(By.xpath("//input[@type='button']"));
+               for (WebElement element : inputButtons){
+                  if (element.getAttribute("id").isEmpty() && element.getAttribute("name").isEmpty()){
+                     theChosenOne = element;
+                     break;
+                  }
+               }
+               return theChosenOne;
+            }
+         }
+      } else {
+         try {
+            return driver.findElement(By.id(idName));
+         }
+         catch (Exception e){
+            System.out.println("Could not locate using id, trying with name instead...");
+            return driver.findElement(By.name(idName));
+         }   
+      }
    }
 
    public void execute() {
       WebElement button = this.getButton();
       button.click();
    } 
+
+   @Override
+    public String toString(){
+      String returnString = String.format("ClickButton, idName = %s", idName);
+      return returnString;
+    }
 }

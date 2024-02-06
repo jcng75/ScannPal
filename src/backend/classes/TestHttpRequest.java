@@ -1,12 +1,7 @@
 package backend.classes;
 
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.net.http.HttpResponse.BodyHandlers;
 
 public class TestHttpRequest {
     
