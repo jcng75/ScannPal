@@ -10,7 +10,7 @@ import net.bytebuddy.asm.Advice.Enter;
 
 public class attackInjector {
 
-    public List<TestCase> injectCase(TestCase originalTestCase){
+    public static List<TestCase> injectCase(TestCase originalTestCase){
 
         List<TestCase> injectionVariations = new ArrayList<>(); //make new arraylist to return with variations of injection
 
@@ -27,14 +27,16 @@ public class attackInjector {
         List<TestAction> goodActions = originalTestCase.getTestCase();
          
 
-        for(int i=0;i<goodActions.size();i++){
+        for(int i=2;i<goodActions.size();i++){
             TestAction action = goodActions.get(i);
 
             if (action instanceof EnterText){ // if we can inject this action, needs review
                 
                 // CLONE THE ORIGINAL CASE
                 TestCase maliciousTestCase = originalTestCase.clone();
-
+                System.out.println("Current Case: "+i);
+                maliciousTestCase.display();
+                System.out.println("\n");
                 // SETUP BADBOX
                 EnterText badBox = (EnterText) maliciousTestCase.getTestCase().get(i); // grab the textbox from the testcase
                 badBox.setText("INFECTED!"); // infect it

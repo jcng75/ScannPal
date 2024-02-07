@@ -1,4 +1,5 @@
 package backend.classes;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -13,17 +14,27 @@ public class main {
         tRequest.getRequest();
 
         WebCrawler crawl = new WebCrawler("http://localhost/login.php", "admin", "password");
-        List<TestCase> goodCases = crawl.crawl(3);
+        List<TestCase> cases = crawl.crawl(3);
 
-        TestCase someCase = goodCases.get(0);
+        // TestCase someCase = goodCases.get(0);
 
-        someCase.display();
+        // someCase.display();
         
-        List<TestCase> injectedCases = injectCase(someCase);
+        // List<TestCase> infectedCases = new ArrayList<TestCase>();
 
-        TestCase injectedCaseExample = injectedCases.get(0);
+        /*for (TestCase tc : cases){
+            List<TestCase> injectedCase = attackInjector.injectCase(tc);
+            infectedCases.addAll(injectedCase);
+        }*/
+        // List<TestCase> injectedCases = attackInjector.injectCase(someCase);
 
-        injectedCaseExample.display();
+        TestCase injectedCaseExample = cases.get(3);
+        List<TestCase> infectedCases = attackInjector.injectCase(injectedCaseExample);
+        
+        //injectedCaseExample.display();
+        for (TestCase tc : infectedCases){
+            tc.display();
+        }
         
         // Testing clicking button
         // String idName = "webwolf-button";
