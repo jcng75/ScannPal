@@ -11,7 +11,8 @@ import java.io.Serializable;
 
 public class TestCase implements Serializable {
     private List<TestAction> testActions;
-    private boolean vulnerable;
+    private boolean isVulnerable;
+    private boolean isInjected;
 
     public TestCase() {
         this.testActions = new ArrayList<TestAction>();
@@ -31,6 +32,14 @@ public class TestCase implements Serializable {
 
     public List<TestAction> getTestCase() {
         return this.testActions;
+    }
+
+    public void setInjected(boolean isInjected){
+        this.isInjected = isInjected;
+    }
+
+    public void setVulnerability(boolean isVulnerable){
+        this.isVulnerable = isVulnerable;
     }
 
     public TestAction getLast(){
@@ -111,6 +120,22 @@ public class TestCase implements Serializable {
 
         }
         return newTestCases;
+    }
+
+    public TestResult runTestCase(TestCase tc){   
+        int counter = 1;
+        List<TestAction> testActions = tc.getTestCase();
+        for (TestAction testAction : testActions){
+            testAction.execute();
+            if (testAction instanceof EnterText){
+                if (++counter == 2){
+                    // screenshot
+                    // save screenshot string
+                    // save html structure
+                }
+            }
+        }
+        return new TestResult("htmlResult", "fileName", tc);
     }
 
     public void display() {
