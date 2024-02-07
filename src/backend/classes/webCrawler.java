@@ -78,11 +78,12 @@ public class WebCrawler {
         
         // Initialize starting test case
         // Create the login action
+        VisitUrl visitLogin = new VisitUrl(this.url);
         EnterText enterUser = new EnterText("username", this.username);
         EnterText enterPassword = new EnterText("password", this.password);
         ClickButton loginButton = new ClickButton("Login");
         VisitUrl visitHome = new VisitUrl(currentURL);
-        List<TestAction> initialLogin = new ArrayList<TestAction>(Arrays.asList(enterUser, enterPassword, loginButton, visitHome));
+        List<TestAction> initialLogin = new ArrayList<TestAction>(Arrays.asList(visitLogin, enterUser, enterPassword, loginButton, visitHome));
         TestCase initialTestCase = new TestCase(initialLogin);
         
         nextQueue.add(initialTestCase);
