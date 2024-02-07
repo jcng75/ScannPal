@@ -1,12 +1,12 @@
 package backend.classes;
 
-public class TestResults {
+public class TestResult {
    
     String htmlResult;
     String photoName;
     TestCase baseCase;
 
-    public TestResults(String htmlResult, String photoName, TestCase baseCase){
+    public TestResult(String htmlResult, String photoName, TestCase baseCase){
         this.htmlResult = htmlResult;
         this.photoName = photoName;
         this.baseCase = baseCase;
