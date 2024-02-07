@@ -37,6 +37,17 @@ public class TestCase implements Serializable {
         return this.testActions.get(this.testActions.size()-1);
     }
 
+    //adding this for easy setting of internal testActions list
+    // needs reviewing
+    public void setTestCase(List<TestAction> someList){
+        this.testActions = someList;
+    }
+    //adding this for easier setting within internal list
+    // needs reviewing
+    public void setTestAction(int someIndex,TestAction someAction){
+        testActions.set(someIndex, someAction);
+    }
+
     public void append(TestAction action) {
         this.testActions.add(action);
     }
