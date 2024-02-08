@@ -92,6 +92,7 @@ public class TestCase implements Serializable {
             List<WebElement> pageInputs = new ArrayList<>();
             pageInputs.addAll(driver.findElements(By.xpath("//input[@type='text']"))); 
             pageInputs.addAll(driver.findElements(By.xpath("//input[@type='password']"))); 
+            pageInputs.addAll(driver.findElements(By.tagName("textarea")));
             /*
             [h, 1] [i1, i2, i3]
             [[h, 1, i1, i2, i3]]
@@ -113,6 +114,7 @@ public class TestCase implements Serializable {
             pageButtons.addAll(driver.findElements(By.xpath("//input[@type='submit']")));
             // Add one button per end of a test case
             for (WebElement buttonElement : pageButtons){
+                if (hc.isBadButton(buttonElement)) continue;
                 String identifierButtonString = buttonElement.getAttribute("id");
                 if (identifierButtonString.isEmpty()){
                     identifierButtonString = buttonElement.getAttribute("name");
@@ -129,9 +131,9 @@ public class TestCase implements Serializable {
         return newTestCases;
     }
 
-    public TestResult runTestCase(TestCase tc){   
+    public TestResult runTestCase(){   
         int counter = 1;
-        List<TestAction> testActions = tc.getTestCase();
+        List<TestAction> testActions = this.getTestCase();
         for (TestAction testAction : testActions){
             testAction.execute();
             if (testAction instanceof EnterText){
@@ -142,7 +144,7 @@ public class TestCase implements Serializable {
                 }
             }
         }
-        return new TestResult("htmlResult", "fileName", tc);
+        return new TestResult("htmlResult", "fileName", new TestCase(testActions));
     }
 
     public void display() {
