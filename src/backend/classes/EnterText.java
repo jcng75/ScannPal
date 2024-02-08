@@ -44,6 +44,10 @@ public class EnterText extends TestAction {
       }
    }
 
+   public EnterText clone(){
+      return new EnterText(this.id, this.text);
+   }
+
    public void execute() {
       String text = this.getText();
       WebElement textbox = this.getTextbox();

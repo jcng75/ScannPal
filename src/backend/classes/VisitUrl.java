@@ -18,6 +18,10 @@ public class VisitUrl extends TestAction{
         return this.url;
     }
 
+    public VisitUrl clone(){
+        return new VisitUrl(this.url);
+    }
+
     public void execute(){
         WebDriver driver = MyWebDriver.getDriver();
         driver.get(this.url);

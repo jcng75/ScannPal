@@ -71,6 +71,10 @@ public class ClickButton extends TestAction {
       }
    }
 
+   public ClickButton clone(){
+      return new ClickButton(this.idName);
+   }
+
    public void execute() {
       WebElement button = this.getButton();
       button.click();
