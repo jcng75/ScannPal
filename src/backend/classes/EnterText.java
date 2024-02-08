@@ -15,6 +15,7 @@ public class EnterText extends TestAction {
    }
 
    /* Getter and Setter Methods */
+
    public void setID(String id) {
       this.id = id;
    }
@@ -43,6 +44,10 @@ public class EnterText extends TestAction {
       }
    }
 
+   public EnterText clone(){
+      return new EnterText(this.id, this.text);
+   }
+
    public void execute() {
       String text = this.getText();
       WebElement textbox = this.getTextbox();
@@ -50,8 +55,9 @@ public class EnterText extends TestAction {
    }
 
    @Override
-   public String toString() {
+   public String toString(){
       String returnString = String.format("EnterText, id = %s ; text = %s", id, text);
       return returnString;
    }
 }
+
