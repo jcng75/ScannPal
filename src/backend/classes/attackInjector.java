@@ -25,7 +25,6 @@ public class attackInjector {
         // If we can continue peacefully:
 
         List<TestAction> goodActions = originalTestCase.getTestCase();
-         
 
         for(int i=3;i<goodActions.size();i++){
             TestAction action = goodActions.get(i);
@@ -34,12 +33,15 @@ public class attackInjector {
                 
                 // CLONE THE ORIGINAL CASE
                 TestCase maliciousTestCase = originalTestCase.clone();
-                System.out.println("Current Case: "+i);
+                System.out.println("Current Case: " + i);
                 maliciousTestCase.display();
                 System.out.println("\n");
                 // SETUP BADBOX
                 EnterText badBox = (EnterText) maliciousTestCase.getTestCase().get(i); // grab the textbox from the testcase
                 badBox.setText("INFECTED!"); // infect it
+                System.out.println("Updated case: " + i);
+                maliciousTestCase.display();
+                System.out.println("\n");
 
                 
                 // add test case to injected cases list
