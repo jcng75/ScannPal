@@ -2,7 +2,9 @@ package backend.classes;
 
 import java.util.List;
 
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -78,6 +80,15 @@ public class ClickButton extends TestAction {
    public void execute() {
       WebElement button = this.getButton();
       button.click();
+      HeuristicsCheck hc = new HeuristicsCheck();
+      
+      // If you get an alert after clicking a button accept alert
+      if (hc.isAlertPresent()){
+         // Switch to the alert and accept it
+         Alert alert = MyWebDriver.getDriver().switchTo().alert();
+         alert.accept();
+      }
+      
    } 
 
    @Override
