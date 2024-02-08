@@ -25,7 +25,18 @@ public class TestCase implements Serializable {
     public TestCase clone(){
         TestCase newTestCase = new TestCase();
         for (TestAction testAction : this.getTestCase()){
-            newTestCase.append(testAction);
+            if (testAction instanceof EnterText){
+                EnterText newEnterText = (EnterText) testAction;
+                newTestCase.append(newEnterText.clone());
+            }
+            else if (testAction instanceof VisitUrl){
+                VisitUrl newVisitUrl = (VisitUrl) testAction;
+                newTestCase.append(newVisitUrl.clone());
+            }
+            else if (testAction instanceof ClickButton){
+                ClickButton newClickButton = (ClickButton) testAction;
+                newTestCase.append(newClickButton);
+            }
         }
         return newTestCase;
     }
@@ -54,7 +65,6 @@ public class TestCase implements Serializable {
     public List<TestCase> extend(TestCase testCase, HashSet<String> hashSet) {
         HeuristicsCheck hc = new HeuristicsCheck();
         List<TestCase> newTestCases = new ArrayList<TestCase>(); 
-        // System.out.println(hashSet);
         // If the testCase cannot be extended any further, return empty list
         if (!hc.canExtend(testCase)){
             return newTestCases;
@@ -73,11 +83,8 @@ public class TestCase implements Serializable {
                     String newPage = linkElement.getAttribute("href");
                     hashSet.add(newPage);
                     VisitUrl newAction = new VisitUrl(newPage);
-                    // TestCase newTestCase = new TestCase(testCase.getTestCase());
                     TestCase newTestCase = testCase.clone();
-                    // System.out.println("\n");
                     newTestCase.append(newAction);
-                    // newTestCase.display();
                     newTestCases.add(newTestCase);
                 }
             }
