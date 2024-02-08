@@ -11,20 +11,34 @@ import java.io.Serializable;
 
 public class TestCase implements Serializable {
     private List<TestAction> testActions;
-    private boolean vulnerable;
+    private boolean isVulnerable;
+    private boolean isInjected;
 
     public TestCase() {
         this.testActions = new ArrayList<TestAction>();
+        setVulnerability(false);
+        setInjected(false);
     }
 
     public TestCase(List<TestAction> actions) {
         this.testActions = actions;
     }
 
-    public TestCase clone() {
+    public TestCase clone(){
         TestCase newTestCase = new TestCase();
-        for (TestAction testAction : this.getTestCase()) {
-            newTestCase.append(testAction);
+        for (TestAction testAction : this.getTestCase()){
+            if (testAction instanceof EnterText){
+                EnterText newEnterText = (EnterText) testAction;
+                newTestCase.append(newEnterText.clone());
+            }
+            else if (testAction instanceof VisitUrl){
+                VisitUrl newVisitUrl = (VisitUrl) testAction;
+                newTestCase.append(newVisitUrl.clone());
+            }
+            else if (testAction instanceof ClickButton){
+                ClickButton newClickButton = (ClickButton) testAction;
+                newTestCase.append(newClickButton);
+            }
         }
         return newTestCase;
     }
@@ -33,8 +47,34 @@ public class TestCase implements Serializable {
         return this.testActions;
     }
 
-    public TestAction getLast() {
+    public void setInjected(boolean isInjected){
+        this.isInjected = isInjected;
+    }
+
+    public boolean getInjected() {
+        return this.isInjected;
+    }
+
+    public void setVulnerability(boolean isVulnerable){
+        this.isVulnerable = isVulnerable;
+    }
+
+    public boolean getVulnerable() {
+        return this.isVulnerable;
+    }
+
+    public TestAction getLast(){
         return this.testActions.get(this.testActions.size()-1);
+    }
+
+    // returns the size of a TestCase object (how many TestActions it has)
+    public int size() {
+        return this.testActions.size();
+    }
+
+    // returns a singular TestAction by index
+    public TestAction get(int i) {
+        return this.testActions.get(i);
     }
 
     public void append(TestAction action) {
@@ -45,9 +85,8 @@ public class TestCase implements Serializable {
     public List<TestCase> extend(TestCase testCase, HashSet<String> hashSet) {
         HeuristicsCheck hc = new HeuristicsCheck();
         List<TestCase> newTestCases = new ArrayList<TestCase>(); 
-        // System.out.println(hashSet);
         // If the testCase cannot be extended any further, return empty list
-        if (!hc.canExtend(testCase)) {
+        if (!hc.canExtend(testCase)){
             return newTestCases;
         } else {
             WebDriver driver = MyWebDriver.getDriver();
@@ -58,17 +97,14 @@ public class TestCase implements Serializable {
             driver.get(currentPage);
             // 1. Get all links to make a new test case
             List<WebElement> pageLinks = driver.findElements(By.tagName("a"));
-            for (WebElement linkElement : pageLinks) {
+            for (WebElement linkElement : pageLinks){
                 // If heuristics pass, clone the current testcase and add the new link
                 if (!hc.heuristicsCheck(linkElement, currentPage, hashSet)) {
                     String newPage = linkElement.getAttribute("href");
                     hashSet.add(newPage);
                     VisitUrl newAction = new VisitUrl(newPage);
-                    // TestCase newTestCase = new TestCase(testCase.getTestCase());
                     TestCase newTestCase = testCase.clone();
-                    // System.out.println("\n");
                     newTestCase.append(newAction);
-                    // newTestCase.display();
                     newTestCases.add(newTestCase);
                 }
             }
@@ -76,12 +112,13 @@ public class TestCase implements Serializable {
             List<WebElement> pageInputs = new ArrayList<>();
             pageInputs.addAll(driver.findElements(By.xpath("//input[@type='text']"))); 
             pageInputs.addAll(driver.findElements(By.xpath("//input[@type='password']"))); 
+            pageInputs.addAll(driver.findElements(By.tagName("textarea")));
             /*
             [h, 1] [i1, i2, i3]
             [[h, 1, i1, i2, i3]]
             */
             TestCase newInputTestBaseCase = testCase.clone();
-            for (WebElement textElement : pageInputs) {
+            for (WebElement textElement : pageInputs){
                 String identifierString = textElement.getAttribute("id");
                 if (identifierString.isEmpty()){
                     identifierString = textElement.getAttribute("name");
@@ -96,7 +133,8 @@ public class TestCase implements Serializable {
             pageButtons.addAll(driver.findElements(By.xpath("//input[@type='button']")));
             pageButtons.addAll(driver.findElements(By.xpath("//input[@type='submit']")));
             // Add one button per end of a test case
-            for (WebElement buttonElement : pageButtons) {
+            for (WebElement buttonElement : pageButtons){
+                if (hc.isBadButton(buttonElement)) continue;
                 String identifierButtonString = buttonElement.getAttribute("id");
                 if (identifierButtonString.isEmpty()){
                     identifierButtonString = buttonElement.getAttribute("name");
@@ -111,6 +149,22 @@ public class TestCase implements Serializable {
 
         }
         return newTestCases;
+    }
+
+    public TestResult runTestCase(){   
+        int counter = 1;
+        List<TestAction> testActions = this.getTestCase();
+        for (TestAction testAction : testActions){
+            testAction.execute();
+            if (testAction instanceof EnterText){
+                if (++counter == 2){
+                    // screenshot
+                    // save screenshot string
+                    // save html structure
+                }
+            }
+        }
+        return new TestResult("htmlResult", "fileName", new TestCase(testActions));
     }
 
     public void display() {
