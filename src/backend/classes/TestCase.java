@@ -16,6 +16,8 @@ public class TestCase implements Serializable {
 
     public TestCase() {
         this.testActions = new ArrayList<TestAction>();
+        setVulnerability(false);
+        setInjected(false);
     }
 
     public TestCase(List<TestAction> actions) {
@@ -49,12 +51,30 @@ public class TestCase implements Serializable {
         this.isInjected = isInjected;
     }
 
+    public boolean getInjected() {
+        return this.isInjected;
+    }
+
     public void setVulnerability(boolean isVulnerable){
         this.isVulnerable = isVulnerable;
     }
 
+    public boolean getVulnerable() {
+        return this.isVulnerable;
+    }
+
     public TestAction getLast(){
         return this.testActions.get(this.testActions.size()-1);
+    }
+
+    // returns the size of a TestCase object (how many TestActions it has)
+    public int size() {
+        return this.testActions.size();
+    }
+
+    // returns a singular TestAction by index
+    public TestAction get(int i) {
+        return this.testActions.get(i);
     }
 
     public void append(TestAction action) {
