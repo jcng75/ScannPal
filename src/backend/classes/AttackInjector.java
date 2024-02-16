@@ -8,6 +8,7 @@ public class AttackInjector {
 
         List<TestCase> injectionVariations = new ArrayList<>(); // make new arraylist to return with variations of injection
 
+        injectionVariations.add(originalTestCase.clone()); // index 0 of each list of injected cases is the clean copy of the injected case
         HeuristicsCheck hc = new HeuristicsCheck(); // hc object
         Boolean needStop = hc.canExtend(originalTestCase); // to test if ends in URL
 
@@ -43,6 +44,27 @@ public class AttackInjector {
         return injectionVariations;
     }
 
+    public static List<List<TestCase>> generateInjectedCases(List<TestCase> crawlResults) {
+        List<List<TestCase>> listOfLists = new ArrayList<List<TestCase>>(); // make a new list of lists to assimilate all lists of injected cases
+
+        for (TestCase tc : crawlResults){
+            List<TestCase> tcBAD = injectCase(tc);
+            listOfLists.add(tcBAD);
+        }
+
+        return listOfLists;
+    }
+
+    public static void displayAll(List<List<TestCase>> allCases){
+        
+        for (List<TestCase> tc : allCases){
+            for(TestCase isolatedtc : tc){
+                isolatedtc.display();
+                System.out.println("");
+            }
+        }
+
+    }
 }
 
 // PER TEST CASE (On^2)
