@@ -14,7 +14,7 @@ public class TakeScreenshot extends TestAction {
    String fileName;
    
    public TakeScreenshot(String fileName){
-      String newFileName = fileName + getTimeStamp() + ".jpg";
+      String newFileName = fileName + getTimeStamp() + ".png";
       setFileName(newFileName);
       MyWebDriver.getDriver().manage().window().maximize();
    }
