@@ -150,21 +150,27 @@ public class TestCase implements Serializable {
         }
         return newTestCases;
     }
+    // [[baseCase1, injectedCase, injectedCase], [baseCase2, injectedCase, injectedCase]]
 
-    public TestResult runTestCase(){   
-        int counter = 1;
+    public TestResult runTestCase(TestCase baseTestCase, String fileName){   
+        int clickButtonCounter = 0;
+        String fullFileName = "";
+        String htmlResult = "";
         List<TestAction> testActions = this.getTestCase();
         for (TestAction testAction : testActions){
             testAction.execute();
-            if (testAction instanceof EnterText){
-                if (++counter == 2){
-                    // screenshot
+            if (testAction instanceof ClickButton){
+                if (++clickButtonCounter == 2){
+                    TakeScreenshot takeScreenshot = new TakeScreenshot(fileName);
+                    takeScreenshot.execute();
+                    fullFileName = takeScreenshot.getFileName();
                     // save screenshot string
-                    // save html structure
+                    htmlResult = MyWebDriver.getDriver().getPageSource();
                 }
             }
         }
-        return new TestResult("htmlResult", "fileName", new TestCase(testActions));
+        
+        return new TestResult(htmlResult, fullFileName, baseTestCase);
     }
 
     public void display() {
