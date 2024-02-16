@@ -10,15 +10,11 @@ public class Main {
         WebCrawler crawl = new WebCrawler("http://localhost/login.php", "admin", "password");
         List<TestCase> testCases = crawl.crawl(3);
         
-        for (int i = testCases.size()-1; i >= 0; i--) {
-            testCases.get(i).runTestCase();
+        List<TestResult> testResults = TestResult.generateResults(testCases);
+
+        for (TestResult tr: testResults) {
+            tr.display();
         }
-        // List<TestCase> infectedCases = attackInjector.injectCase(injectedCaseExample);
-        
-        // injectedCaseExample.display();
-        // for (TestCase tc : infectedCases) {
-            // tc.display();
-        // }
 
         // WebDriver driver = MyWebDriver.getDriver();
         // driver.get("http://35.175.186.100:8080/WebGoat/login");
