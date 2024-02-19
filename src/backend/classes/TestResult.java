@@ -1,18 +1,21 @@
 package backend.classes;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TestResult {
    
-    String htmlResult;
-    String photoName;
-    TestCase baseCase;
+    private String htmlResult;
+    private String photoName;
+    private TestCase baseCase;
+    private TestCase injectedCase;
 
-    public TestResult(String htmlResult, String photoName, TestCase baseCase){
+    public TestResult(String htmlResult, String photoName, TestCase baseCase, TestCase injectedCase){
         this.htmlResult = htmlResult;
         this.photoName = photoName;
         this.baseCase = baseCase;
+        this.injectedCase = injectedCase;
     }
 
     public String getHtmlResult() {
@@ -27,24 +30,63 @@ public class TestResult {
         return this.baseCase;
     }
 
-    public static List<TestResult> generateResults(List<TestCase> testCases){
+    public TestCase getInjectTestCase(){
+        return this.injectedCase;
+    }
+
+    // BaseCase1 InjectedCase1 InjectedCase2 InjectedCase3 BaseCase2 InjectedCase1...
+
+    // public static List<TestResult> generateResults(List<TestCase> testCases) throws IOException{
         
-        List<List<TestCase>> injectedCases = attackInjector.generateInjectedCases(testCases);
-        attackInjector.displayAll(injectedCases);
+    //     List<List<TestCase>> injectedCases = AttackInjector.generateInjectedCases(testCases);
+    //     // AttackInjector.displayAll(injectedCases);
+    //     List<TestResult> testResults = new ArrayList<TestResult>();
+        
+    //     System.out.println(injectedCases.size());
+    //     for (int i = 0; i < injectedCases.size(); i++){
+    //         List<TestCase> testCaseGroup = injectedCases.get(i);
+    //         int counter = 1;
+    //         String addString = "TestCase" + (i+1) + "--";
+    //         TestCase originalTestCase = testCaseGroup.get(0);
+    //         for (int j = 0; j < testCaseGroup.size(); j++){
+    //             TestCase currentTestCase = testCaseGroup.get(j);
+    //             if (j == 0){
+    //                 TestResult tr = testCaseGroup.get(j).runTestCase(originalTestCase, currentTestCase, addString + "BaseCase--");
+    //                 testResults.add(tr);
+    //             }
+    //             else {
+    //                 TestResult tr = testCaseGroup.get(j).runTestCase(originalTestCase, currentTestCase, addString + "InjectedCase" + counter + "--" + testCaseGroup.get(j).getAttackType() + "--");
+    //                 testResults.add(tr);
+    //                 counter++;
+    //             }
+    //         }
+    //     }
+    //     return testResults;
+    // }
+    
+    public static List<TestResult> generateResults(List<TestCase> testCases) throws IOException{
+        
+        List<List<TestCase>> injectedCases = AttackInjector.generateInjectedCases(testCases);
+        // AttackInjector.displayAll(injectedCases);
         List<TestResult> testResults = new ArrayList<TestResult>();
-        
+
+        System.out.println(injectedCases.size());
         for (int i = 0; i < injectedCases.size(); i++){
             List<TestCase> testCaseGroup = injectedCases.get(i);
             int counter = 1;
-            String addString = "--ForTestCase" + (i+1) + "--";
+            TestResult baseTestResult = new TestResult(null, null, null, null);
+            String addString = "TestCase" + (i+1) + "--";
             TestCase originalTestCase = testCaseGroup.get(0);
             for (int j = 0; j < testCaseGroup.size(); j++){
+                TestCase currentTestCase = testCaseGroup.get(j);
                 if (j == 0){
-                    TestResult tr = testCaseGroup.get(j).runTestCase(originalTestCase, "baseCase" + addString);
+                    TestResult tr = testCaseGroup.get(j).runTestCase(originalTestCase, currentTestCase, addString + "BaseCase--");
+                    baseTestResult = tr;
                     testResults.add(tr);
                 }
                 else {
-                    TestResult tr = testCaseGroup.get(j).runTestCase(originalTestCase, "injectedCase" + counter + addString);
+                    TestResult tr = testCaseGroup.get(j).runTestCase(originalTestCase, currentTestCase, addString + "InjectedCase" + counter + "--" + testCaseGroup.get(j).getAttackType() + "--");
+                    ResultAnalysis.analyzeResult(baseTestResult, tr);
                     testResults.add(tr);
                     counter++;
                 }
