@@ -13,6 +13,8 @@ public class TestCase implements Serializable {
     private List<TestAction> testActions;
     private boolean isVulnerable;
     private boolean isInjected;
+    private String attackType;
+    private String payload;
 
     public TestCase() {
         this.testActions = new ArrayList<TestAction>();
@@ -22,6 +24,22 @@ public class TestCase implements Serializable {
 
     public TestCase(List<TestAction> actions) {
         this.testActions = actions;
+    }
+
+    public void setAttackType(String attackType){
+        this.attackType = attackType;
+    }
+
+    public String getAttackType(){
+        return this.attackType;
+    }
+
+    public void setPayload(String payload){
+        this.payload = payload;
+    }
+
+    public String getPayload(){
+        return this.payload;
     }
 
     public TestCase clone(){
@@ -152,7 +170,7 @@ public class TestCase implements Serializable {
     }
     // [[baseCase1, injectedCase, injectedCase], [baseCase2, injectedCase, injectedCase]]
 
-    public TestResult runTestCase(TestCase baseTestCase, String fileName){   
+    public TestResult runTestCase(TestCase baseTestCase, TestCase injectedTestCase, String fileName){   
         int clickButtonCounter = 0;
         String fullFileName = "";
         String htmlResult = "";
@@ -170,7 +188,7 @@ public class TestCase implements Serializable {
             }
         }
         
-        return new TestResult(htmlResult, fullFileName, baseTestCase);
+        return new TestResult(htmlResult, fullFileName, baseTestCase, injectedTestCase);
     }
 
     public void display() {
