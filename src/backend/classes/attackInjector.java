@@ -2,7 +2,7 @@ package backend.classes;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
+import java.lang.Math;
 import java.util.Scanner;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -166,7 +166,40 @@ public class AttackInjector {
         return selectedLines;
     }
 
+
+
+    public static List<List<TestCase>> splitTestCases(List<TestCase> testCaseList, int numOfMachines){
+        List<List<TestCase>> splitCases = new ArrayList<List<TestCase>>();
+
+        int indexToFill = 0;
+        int maxPerCase = (int)(Math.ceil(testCaseList.size()/numOfMachines));
+        int casesInBucket = 0;
+
+        while(splitCases.size()<numOfMachines){
+            List<TestCase> toAdd = new ArrayList<TestCase>();
+            for(TestCase tc : testCaseList){
+                if(casesInBucket>=maxPerCase){
+                    indexToFill++;
+                    casesInBucket=0;
+                    splitCases.add(testCaseList);
+                }
+                toAdd.add(tc);
+                
+            }
+        }
+
+
+
+        return splitCases;
+
+
+    }
+
+
+
 }
+
+
 
 // PER TEST CASE (On^2)
 // a --> previous element
