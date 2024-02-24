@@ -1,28 +1,150 @@
 package backend.classes;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class ResultAnalysis {
-    
-    public static void analyzeResults(List<TestResult> testResults){
+import org.openqa.selenium.WebDriver;
 
+public interface ResultAnalysis {
+
+    private static boolean sqliCheck(String HTML, TestResult injectedTestResult){
+        List<String> errorList = new ArrayList<String>(Arrays.asList(
+        "You have an error in your SQL syntax", 
+        "Unclosed quotation mark after the character string ''",
+        "quoted string not properly terminated",
+        "check the manual", 
+        "Incorrect syntax near",
+        "Unclosed quotation",
+        "Invalid expression",
+        "Rule does not contain a variable.",
+        "Rule contains more than one variable.",
+        "Invalid column name",
+        "Invalid object name",
+        "Ambiguous column name"
+        )); 
+        for (String error : errorList){
+            if (HTML.contains(error)){
+                injectedTestResult.setVulnerability(true);
+                return true;
+            }
+        }
+        return false;
     }
 
     private static boolean xssCheck(String HTML, String payload){
-        System.out.println("Comparing HTML page to payload: "); 
-        StringSimilarity.printSimilarity(HTML, payload);
         return HTML.contains(payload);
     }
+    
+    private static boolean cmdCheck(String HTML){
+        return true;
+    }
 
-    public static void analyzeResult(TestResult baseResult, TestResult injectedResult){
+    private static boolean checkSpecificAttack(String attackType, String htmlString, String payload, TestResult injectedTestResult){
+        
+        if (attackType == "SQL"){
+            return sqliCheck(htmlString, injectedTestResult);
+        } else if (attackType == "XSS"){
+            return xssCheck(htmlString, payload);
+        } else {
+            return false;
+        }
+    
+    }
+
+    private static boolean imageSimilarityCheck(String basePhotoPath, String injectedPhotoPath, TestResult injectedResult) throws IOException{
+        String path = "photos/";
+        float similarity = ImageDifferenceBox.getPercentDifference(path + basePhotoPath, path + injectedPhotoPath);
+        if (similarity > 0.9){
+            // Fix later
+            String comparisonPhoto = basePhotoPath + injectedPhotoPath;
+            ImageDifferenceBox.compareImages(path + basePhotoPath, path + injectedPhotoPath, path + comparisonPhoto);
+            injectedResult.setComparisonPhoto(comparisonPhoto);
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean htmlSimilarityCheck(String baseHTML, String injectedHTML){
+        // If the percentage is lower than 50%, we can assume an injection was successful
+        double similarity = StringSimilarity.similarity(baseHTML, injectedHTML);
+        if (similarity < 50.00){
+            return true;
+        }
+        return false;
+    }
+
+    public static void runAnalysis(List<TestResult> testResults) throws IOException{
+        TestCase currentBaseCase = null;
+        TestResult currentBaseResult = null;
+        for (TestResult tr : testResults){
+            if (!tr.getBaseCase().equals(currentBaseCase)){
+                currentBaseCase = tr.getBaseCase();
+                currentBaseResult = tr;
+            }
+            analyzeResult(currentBaseResult, tr);
+        }
+    }
+    
+    public static void analyzeResult(TestResult baseResult, TestResult injectedResult) throws IOException{
+
+        // Ignore all basecases to be tested in our algorithm
+        if (baseResult.equals(injectedResult)){
+            return;
+        }
+
+        String basePhoto = baseResult.getPhotoName();
+        String injectedPhoto = injectedResult.getPhotoName();
         String baseHTML = baseResult.getHtmlResult();
         String injectedHTML = injectedResult.getHtmlResult();
-        double similarity = StringSimilarity.similarity(baseHTML, injectedHTML);
-        System.out.println(String.format("Comparing Case %s to %s", baseResult.getPhotoName(), injectedResult.getPhotoName()));
-        xssCheck(injectedResult.getHtmlResult(), injectedResult.getInjectTestCase().getPayload());
-        System.out.println(similarity);
+        
+        System.out.println(String.format("Comparing Case %s to %s", basePhoto, injectedPhoto));
+        // Check for specific injected heuristic type
+        String injectedResultType = injectedResult.getBaseCase().getAttackType();
+        String payload = injectedResult.getBaseCase().getPayload();
+        int counter = 0;
+        // First check specific attack
+        if (checkSpecificAttack(injectedResultType, injectedHTML, payload, injectedResult)){
+            counter++;
+        }
+        // Check html similarity
+        if (htmlSimilarityCheck(baseHTML, injectedHTML)){
+            counter++;
+        }
+        // Next check image similarity
+        if (imageSimilarityCheck(basePhoto, injectedPhoto, injectedResult)){
+            counter++;
+        }
+        
+        if (counter >= 2){
+            System.out.println("TestResult is vulnerable to attack!");
+        }
+        if (injectedResult.getVulnerable()){
+            System.out.println("TestResult is vulnerable to " + injectedResult.getInjectTestCase().getAttackType() + "!");
+        }
+
         System.out.println("\n");
 
 
     }
+
+    public static void checkAlert(TestResult testResult){
+        WebDriver driver = MyWebDriver.getDriver();
+        String alertMessage = driver.switchTo().alert().getText(); // capture alert message
+        if (alertMessage.equals("1")){
+            testResult.setVulnerability(true);
+        }
+    }
+
+    /* 
+    TODO:
+    - Check for alerts for xss attacks
+    - Update attack heuristics
+    - Help adam with splitting thing
+    - EC2 communication script
+    - Create demo
+    - Ensure that if vulnerable update TestResult to be set as vulnerable 
+    */
+    
 }
