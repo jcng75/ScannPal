@@ -1,11 +1,12 @@
 package backend.classes;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 // For Local Tests
 public class main {
-    public static void main(String args[]) {
+    public static void main(String args[]) throws IOException {
         System.setProperty("webdriver.chrome.driver", "C:\\Users\\Justin Ng\\Downloads\\chromedriver-win64\\chromedriver-win64\\chromedriver.exe");
 
         TestHttpRequest tRequest = new TestHttpRequest("http://localhost/login.php"); 
@@ -20,8 +21,10 @@ public class main {
 
         List<TestResult> testResults = TestResult.generateResults(testCases);
 
-        for (TestResult tr : testResults){
-            tr.display();
-        }
+        ResultAnalysis.runAnalysis(testResults);
+
+        // for (TestResult tr : testResults){
+        //     tr.display();
+        // }
     }
 }
