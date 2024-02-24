@@ -1,6 +1,7 @@
 package backend.classes;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 
 public class EnterText extends TestAction {
@@ -51,6 +52,14 @@ public class EnterText extends TestAction {
    public void execute() {
       String text = this.getText();
       WebElement textbox = this.getTextbox();
+      
+      int newMaxLength = 1000;
+
+      ((JavascriptExecutor) MyWebDriver.getDriver()).executeScript(
+         "arguments[0].setAttribute('maxlength', arguments[1])",
+         textbox,
+         newMaxLength
+      );
       textbox.sendKeys(text);
    }
 
