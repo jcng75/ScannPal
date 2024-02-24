@@ -11,14 +11,12 @@ import java.io.Serializable;
 
 public class TestCase implements Serializable {
     private List<TestAction> testActions;
-    private boolean isVulnerable;
     private boolean isInjected;
     private String attackType;
     private String payload;
 
     public TestCase() {
         this.testActions = new ArrayList<TestAction>();
-        setVulnerability(false);
         setInjected(false);
     }
 
@@ -71,14 +69,6 @@ public class TestCase implements Serializable {
 
     public boolean getInjected() {
         return this.isInjected;
-    }
-
-    public void setVulnerability(boolean isVulnerable){
-        this.isVulnerable = isVulnerable;
-    }
-
-    public boolean getVulnerable() {
-        return this.isVulnerable;
     }
 
     public TestAction getLast(){
@@ -174,6 +164,7 @@ public class TestCase implements Serializable {
         int clickButtonCounter = 0;
         String fullFileName = "";
         String htmlResult = "";
+        boolean xssVulnerable = false;
         List<TestAction> testActions = this.getTestCase();
         for (TestAction testAction : testActions){
             testAction.execute();
@@ -184,11 +175,19 @@ public class TestCase implements Serializable {
                     fullFileName = takeScreenshot.getFileName();
                     // save screenshot string
                     htmlResult = MyWebDriver.getDriver().getPageSource();
+                    ClickButton currentClickButton = (ClickButton) testAction;
+                    if (currentClickButton.hasAlert() && 
+                    currentClickButton.getAlertMessage().equals("1") && 
+                    injectedTestCase.getAttackType().equals("XSS")){
+                        xssVulnerable = true;
+                    }
                 }
             }
         }
         
-        return new TestResult(htmlResult, fullFileName, baseTestCase, injectedTestCase);
+        TestResult newResult = new TestResult(htmlResult, fullFileName, baseTestCase, injectedTestCase);
+        newResult.setVulnerability(xssVulnerable);
+        return newResult;
     }
 
     public void display() {
