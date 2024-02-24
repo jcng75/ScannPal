@@ -54,7 +54,7 @@ public class EnterText extends TestAction {
       WebElement textbox = this.getTextbox();
       
       int newMaxLength = 1000;
-
+      // Updates maxlength argument
       ((JavascriptExecutor) MyWebDriver.getDriver()).executeScript(
          "arguments[0].setAttribute('maxlength', arguments[1])",
          textbox,
