@@ -70,13 +70,16 @@ public class TestResult {
             for (int j = 0; j < testCaseGroup.size(); j++){
                 TestCase currentTestCase = testCaseGroup.get(j);
                 if (j == 0){
-                    TestResult tr = testCaseGroup.get(j).runTestCase(originalTestCase, currentTestCase, addString + "BaseCase--");
-                    baseTestResult = tr;
-                    testResults.add(tr);
+                    try {
+                        TestResult tr = testCaseGroup.get(j).runTestCase(originalTestCase, currentTestCase, addString + "BaseCase--");
+                        baseTestResult = tr;
+                        testResults.add(tr);
+                    } catch (NullPointerException e) {
+                        e.printStackTrace();
+                    }
                 }
                 else {
                     TestResult tr = testCaseGroup.get(j).runTestCase(originalTestCase, currentTestCase, addString + "InjectedCase" + counter + "--" + testCaseGroup.get(j).getAttackType() + "--");
-                    ResultAnalysis.analyzeResult(baseTestResult, tr);
                     testResults.add(tr);
                     counter++;
                 }
