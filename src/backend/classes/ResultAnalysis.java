@@ -33,8 +33,8 @@ public interface ResultAnalysis {
         return false;
     }
 
-    private static boolean xssCheck(String HTML, String payload){
-        return HTML.contains(payload);
+    private static boolean xssCheck(String htmlSource, String payload){
+        return htmlSource.contains(payload);
     }
     
     private static boolean cmdCheck(String HTML){
@@ -78,6 +78,7 @@ public interface ResultAnalysis {
     public static void runAnalysis(List<TestResult> testResults) throws IOException{
         TestCase currentBaseCase = null;
         TestResult currentBaseResult = null;
+        System.out.println("\n(***) Anylizing all results...\n");
         for (TestResult tr : testResults){
             if (!tr.getBaseCase().equals(currentBaseCase)){
                 currentBaseCase = tr.getBaseCase();
@@ -99,10 +100,10 @@ public interface ResultAnalysis {
         String baseHTML = baseResult.getHtmlResult();
         String injectedHTML = injectedResult.getHtmlResult();
         
-        System.out.println(String.format("Comparing Case %s to %s", basePhoto, injectedPhoto));
+        System.out.println(String.format("(*) Comparing Case %s to %s", basePhoto, injectedPhoto));
         // Check for specific injected heuristic type
-        String injectedResultType = injectedResult.getBaseCase().getAttackType();
-        String payload = injectedResult.getBaseCase().getPayload();
+        String injectedResultType = injectedResult.getInjectTestCase().getAttackType();
+        String payload = injectedResult.getInjectTestCase().getPayload();
         int counter = 0;
         // First check specific attack
         if (checkSpecificAttack(injectedResultType, injectedHTML, payload, injectedResult)){
@@ -118,10 +119,12 @@ public interface ResultAnalysis {
         }
         
         if (counter >= 2){
-            System.out.println("TestResult is vulnerable to attack!");
+            System.out.println("(!!) TestResult is vulnerable to " + injectedResultType +  " attack!");
+            System.out.println("(+) Payload used: " + payload);
         }
         if (injectedResult.getVulnerable()){
-            System.out.println("TestResult is vulnerable to " + injectedResult.getInjectTestCase().getAttackType() + "!");
+            System.out.println("(!!!) TestResult is directly vulnerable to " + injectedResultType + "!");
+            System.out.println("(+) Payload used: " + payload);
         }
 
         System.out.println("\n");
@@ -132,7 +135,7 @@ public interface ResultAnalysis {
     public static void checkAlert(TestResult testResult){
         WebDriver driver = MyWebDriver.getDriver();
         String alertMessage = driver.switchTo().alert().getText(); // capture alert message
-        if (alertMessage.equals("1")){
+        if (alertMessage.equals("1") || alertMessage.contains("XSS")){
             testResult.setVulnerability(true);
         }
     }
