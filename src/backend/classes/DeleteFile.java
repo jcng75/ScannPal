@@ -4,18 +4,30 @@ import java.io.File;
 
 public class DeleteFile {
 
-    public static void removeFile(String fileName){
-        String filePath = "photos/" + fileName;
+    public static void deleteFile(String fileName) {
+        String directory = "photos";
+        String filePath = directory + File.separator + fileName;
         File fileToDelete = new File(filePath);
 
         if (fileToDelete.exists()) {
             if (fileToDelete.delete()) {
-                System.out.println("File deleted successfully.");
-            } else {
-                System.out.println("Unable to delete the file.");
+              System.out.println(fileToDelete.getName() + " deleted successfully");
+            } 
+            else {
+              System.out.println("Failed to delete " + fileToDelete.getName());
             }
-        } else {
-            System.out.println("File does not exist.");
+        } 
+        else {
+            System.out.println(fileToDelete.getName() + " does not exist");
         }
-    }
+      }
+
+      public static void clearDir(String directoryPath) {
+        File dir = new File(directoryPath);
+
+        for (File file : dir.listFiles()) {
+            file.delete();
+        } 
+      }
+
 }
