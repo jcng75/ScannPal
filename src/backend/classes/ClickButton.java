@@ -5,6 +5,7 @@ import java.util.List;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -86,7 +87,7 @@ public class ClickButton extends TestAction {
             return driver.findElement(By.id(idName));
          }
          catch (Exception e){
-            System.out.println("Could not locate using id, trying with name instead...");
+            System.out.println("(-) ClickButton Could not locate using id, trying with name instead...");
             return driver.findElement(By.name(idName));
          }   
       }
@@ -104,11 +105,16 @@ public class ClickButton extends TestAction {
       // If you get an alert after clicking a button accept alert
       if (hc.isAlertPresent()){
          // Switch to the alert and accept it
-         String alertMessage = MyWebDriver.getDriver().switchTo().alert().getText(); // capture alert message
-         setAlertMessage(alertMessage);
-         setHasAlert(true);
-         Alert alert = MyWebDriver.getDriver().switchTo().alert();
-         alert.accept();
+         try {
+            String alertMessage = MyWebDriver.getDriver().switchTo().alert().getText(); // capture alert message
+            setAlertMessage(alertMessage);
+            setHasAlert(true);
+            Alert alert = MyWebDriver.getDriver().switchTo().alert();
+            alert.accept();
+         } catch (NoAlertPresentException noe){
+
+         }
+
       }
       
    } 
