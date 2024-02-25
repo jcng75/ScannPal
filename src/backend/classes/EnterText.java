@@ -39,7 +39,7 @@ public class EnterText extends TestAction {
          return textbox;
       } 
       catch (Exception e) {
-         System.out.println("Id didn't work trying to search by name...");
+         System.out.println("(-) EnterText Id didn't work trying to search by name...");
          WebElement textbox = MyWebDriver.getDriver().findElement(By.name(id));
          return textbox;
       }
