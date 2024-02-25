@@ -56,16 +56,18 @@ public class WebCrawler {
     // Fu version
     public List<TestCase> crawl(int depth){
         
-        String s = String.format("Crawling for website: %s", url);
+        String s = String.format("\n(+) Begin crawling for website: %s", url + "\n");
         System.out.println(s);
+
+        System.out.println("(-) Clearing Photos Directory...");
+        DeleteFile.clearDir("photos");
         
         WebDriver driver = MyWebDriver.getDriver();
         VisitUrl visitUrl = new VisitUrl(this.url);
         visitUrl.execute();
         
         loginUser();
-        System.out.println(String.format("Logged into website: %s", driver.getTitle()));
-        System.out.println(String.format("Current URL: %s", driver.getCurrentUrl()));
+        System.out.println(String.format("(-) Logged into website: %s", driver.getTitle()));
         
         String currentURL = driver.getCurrentUrl();
         
@@ -89,15 +91,15 @@ public class WebCrawler {
         nextQueue.add(initialTestCase);
         
         for (int i = 0; i < depth ; i++){
-            System.out.println("Current Depth: " + (i+1));
+            System.out.println("(-) Current Depth: " + (i+1));
             currentQueue = new LinkedList<>(nextQueue);
             nextQueue.clear();
             for (TestCase tc : currentQueue){
                 List<TestCase> updatedTC = tc.extend(tc, hashSet); 
-                for (TestCase testy : updatedTC){
-                    testy.display();
-                    System.out.println("\n");
-                }
+                // for (TestCase testy : updatedTC){
+                    // testy.display();
+                    // System.out.println("\n");
+                // }
                 nextQueue.addAll(updatedTC);
             }
         }
