@@ -57,10 +57,10 @@ public class TestResult {
     public static List<TestResult> generateResults(List<TestCase> testCases) throws IOException{
         
         List<List<TestCase>> injectedCases = AttackInjector.generateInjectedCases(testCases);
-        // AttackInjector.displayAll(injectedCases);
         List<TestResult> testResults = new ArrayList<TestResult>();
 
-        System.out.println(injectedCases.size());
+        // System.out.println(injectedCases.size());
+        System.out.println("\n(+) Generating Test Results");
         for (int i = 0; i < injectedCases.size(); i++){
             List<TestCase> testCaseGroup = injectedCases.get(i);
             int counter = 1;
