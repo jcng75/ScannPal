@@ -3,9 +3,12 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+
+import io.netty.handler.codec.http.HttpContentEncoder.Result;
 
 import java.io.Serializable;
 
@@ -103,6 +106,11 @@ public class TestCase implements Serializable {
             String currentPage = lastTestAction.getURL();
             // System.out.println(currentPage);
             driver.get(currentPage);
+            while (hc.isAlertPresent()){
+            // Switch to the alert and accept it
+                Alert alert = MyWebDriver.getDriver().switchTo().alert();
+                alert.accept();
+            }         
             // 1. Get all links to make a new test case
             List<WebElement> pageLinks = driver.findElements(By.tagName("a"));
             for (WebElement linkElement : pageLinks){
@@ -160,7 +168,8 @@ public class TestCase implements Serializable {
     }
     // [[baseCase1, injectedCase, injectedCase], [baseCase2, injectedCase, injectedCase]]
 
-    public TestResult runTestCase(TestCase baseTestCase, TestCase injectedTestCase, String fileName){   
+    public TestResult runTestCase(TestCase baseTestCase, TestCase injectedTestCase, String fileName){ 
+        System.out.println("\n(+) Running Test Case: " + fileName + "\n");  
         int clickButtonCounter = 0;
         String fullFileName = "";
         String htmlResult = "";
@@ -176,10 +185,15 @@ public class TestCase implements Serializable {
                     // save screenshot string
                     htmlResult = MyWebDriver.getDriver().getPageSource();
                     ClickButton currentClickButton = (ClickButton) testAction;
-                    if (currentClickButton.hasAlert() && 
-                    currentClickButton.getAlertMessage().equals("1") && 
-                    injectedTestCase.getAttackType().equals("XSS")){
-                        xssVulnerable = true;
+                    try {
+                        boolean correctAlertMessage = currentClickButton.getAlertMessage().equals("1") || 
+                        currentClickButton.getAlertMessage().contains("XSS");
+                        if (currentClickButton.hasAlert() && correctAlertMessage){
+                            System.out.println("(!!) Alert detected");
+                            xssVulnerable = true;
+                        }
+                    } catch (NullPointerException e){
+
                     }
                 }
             }
