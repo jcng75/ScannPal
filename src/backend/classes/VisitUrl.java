@@ -1,5 +1,6 @@
 package backend.classes;
 
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.WebDriver;
 
 public class VisitUrl extends TestAction{
@@ -25,6 +26,12 @@ public class VisitUrl extends TestAction{
     public void execute(){
         WebDriver driver = MyWebDriver.getDriver();
         driver.get(this.url);
+        HeuristicsCheck hc = new HeuristicsCheck();
+        while (hc.isAlertPresent()){
+        // Switch to the alert and accept it
+            Alert alert = MyWebDriver.getDriver().switchTo().alert();
+            alert.accept();
+        }         
         driver.manage().window().maximize();
     }
 
