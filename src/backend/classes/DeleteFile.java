@@ -1,6 +1,7 @@
 package backend.classes;
 
 import java.io.File;
+import java.util.List;
 
 public class DeleteFile {
 
@@ -11,10 +12,10 @@ public class DeleteFile {
 
         if (fileToDelete.exists()) {
             if (fileToDelete.delete()) {
-              System.out.println(fileToDelete.getName() + " deleted successfully");
+              System.out.println("(-) " + fileToDelete.getName() + " deleted successfully");
             } 
             else {
-              System.out.println("Failed to delete " + fileToDelete.getName());
+              System.out.println("(X) Failed to delete " + fileToDelete.getName());
             }
         } 
         else {
@@ -28,6 +29,25 @@ public class DeleteFile {
         for (File file : dir.listFiles()) {
             file.delete();
         } 
+        System.out.println("(✓) Directory successfully cleared");
+      }
+
+      public static boolean checkFile(String directoryPath, String fileStart){
+        File dir = new File(directoryPath);
+        int counter = 0;
+        
+        File[] files = dir.listFiles();
+        for (File file : files){
+            if (file.getName().contains(fileStart)){
+                counter++;
+            }
+        }
+        System.out.println(String.format("(+) %s contains %s files", fileStart, counter));
+        if (files[files.length-1].getName().contains(fileStart)){
+            return true;
+        }
+        return counter < 2;
+
       }
 
 }
