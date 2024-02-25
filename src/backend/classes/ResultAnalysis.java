@@ -78,9 +78,20 @@ public interface ResultAnalysis {
     public static void runAnalysis(List<TestResult> testResults) throws IOException{
         TestCase currentBaseCase = null;
         TestResult currentBaseResult = null;
-        System.out.println("\n(***) Anylizing all results...\n");
+        System.out.println("\n(***) Analyzing all results...\n");
         for (TestResult tr : testResults){
             if (!tr.getBaseCase().equals(currentBaseCase)){
+                // Get the TestCaseNumber
+                try{
+                    String photoName = currentBaseResult.getPhotoName();
+                    String startFile = photoName.split("--", 2)[0];
+                    if (DeleteFile.checkFile("photos", startFile)){
+                        System.out.println("(-) TestCase is not vulnerable!  Removing BaseCase file");
+                        DeleteFile.deleteFile(photoName); 
+                    }
+                } catch (Exception e){
+
+                }
                 currentBaseCase = tr.getBaseCase();
                 currentBaseResult = tr;
             }
@@ -122,9 +133,13 @@ public interface ResultAnalysis {
             System.out.println("(!!) TestResult is vulnerable to " + injectedResultType +  " attack!");
             System.out.println("(+) Payload used: " + payload);
         }
-        if (injectedResult.getVulnerable()){
+        else if (injectedResult.getVulnerable()){
             System.out.println("(!!!) TestResult is directly vulnerable to " + injectedResultType + "!");
             System.out.println("(+) Payload used: " + payload);
+        }
+        else{
+            System.out.println("(✓) TestResult is not vulnerable!  Removing screenshot file");
+            DeleteFile.deleteFile(injectedPhoto);
         }
 
         System.out.println("\n");
