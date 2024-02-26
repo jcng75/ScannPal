@@ -3,25 +3,44 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+
+import io.netty.handler.codec.http.HttpContentEncoder.Result;
 
 import java.io.Serializable;
 
 public class TestCase implements Serializable {
     private List<TestAction> testActions;
-    private boolean isVulnerable;
     private boolean isInjected;
+    private String attackType;
+    private String payload;
 
     public TestCase() {
         this.testActions = new ArrayList<TestAction>();
-        setVulnerability(false);
         setInjected(false);
     }
 
     public TestCase(List<TestAction> actions) {
         this.testActions = actions;
+    }
+
+    public void setAttackType(String attackType){
+        this.attackType = attackType;
+    }
+
+    public String getAttackType(){
+        return this.attackType;
+    }
+
+    public void setPayload(String payload){
+        this.payload = payload;
+    }
+
+    public String getPayload(){
+        return this.payload;
     }
 
     public TestCase clone(){
@@ -53,14 +72,6 @@ public class TestCase implements Serializable {
 
     public boolean getInjected() {
         return this.isInjected;
-    }
-
-    public void setVulnerability(boolean isVulnerable){
-        this.isVulnerable = isVulnerable;
-    }
-
-    public boolean getVulnerable() {
-        return this.isVulnerable;
     }
 
     public TestAction getLast(){
@@ -95,6 +106,11 @@ public class TestCase implements Serializable {
             String currentPage = lastTestAction.getURL();
             // System.out.println(currentPage);
             driver.get(currentPage);
+            while (hc.isAlertPresent()){
+            // Switch to the alert and accept it
+                Alert alert = MyWebDriver.getDriver().switchTo().alert();
+                alert.accept();
+            }         
             // 1. Get all links to make a new test case
             List<WebElement> pageLinks = driver.findElements(By.tagName("a"));
             for (WebElement linkElement : pageLinks){
@@ -152,10 +168,12 @@ public class TestCase implements Serializable {
     }
     // [[baseCase1, injectedCase, injectedCase], [baseCase2, injectedCase, injectedCase]]
 
-    public TestResult runTestCase(TestCase baseTestCase, String fileName){   
+    public TestResult runTestCase(TestCase baseTestCase, TestCase injectedTestCase, String fileName){ 
+        System.out.println("\n(+) Running Test Case: " + fileName + "\n");  
         int clickButtonCounter = 0;
         String fullFileName = "";
         String htmlResult = "";
+        boolean xssVulnerable = false;
         List<TestAction> testActions = this.getTestCase();
         for (TestAction testAction : testActions){
             testAction.execute();
@@ -166,11 +184,24 @@ public class TestCase implements Serializable {
                     fullFileName = takeScreenshot.getFileName();
                     // save screenshot string
                     htmlResult = MyWebDriver.getDriver().getPageSource();
+                    ClickButton currentClickButton = (ClickButton) testAction;
+                    try {
+                        boolean correctAlertMessage = currentClickButton.getAlertMessage().equals("1") || 
+                        currentClickButton.getAlertMessage().contains("XSS");
+                        if (currentClickButton.hasAlert() && correctAlertMessage){
+                            System.out.println("(!!) Alert detected");
+                            xssVulnerable = true;
+                        }
+                    } catch (NullPointerException e){
+
+                    }
                 }
             }
         }
         
-        return new TestResult(htmlResult, fullFileName, baseTestCase);
+        TestResult newResult = new TestResult(htmlResult, fullFileName, baseTestCase, injectedTestCase);
+        newResult.setVulnerability(xssVulnerable);
+        return newResult;
     }
 
     public void display() {

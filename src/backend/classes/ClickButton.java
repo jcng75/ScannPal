@@ -4,12 +4,16 @@ import java.util.List;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 public class ClickButton extends TestAction {
 
    String idName;
+   String alertMessage;
+   boolean hasAlert;
 
    /* Constructor */
    public ClickButton(String idName) {
@@ -22,6 +26,23 @@ public class ClickButton extends TestAction {
    public void setIdName(String idName){
       this.idName = idName;
    }
+
+   public void setAlertMessage(String alertMessage){
+      this.alertMessage = alertMessage;
+   }
+
+   public String getAlertMessage(){
+      return this.alertMessage;
+   }
+
+   public void setHasAlert(boolean hasAlert){
+      this.hasAlert = hasAlert;
+   }
+
+   public boolean hasAlert(){
+      return this.hasAlert;
+   }
+
 
    // If we don't know the id, search for it using findElement by tagname
    // Otherwise, use the id to get the element using findElement by id/name
@@ -66,7 +87,7 @@ public class ClickButton extends TestAction {
             return driver.findElement(By.id(idName));
          }
          catch (Exception e){
-            System.out.println("Could not locate using id, trying with name instead...");
+            System.out.println("(-) ClickButton Could not locate using id, trying with name instead...");
             return driver.findElement(By.name(idName));
          }   
       }
@@ -84,8 +105,16 @@ public class ClickButton extends TestAction {
       // If you get an alert after clicking a button accept alert
       if (hc.isAlertPresent()){
          // Switch to the alert and accept it
-         Alert alert = MyWebDriver.getDriver().switchTo().alert();
-         alert.accept();
+         try {
+            String alertMessage = MyWebDriver.getDriver().switchTo().alert().getText(); // capture alert message
+            setAlertMessage(alertMessage);
+            setHasAlert(true);
+            Alert alert = MyWebDriver.getDriver().switchTo().alert();
+            alert.accept();
+         } catch (NoAlertPresentException noe){
+
+         }
+
       }
       
    } 

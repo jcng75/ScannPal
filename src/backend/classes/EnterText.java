@@ -1,6 +1,7 @@
 package backend.classes;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 
 public class EnterText extends TestAction {
@@ -38,7 +39,7 @@ public class EnterText extends TestAction {
          return textbox;
       } 
       catch (Exception e) {
-         System.out.println("Id didn't work trying to search by name...");
+         System.out.println("(-) EnterText Id didn't work trying to search by name...");
          WebElement textbox = MyWebDriver.getDriver().findElement(By.name(id));
          return textbox;
       }
@@ -51,6 +52,14 @@ public class EnterText extends TestAction {
    public void execute() {
       String text = this.getText();
       WebElement textbox = this.getTextbox();
+      
+      int newMaxLength = 1000;
+      // Updates maxlength argument
+      ((JavascriptExecutor) MyWebDriver.getDriver()).executeScript(
+         "arguments[0].setAttribute('maxlength', arguments[1])",
+         textbox,
+         newMaxLength
+      );
       textbox.sendKeys(text);
    }
 

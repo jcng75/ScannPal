@@ -3,6 +3,7 @@ package backend.classes;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.WebDriver;
@@ -62,11 +63,19 @@ public class HeuristicsCheck {
         return parsedPath.equals("/vulnerabilities/captcha/");
     }
 
+    private boolean isBadRequest(WebElement element){
+        String webLink = element.getAttribute("href");
+        TestHttpRequest testHttpReq = new TestHttpRequest(webLink);
+        int responseCode = testHttpReq.getRequest();
+        return responseCode >= 400;
+    }
+
     public boolean heuristicsCheck(WebElement element, String currentLink, HashSet<String> hashSet){
         
         // if any of the heuristics hold, we can skip the web element within the crawl function
         if (isStale(element)) return true;
         if (isNull(element)) return true;
+        // if (isBadRequest(element)) return true;
         if (isBadLink(element)) return true;
         if (isDifferentWebsite(currentLink, element)) return true;
         if (isLogout(element)) return true;
