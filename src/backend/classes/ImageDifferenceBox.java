@@ -26,7 +26,7 @@ public class ImageDifferenceBox {
             ImageComparisonResult imageComparisonResult = new ImageComparison(baseImage, compareImage).compareImages();
 
             // Image can be saved after comparison, using ImageComparisonUtil.
-            File resultDestination = new File("photos/TestCase1--Result3--SQL.png");
+            File resultDestination = new File(resultImageFilePath);
             ImageComparisonUtil.saveImage(resultDestination, imageComparisonResult.getResult());
 
     }
