@@ -1,12 +1,9 @@
 package backend.classes;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-
-import java.util.Scanner;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Random;
 
@@ -140,16 +137,18 @@ public class AttackInjector {
     public static List<String> getPayloads(String payloadType) throws IOException{
         List<String> toReturn = new ArrayList<String>();
         if (payloadType.equals("SQL")){
-
-            toReturn = getRandomLines("payloads\\sqli.txt", 3);
+            String sqliFile = "payloads" + File.separator + "sqli.txt";
+            toReturn = getRandomLines(sqliFile, 3);
 
         }
         else if(payloadType.equals("CMD")){
-            toReturn = getRandomLines("payloads\\cmd.txt", 3);
+            String cmdFile = "payloads" + File.separator + "cmd.txt";
+            toReturn = getRandomLines(cmdFile, 3);
 
         }
         else if(payloadType.equals("XSS")){
-            toReturn = getRandomLines("payloads\\xss.txt", 3);
+            String xssFile = "payloads" + File.separator + "xss.txt";
+            toReturn = getRandomLines(xssFile, 3);
 
         }
         return toReturn;
