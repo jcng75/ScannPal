@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -112,7 +111,7 @@ public class ClickButton extends TestAction {
             Alert alert = MyWebDriver.getDriver().switchTo().alert();
             alert.accept();
          } catch (NoAlertPresentException noe){
-
+            noe.printStackTrace();
          }
 
       }

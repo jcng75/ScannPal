@@ -15,18 +15,19 @@ public class TestHttpRequest {
         this.url = url;
     }
 
-    public void getRequest(){
+    public int getRequest(){
+        int responseCode = 0;
         try {
             URL url = new URL(this.url);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
-            int responseCode = connection.getResponseCode();
-            System.out.println("Response Code: " + responseCode);
+            responseCode = connection.getResponseCode();
+            return responseCode;
 
         } catch (Exception e) {
             System.out.println(e);
             e.printStackTrace();
         }
-        
-   } 
+        return responseCode;
+   }
 }

@@ -14,13 +14,13 @@ public class TakeScreenshot extends TestAction {
    String fileName;
    
    public TakeScreenshot(String fileName){
-      String newFileName = fileName + getTimeStamp() + ".jpg";
+      String newFileName = fileName + getTimeStamp() + ".png";
       setFileName(newFileName);
       MyWebDriver.getDriver().manage().window().maximize();
    }
 
    public TakeScreenshot(){
-      String time = getTimeStamp() + ".jpg";
+      String time = getTimeStamp() + ".png";
       setFileName(time);
       MyWebDriver.getDriver().manage().window().maximize();
    }

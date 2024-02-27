@@ -8,8 +8,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-import io.netty.handler.codec.http.HttpContentEncoder.Result;
-
 import java.io.Serializable;
 
 public class TestCase implements Serializable {
