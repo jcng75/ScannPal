@@ -1,8 +1,10 @@
 package backend.classes;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.openqa.selenium.WebDriver;
@@ -37,9 +39,9 @@ public interface ResultAnalysis {
         return htmlSource.contains(payload);
     }
     
-    private static boolean cmdCheck(String HTML){
+    /* private static boolean cmdCheck(String HTML){
         return true;
-    }
+    } */
 
     private static boolean checkSpecificAttack(String attackType, String htmlString, String payload, TestResult injectedTestResult){
         
@@ -53,17 +55,26 @@ public interface ResultAnalysis {
     
     }
 
-    private static boolean imageSimilarityCheck(String basePhotoPath, String injectedPhotoPath, TestResult injectedResult) throws IOException{
+    private static boolean imageSimilarityCheck(String basePhotoName, String injectedPhotoName, TestResult injectedResult) throws IOException{
         String path = "photos/";
-        float similarity = ImageDifferenceBox.getPercentDifference(path + basePhotoPath, path + injectedPhotoPath);
+        float similarity = ImageDifferenceBox.getPercentDifference(path + basePhotoName, path + injectedPhotoName);
         if (similarity > 0.9){
             // Fix later
-            String comparisonPhoto = basePhotoPath + injectedPhotoPath;
-            ImageDifferenceBox.compareImages(path + basePhotoPath, path + injectedPhotoPath, path + comparisonPhoto);
-            injectedResult.setComparisonPhoto(comparisonPhoto);
+            String resultPhoto = resultFileName(injectedPhotoName);
+            ImageDifferenceBox.compareImages(path + basePhotoName, path + injectedPhotoName, path + resultPhoto);
+            injectedResult.setComparisonPhoto(resultPhoto);
             return true;
         }
         return false;
+    }
+
+    // helper method for imageSimilarityCheck to create a filename for a result image
+    public static String resultFileName(String injectedPhotoName) {
+        String separator = "--";
+        String[] fileNameParts = injectedPhotoName.split(separator);
+        String currentTimeStamp = new SimpleDateFormat("yyyy-MM-dd--HH-mm-ss").format(new Date());
+        String newFileName = fileNameParts[0] + separator + fileNameParts[1] + separator + fileNameParts[2] + separator + "Result" + separator + currentTimeStamp + ".png";
+        return newFileName;
     }
 
     private static boolean htmlSimilarityCheck(String baseHTML, String injectedHTML){
@@ -78,24 +89,14 @@ public interface ResultAnalysis {
     public static void runAnalysis(List<TestResult> testResults) throws IOException{
         TestCase currentBaseCase = null;
         TestResult currentBaseResult = null;
-        System.out.println("\n(***) Analyzing all results...\n");
         for (TestResult tr : testResults){
             if (!tr.getBaseCase().equals(currentBaseCase)){
-                // Get the TestCaseNumber
-                try{
-                    String photoName = currentBaseResult.getPhotoName();
-                    String startFile = photoName.split("--", 2)[0];
-                    if (DeleteFile.checkFile("photos", startFile)){
-                        System.out.println("(-) TestCase is not vulnerable!  Removing BaseCase file");
-                        DeleteFile.deleteFile(photoName); 
-                    }
-                } catch (Exception e){
-
-                }
                 currentBaseCase = tr.getBaseCase();
                 currentBaseResult = tr;
             }
             analyzeResult(currentBaseResult, tr);
+            // Delete the BaseCase images that do not have corresponding InjectedCase images
+            DeleteFile.deleteNonVulnerableImages("photos");
         }
     }
     
@@ -116,6 +117,7 @@ public interface ResultAnalysis {
         String injectedResultType = injectedResult.getInjectTestCase().getAttackType();
         String payload = injectedResult.getInjectTestCase().getPayload();
         int counter = 0;
+
         // First check specific attack
         if (checkSpecificAttack(injectedResultType, injectedHTML, payload, injectedResult)){
             counter++;
@@ -143,8 +145,6 @@ public interface ResultAnalysis {
         }
 
         System.out.println("\n");
-
-
     }
 
     public static void checkAlert(TestResult testResult){
@@ -156,7 +156,7 @@ public interface ResultAnalysis {
     }
 
     /* 
-    TODO:
+    To-do:
     - Check for alerts for xss attacks
     - Update attack heuristics
     - Help adam with splitting thing
