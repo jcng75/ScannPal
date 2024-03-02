@@ -1,7 +1,8 @@
 package backend.classes;
 
 import java.io.File;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DeleteFile {
 
@@ -32,22 +33,41 @@ public class DeleteFile {
         System.out.println("(✓) Directory successfully cleared");
       }
 
-      public static boolean checkFile(String directoryPath, String fileStart){
+      public static void deleteNonVulnerableImages(String directoryPath) {
         File dir = new File(directoryPath);
-        int counter = 0;
-        
         File[] files = dir.listFiles();
-        for (File file : files){
-            if (file.getName().contains(fileStart)){
-                counter++;
+
+        Map<String, Integer> BaseCaseToInjectedCaseMap = new HashMap<>();
+
+        // Populate hashmap with all TestCase numbers and corresponding number of InjectedCases
+        for (File file : files) {
+          String filename = file.getName();
+          // get the first part of the filename before the -- (which is the TestCase number)
+          String testCaseNumber = filename.split("--")[0];
+
+          if (filename.contains("BaseCase")) {
+            BaseCaseToInjectedCaseMap.putIfAbsent(testCaseNumber, 0);
+          }
+          else if (filename.contains("InjectedCase")) {
+            if (!BaseCaseToInjectedCaseMap.containsKey(testCaseNumber)) {
+              BaseCaseToInjectedCaseMap.put(testCaseNumber, 1);
             }
+            else { // if TestCase number is already in the list, then update the value by 1
+              Integer value = BaseCaseToInjectedCaseMap.get(testCaseNumber);
+              BaseCaseToInjectedCaseMap.put(testCaseNumber, value + 1);
+            }
+          }
         }
-        System.out.println(String.format("(+) %s contains %s files", fileStart, counter));
-        if (files[files.length-1].getName().contains(fileStart)){
-            return true;
-        }
-        return counter < 2;
 
+        // Loop through the list of files and delete the BaseCases with no corresponding InjectedCases
+        for (File file : files) {
+          String filename = file.getName();
+          String testCaseNumber = filename.split("--")[0];
+
+          Integer numInjectedCases = BaseCaseToInjectedCaseMap.get(testCaseNumber);
+          if (numInjectedCases == 0) {
+            deleteFile(filename);
+          }
+        }
       }
-
 }
