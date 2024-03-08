@@ -173,7 +173,7 @@ public class TestCase implements Serializable {
         int clickButtonCounter = 0;
         String fullFileName = "";
         String htmlResult = "";
-        boolean xssVulnerable = false;
+        boolean vulnerable = false;
         List<TestAction> testActions = this.getTestCase();
         for (TestAction testAction : testActions){
             testAction.execute();
@@ -190,7 +190,8 @@ public class TestCase implements Serializable {
                         currentClickButton.getAlertMessage().contains("XSS");
                         if (currentClickButton.hasAlert() && correctAlertMessage){
                             System.out.println("(!!) Alert detected");
-                            xssVulnerable = true;
+                            // xss is vulnerable
+                            vulnerable = true;
                         }
                     } catch (NullPointerException e){
 
@@ -200,7 +201,7 @@ public class TestCase implements Serializable {
         }
         
         TestResult newResult = new TestResult(htmlResult, fullFileName, baseTestCase, injectedTestCase);
-        newResult.setVulnerability(xssVulnerable);
+        newResult.setVulnerability(vulnerable);
         return newResult;
     }
 

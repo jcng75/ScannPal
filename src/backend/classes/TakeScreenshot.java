@@ -20,7 +20,7 @@ public class TakeScreenshot extends TestAction {
    }
 
    public TakeScreenshot(){
-      String time = getTimeStamp() + ".jpg";
+      String time = getTimeStamp() + ".png";
       setFileName(time);
       MyWebDriver.getDriver().manage().window().maximize();
    }

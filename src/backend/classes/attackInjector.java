@@ -1,12 +1,12 @@
-package backend.classes;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
-import java.util.Scanner;
+package backend.classes;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Random;
 
@@ -25,35 +25,35 @@ public class AttackInjector {
         }
         
         // If we can continue peacefully:
-        List<String> SQLPayloads = AttackInjector.getPayloads("SQL");
-        for (String payload : SQLPayloads){
+        // List<String> SQLPayloads = AttackInjector.getPayloads("SQL");
+        // for (String payload : SQLPayloads){
 
-            for (int i = 3; i < originalTestCase.size(); i++) {
-                TestAction action = originalTestCase.get(i);
+        //     for (int i = 3; i < originalTestCase.size(); i++) {
+        //         TestAction action = originalTestCase.get(i);
                 
-                if (action instanceof EnterText) { // if we can inject this action, needs review
+        //         if (action instanceof EnterText) { // if we can inject this action, needs review
                     
-                    // CLONE THE ORIGINAL CASE
-                    TestCase maliciousTestCase = originalTestCase.clone();
-                    System.out.println("Current Case: " + i);
-                    // maliciousTestCase.display();
-                    System.out.println("\n");
+        //             // CLONE THE ORIGINAL CASE
+        //             TestCase maliciousTestCase = originalTestCase.clone();
+        //             // System.out.println("Current Case: " + i);
+        //             // maliciousTestCase.display();
+        //             // System.out.println("\n");
                     
-                    // SETUP BADBOX
-                    EnterText badBox = (EnterText) maliciousTestCase.get(i); // grab the textbox from the malicious TestCase
-                    badBox.setText(payload); // infect it
-                    System.out.println("Updated case: " + i);
-                    // maliciousTestCase.display();
-                    System.out.println("\n");
-                    maliciousTestCase.setInjected(true);
-                    maliciousTestCase.setAttackType("SQL");
-                    maliciousTestCase.setPayload(payload); 
+        //             // SETUP BADBOX
+        //             EnterText badBox = (EnterText) maliciousTestCase.get(i); // grab the textbox from the malicious TestCase
+        //             badBox.setText(payload); // infect it
+        //             // System.out.println("Updated case: " + i);
+        //             // maliciousTestCase.display();
+        //             // System.out.println("\n");
+        //             maliciousTestCase.setInjected(true);
+        //             maliciousTestCase.setAttackType("SQL");
+        //             maliciousTestCase.setPayload(payload); 
                     
-                    // add test case to injected cases list
-                    injectionVariations.add(maliciousTestCase);
-                }
-            }
-        }
+        //             // add test case to injected cases list
+        //             injectionVariations.add(maliciousTestCase);
+        //         }
+        //     }
+        // }
         // List<String> XSSPayloads = AttackInjector.getPayloads("XSS");
         // for (String payload : XSSPayloads){
 
@@ -84,34 +84,34 @@ public class AttackInjector {
         //     }
             
         // }
-        // List<String> CMDPayloads = AttackInjector.getPayloads("CMD");
-        // for (String payload : CMDPayloads){
+        List<String> CMDPayloads = AttackInjector.getPayloads("CMD");
+        for (String payload : CMDPayloads){
 
-        //     for (int i = 3; i < originalTestCase.size(); i++) {
-        //         TestAction action = originalTestCase.get(i);
+            for (int i = 3; i < originalTestCase.size(); i++) {
+                TestAction action = originalTestCase.get(i);
                 
-        //         if (action instanceof EnterText) { // if we can inject this action, needs review
+                if (action instanceof EnterText) { // if we can inject this action, needs review
                     
-        //             // CLONE THE ORIGINAL CASE
-        //             TestCase maliciousTestCase = originalTestCase.clone();
-        //             System.out.println("Current Case: " + i);
-        //             maliciousTestCase.display();
-        //             System.out.println("\n");
+                    // CLONE THE ORIGINAL CASE
+                    TestCase maliciousTestCase = originalTestCase.clone();
+                    System.out.println("Current Case: " + i);
+                    maliciousTestCase.display();
+                    System.out.println("\n");
                     
-        //             // SETUP BADBOX
-        //             EnterText badBox = (EnterText) maliciousTestCase.get(i); // grab the textbox from the malicious TestCase
-        //             badBox.setText(payload); // infect it
-        //             System.out.println("Updated case: " + i);
-        //             maliciousTestCase.display();
-        //             System.out.println("\n");
-        //             maliciousTestCase.setInjected(true);
-        //             maliciousTestCase.setAttackType("CMD");
-        //             maliciousTestCase.setPayload(payload); 
-        //             // add test case to injected cases list
-        //             injectionVariations.add(maliciousTestCase);
-        //         }
-        //     }
-        // }
+                    // SETUP BADBOX
+                    EnterText badBox = (EnterText) maliciousTestCase.get(i); // grab the textbox from the malicious TestCase
+                    badBox.setText(payload); // infect it
+                    System.out.println("Updated case: " + i);
+                    maliciousTestCase.display();
+                    System.out.println("\n");
+                    maliciousTestCase.setInjected(true);
+                    maliciousTestCase.setAttackType("CMD");
+                    maliciousTestCase.setPayload(payload); 
+                    // add test case to injected cases list
+                    injectionVariations.add(maliciousTestCase);
+                }
+            }
+        }
             return injectionVariations;
         }
         
@@ -140,16 +140,18 @@ public class AttackInjector {
     public static List<String> getPayloads(String payloadType) throws IOException{
         List<String> toReturn = new ArrayList<String>();
         if (payloadType.equals("SQL")){
-
-            toReturn = getRandomLines("payloads\\sqli.txt", 3);
+            String sqliFile = "payloads" + File.separator + "sqli.txt";
+            toReturn = getRandomLines(sqliFile, 3);
 
         }
         else if(payloadType.equals("CMD")){
-            toReturn = getRandomLines("payloads\\cmd.txt", 3);
+            String cmdFile = "payloads" + File.separator + "cmd.txt";
+            toReturn = getRandomLines(cmdFile, 3);
 
         }
         else if(payloadType.equals("XSS")){
-            toReturn = getRandomLines("payloads\\xss.txt", 3);
+            String xssFile = "payloads" + File.separator + "xss.txt";
+            toReturn = getRandomLines(xssFile, 3);
 
         }
         return toReturn;
@@ -171,7 +173,32 @@ public class AttackInjector {
         return selectedLines;
     }
 
+    public static HashMap<String, List<TestCase>> splitTestCases(List<TestCase> testCases){
+        
+        HashMap<String, List<TestCase>> splitCases = new HashMap<String, List<TestCase>>();
+
+        EC2Client client = new EC2Client();
+        List<String> machines = client.getActiveInstances();
+        int numOfMachines = machines.size();
+
+        int maxPerCase = (int)(Math.ceil(testCases.size() / numOfMachines));
+        int testCaseIndex = 0;
+
+        for (int i = 0; i < numOfMachines; i++){
+
+            List<TestCase> toAdd = new ArrayList<TestCase>();
+            for (int j = 0; j < maxPerCase; j++){
+                toAdd.add(testCases.get(testCaseIndex));
+                testCaseIndex++;
+            }
+
+            splitCases.put(machines.get(i), toAdd);
+        }
+
+        return splitCases;
+    } 
 }
+
 
 // PER TEST CASE (On^2)
 // a --> previous element

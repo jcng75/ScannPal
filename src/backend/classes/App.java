@@ -1,7 +1,6 @@
 package backend.classes;
 
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
 // For Cloud Tests
@@ -12,7 +11,7 @@ public class App {
         chromeOptions.setBinary("/home/ec2-user/ScannPal/chrome-linux64/chrome");
         chromeOptions.addArguments("--headless");
       
-        WebDriver driver = new ChromeDriver(chromeOptions);
+        WebDriver driver = MyWebDriver.getDriver();
         // driver.get("https://www.amazon.com/");
         driver.get("http://localhost:8080/WebGoat/login");
         System.out.println("Page title is: " + driver.getTitle());
@@ -21,7 +20,7 @@ public class App {
         // enter text into username field
         String usernameID = "exampleInputEmail1";
         String usernameText = "johnny";
-        EnterText enterText = new EnterText(driver, usernameID, usernameText);
+        EnterText enterText = new EnterText(usernameID, usernameText);
         enterText.execute();
 
         // enter text into password field
@@ -29,12 +28,11 @@ public class App {
         String passwordText = "abc123";
         enterText.setID(passwordID);
         enterText.setText(passwordText);
-        enterText.setTextbox(passwordID);
         enterText.execute();
 
         // click the button
         String tagName = "button";
-        ClickButton clickButton = new ClickButton(driver, tagName);
+        ClickButton clickButton = new ClickButton(tagName);
         clickButton.execute();
 
         // WebElement username = driver.findElement(By.id("exampleInputEmail1"));

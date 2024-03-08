@@ -5,28 +5,20 @@ import java.net.URL;
 
 public class TestHttpRequest {
     
-    String url;
 
-    public TestHttpRequest(String url){
-        setURL(url);
-    }
-
-    private void setURL(String url){
-        this.url = url;
-    }
-
-    public void getRequest(){
+    public static int getRequest(String url){
+        int responseCode = -1;
         try {
-            URL url = new URL(this.url);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            URL urlTest = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) urlTest.openConnection();
             connection.setRequestMethod("GET");
-            int responseCode = connection.getResponseCode();
-            System.out.println("Response Code: " + responseCode);
+            responseCode = connection.getResponseCode();
+            return responseCode;
 
         } catch (Exception e) {
             System.out.println(e);
             e.printStackTrace();
         }
-        
-   } 
+        return responseCode;
+   }
 }
