@@ -23,19 +23,29 @@ public class Main {
         // EC2Client client = new EC2Client();
         // client.listInstances();
 
-        MySQLConnection client = new MySQLConnection();
-        // String insertQuery = """
-        //     INSERT INTO User (fname, lname, email, password_hash, creation_date) VALUES (
-        //         'Justin', 
-        //         'Ng', 
-        //         'jng14@pride.hofstra.edu', 
-        //         '$2y$10$aZegIS2LjnykNb3QPIsnM.OeQ0vIEgRjfSqAlCVlzQdyHrLvBQLVK', 
-        //         NOW()
+        MySQLConnection conn = new MySQLConnection();
+        // String createQuery = """
+        //     CREATE TABLE Result (
+        //         result_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+        //         task_id INT NOT NULL,
+        //         is_vulnerable BOOLEAN NOT NULL,
+        //         payload varchar(250),
+        //         attack_type char(3),
+        //         html_string TEXT,
+        //         screenshot BLOB,
+        //         FOREIGN KEY (task_id) REFERENCES Task(task_id)
         //     );
         // """;
-        // client.runUpdate(insertQuery);
+        // client.runUpdate(createQuery);
 
         String selectQuery = "SELECT * FROM User";
-        client.runSelect(selectQuery);
+        conn.displaySelectAsList(selectQuery);
+        conn.displaySelectAsTable(selectQuery);
+        
+        // try {
+		// 	System.out.println(PrivateIP.getPrivateIP());
+		// } catch (Exception e) {
+		// 	e.printStackTrace();
+		// }
     }
 }
