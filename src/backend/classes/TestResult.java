@@ -64,7 +64,8 @@ public class TestResult {
         for (int i = 0; i < injectedCases.size(); i++){
             List<TestCase> testCaseGroup = injectedCases.get(i);
             int counter = 1;
-            TestResult baseTestResult = new TestResult(null, null, null, null);
+            @SuppressWarnings("unused")
+			TestResult baseTestResult = new TestResult(null, null, null, null);
             String addString = "TestCase" + (i+1) + "--";
             TestCase originalTestCase = testCaseGroup.get(0);
             for (int j = 0; j < testCaseGroup.size(); j++){
