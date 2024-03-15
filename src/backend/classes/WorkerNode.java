@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
@@ -33,13 +34,18 @@ public class WorkerNode {
  
             if (queryResults != null){
                 while (queryResults.next()){
-                    int taskID = queryResults.getInt("task_id");
-                    InputStream getData = queryResults.getBinaryStream("test_case");
-                    ObjectInputStream objectInputStream = new ObjectInputStream(getData);
 
-                    @SuppressWarnings("unchecked")
-                    List<TestCase> testCases = (List<TestCase>) objectInputStream.readObject();
-                    // TestCase tc = deserialize(getData);
+                    int taskID = queryResults.getInt("task_id");
+                    
+                    int jobID = queryResults.getInt("job_id");
+                    
+                    Blob blobData = queryResults.getBlob("test_cases");
+
+                    int blobLength = (int) blobData.length();
+                    byte[] byteData = blobData.getBytes(1, blobLength);
+                    blobData.free();
+
+                    List<TestCase> testCases = Serialize.deserializeList(byteData);
 
                     List<TestResult> testResults = TestResult.generateResults(testCases);
                     // If the testresult is vulnerable, save the results
@@ -47,11 +53,27 @@ public class WorkerNode {
                     ResultAnalysis.runAnalysis(testResults);
                     
                     String completeTaskQuery = """
-                        UPDATE task
-                        SET status = 1
+                        UPDATE Task
+                        SET completed = true
                         WHERE task_id = 
                     """ + taskID + ";";
                     conn.runUpdate(completeTaskQuery);
+
+                    String checkJob = """
+                        SELECT * FROM Job
+                        WHERE job_id =
+                            """ + jobID + ";";
+
+                    ResultSet rs = conn.getSelectResults(checkJob);
+                    // if no tasks left, run update query
+                    if (rs == null){
+                        String completeJobQuery = """
+                            UPDATE Job
+                            SET completed = true
+                            WHERE job_id =
+                                """ + jobID + ";";
+                        conn.runUpdate(completeJobQuery);
+                    }
 
                 }
             }
