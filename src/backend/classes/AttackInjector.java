@@ -173,20 +173,24 @@ public class AttackInjector {
         return selectedLines;
     }
 
-    public static HashMap<String, List<TestCase>> splitTestCases(List<TestCase> testCases){
+    public static HashMap<String, List<List<TestCase>>> splitTestCases(List<List<TestCase>> testCases){
         
-        HashMap<String, List<TestCase>> splitCases = new HashMap<String, List<TestCase>>();
-
+        HashMap<String, List<List<TestCase>>> splitCases = new HashMap<String, List<List<TestCase>>>();
         EC2Client client = new EC2Client();
         List<String> machines = client.getActiveInstances();
         int numOfMachines = machines.size();
+        
+        if (numOfMachines == 0){
+            System.out.println("(!) There are no worker nodes running!");
+            return null;
+        }
 
         int maxPerCase = (int)(Math.ceil(testCases.size() / numOfMachines));
         int testCaseIndex = 0;
 
         for (int i = 0; i < numOfMachines; i++){
 
-            List<TestCase> toAdd = new ArrayList<TestCase>();
+            List<List<TestCase>> toAdd = new ArrayList<List<TestCase>>();
             for (int j = 0; j < maxPerCase; j++){
                 toAdd.add(testCases.get(testCaseIndex));
                 testCaseIndex++;
