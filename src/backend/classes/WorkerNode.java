@@ -1,8 +1,5 @@
 package backend.classes;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -20,64 +17,71 @@ public class WorkerNode {
 
     public void runNode() throws Exception{
 
+        MySQLConnection mySQLConnection = new MySQLConnection();
+        Connection conn = mySQLConnection.createConnection();
         String privateIP = PrivateIP.getPrivateIP();
-        String goldenQuery = """
+
+        PreparedStatement goldenStatement = conn.prepareStatement("""
                 SELECT * FROM Task 
-                WHERE node_ip = ;
-                """ + privateIP + "AND completed = false;";
+                WHERE node_ip = ? AND completed = false;
+                """);
+
+        goldenStatement.setString(1, privateIP);
 
         while (true){
             Thread.sleep(5000);
             // Run the query to check for any new tasks from the database
-            MySQLConnection conn = new MySQLConnection();
-            ResultSet queryResults = conn.getSelectResults(goldenQuery);
+            // ResultSet queryResults = mySQLConnection.getSelectResults(goldenQuery);
+            ResultSet queryResults = goldenStatement.executeQuery();
  
-            if (queryResults != null){
-                while (queryResults.next()){
+            while (queryResults.next()){
 
-                    int taskID = queryResults.getInt("task_id");
-                    
-                    int jobID = queryResults.getInt("job_id");
-                    
-                    Blob blobData = queryResults.getBlob("test_cases");
+                int taskID = queryResults.getInt("task_id");
+                
+                int jobID = queryResults.getInt("job_id");
+                
+                Blob blobData = queryResults.getBlob("test_cases");
 
-                    int blobLength = (int) blobData.length();
-                    byte[] byteData = blobData.getBytes(1, blobLength);
-                    blobData.free();
+                int blobLength = (int) blobData.length();
+                byte[] byteData = blobData.getBytes(1, blobLength);
+                blobData.free();
 
-                    List<TestCase> testCases = Serialize.deserializeList(byteData);
+                List<TestCase> testCases = Serialize.deserializeList(byteData);
 
-                    List<TestResult> testResults = TestResult.generateResults(testCases);
-                    // If the testresult is vulnerable, save the results
+                List<TestResult> testResults = TestResult.generateResults(testCases);
+                // If the testresult is vulnerable, save the results
 
-                    ResultAnalysis.runAnalysis(testResults);
-                    
-                    String completeTaskQuery = """
-                        UPDATE Task
-                        SET completed = true
-                        WHERE task_id = 
-                    """ + taskID + ";";
-                    conn.runUpdate(completeTaskQuery);
+                ResultAnalysis.runAnalysis(testResults);
+                
+                PreparedStatement completeTaskQuery = conn.prepareStatement("""
+                    UPDATE Task
+                    SET completed = true, date_completed = NOW()
+                    WHERE task_id = ?;
+                """);
 
-                    String checkJob = """
-                        SELECT * FROM Job
-                        WHERE job_id =
-                            """ + jobID + ";";
+                completeTaskQuery.setInt(1, taskID);
+                completeTaskQuery.execute();
 
-                    ResultSet rs = conn.getSelectResults(checkJob);
-                    // if no tasks left, run update query
-                    if (rs == null){
-                        String completeJobQuery = """
-                            UPDATE Job
-                            SET completed = true
-                            WHERE job_id =
-                                """ + jobID + ";";
-                        conn.runUpdate(completeJobQuery);
-                    }
+                PreparedStatement checkJob = conn.prepareStatement("""
+                    SELECT * FROM Job
+                    WHERE job_id = ?;
+                """);
 
+                checkJob.setInt(1, jobID);
+                
+                ResultSet rs = checkJob.executeQuery();
+                // if no tasks left, run update query
+                if (!rs.next()){
+                    PreparedStatement completeJobQuery = conn.prepareStatement("""
+                        UPDATE Job
+                        SET completed = true, date_completed = NOW()
+                        WHERE job_id = ?;
+                    """);
+                    completeJobQuery.setInt(1, jobID);
+                    completeJobQuery.execute();
                 }
-            }
 
+            }
         }
     }
 
