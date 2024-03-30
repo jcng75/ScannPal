@@ -1,9 +1,13 @@
 package backend.classes;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+// import java.sql.Connection;
+// import java.sql.PreparedStatement;
+// import java.sql.ResultSet;
+// import java.sql.SQLException;
+// import java.util.ArrayList;
+// import java.util.Arrays;
+// import java.util.List;
 
 // For Local Tests
 public class Main {
@@ -25,55 +29,16 @@ public class Main {
         // EC2Client client = new EC2Client();
         // client.listInstances();
 
-        // MySQLConnection conn = new MySQLConnection();
-        // String createQuery = """
-        //     CREATE TABLE Result (
-        //         result_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-        //         task_id INT NOT NULL,
-        //         is_vulnerable BOOLEAN NOT NULL,
-        //         payload varchar(250),
-        //         attack_type char(3),
-        //         html_string TEXT,
-        //         screenshot BLOB,
-        //         FOREIGN KEY (task_id) REFERENCES Task(task_id)
-        //     );
-        // """;
-        // client.runUpdate(createQuery);
+        MySQLConnection conn = new MySQLConnection();
 
-        // String selectQuery = "SELECT * FROM User";
-        // conn.displaySelectAsList(selectQuery);
-        // conn.displaySelectAsTable(selectQuery);
-        
-        // try {
-		// 	System.out.println(PrivateIP.getPrivateIP());
-		// } catch (Exception e) {
-		// 	e.printStackTrace();
-		// }
+        //conn.runUpdate("DELETE FROM Job");
+        //conn.runUpdate("DELETE FROM Task");
 
-        TestCase tc1 = new TestCase();
-        tc1.setAttackType("SQL tc1");
-        tc1.setInjected(false);
-        tc1.setPayload("this is for tc1 test");
+        String selectQuery = "SELECT * FROM Job";
+        conn.displaySelectAsTable(selectQuery);
 
-        TestCase tc2 = new TestCase();
-        tc2.setAttackType("XSS tc2");
-        tc2.setInjected(true);
-        tc2.setPayload("this is for tc2 test");
+        selectQuery = "SELECT * FROM Task";
+        conn.displaySelectAsTable(selectQuery);
 
-        List<TestCase> tcList = new ArrayList<TestCase>(Arrays.asList(tc1, tc2));
-        System.out.println("tcList before serialization: " + tcList);
-
-        byte[] serializedArray = Serialize.serializeList(tcList);
-        System.out.println("Serialized tcList into byte array: " + serializedArray);
-
-        List<TestCase> deserializedTC = Serialize.deserializeList(serializedArray);
-		System.out.println("Deserialized byte array into List<TestCase>: " + deserializedTC + "\n");
-
-        for (TestCase tc : deserializedTC) {
-            System.out.println(tc.getAttackType());
-            System.out.println(tc.getInjected());
-            System.out.println(tc.getPayload()+"\n");
-        }
- 
     }
 }
