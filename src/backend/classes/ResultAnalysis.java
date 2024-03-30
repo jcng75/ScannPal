@@ -1,6 +1,7 @@
 package backend.classes;
 
 import java.io.IOException;
+import java.sql.Blob;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -86,7 +87,7 @@ public interface ResultAnalysis {
         return false;
     }
 
-    public static void runAnalysis(List<TestResult> testResults) throws IOException{
+    public static void runAnalysis(List<TestResult> testResults, int taskID) throws IOException{
         TestCase currentBaseCase = null;
         TestResult currentBaseResult = null;
         for (TestResult tr : testResults){
@@ -94,13 +95,13 @@ public interface ResultAnalysis {
                 currentBaseCase = tr.getBaseCase();
                 currentBaseResult = tr;
             }
-            analyzeResult(currentBaseResult, tr);
+            analyzeResult(currentBaseResult, tr, taskID);
             // Delete the BaseCase images that do not have corresponding InjectedCase images
             DeleteFile.deleteNonVulnerableImages("photos");
         }
     }
     
-    public static void analyzeResult(TestResult baseResult, TestResult injectedResult) throws IOException{
+    public static void analyzeResult(TestResult baseResult, TestResult injectedResult, int taskID) throws IOException{
 
         // Ignore all basecases to be tested in our algorithm
         if (baseResult.equals(injectedResult)){
@@ -143,6 +144,24 @@ public interface ResultAnalysis {
             System.out.println("(✓) TestResult is not vulnerable!  Removing screenshot file");
             DeleteFile.deleteFile(injectedPhoto);
         }
+
+        // store results into database
+        // we have taskID from parameter
+        MySQLConnection connection = new MySQLConnection();
+        boolean vulnerable = injectedResult.getVulnerable();
+        String attackPayload = injectedResult.getInjectTestCase().getPayload();
+        String attackType = injectedResult.getInjectTestCase().getAttackType();
+        String htmlString = injectedResult.getHtmlResult();
+        
+        Blob screenshotBlob = null;
+        // store the screenshot as a BLOB if the TestResult is vulnerable
+        if (vulnerable) {
+            String resultPhotoFileName = injectedResult.getComparisonPhoto();
+            screenshotBlob = connection.convertScreenshotToBlob(resultPhotoFileName);
+        }
+
+        // save the results to the Result table
+        connection.addResult(taskID, vulnerable, attackPayload, attackType, htmlString, screenshotBlob);
 
         System.out.println("\n");
     }
