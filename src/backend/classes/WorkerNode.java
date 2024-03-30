@@ -51,7 +51,8 @@ public class WorkerNode {
                 List<TestResult> testResults = TestResult.generateResults(testCases);
                 // If the testresult is vulnerable, save the results
 
-                ResultAnalysis.runAnalysis(testResults);
+                // pass the taskID when running analysis, so that it can be used when inserting into Result table
+                ResultAnalysis.runAnalysis(testResults, taskID);
                 
                 PreparedStatement completeTaskQuery = conn.prepareStatement("""
                     UPDATE Task
