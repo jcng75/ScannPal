@@ -1,5 +1,8 @@
 package backend.classes;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,6 +12,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 import javax.sql.rowset.serial.SerialBlob;
+import javax.sql.rowset.serial.SerialException;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
@@ -135,9 +139,52 @@ public class MySQLConnection {
             preparedStatement.execute();
 
         } catch (SQLException e) {
-            System.out.println("SQLException error in getSelectResults()");
+            System.out.println("SQLException error in createTask()");
             System.out.println("Error message: " + e.getMessage());
         }
-        
     }
+
+    // Add a single row to the Result database table
+    public void addResult(int taskID, boolean vulnerable, String payload, String attackType, String htmlString, Blob screenshot) {
+        Connection conn = this.createConnection();
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement("""
+                INSERT INTO Result (task_id, is_vulnerable, payload, attack_type, html_string, screenshot)
+                VALUES (?, ?, ?, ?, ?, ?)"""
+            );
+            preparedStatement.setInt(1, taskID);
+            preparedStatement.setBoolean(2, vulnerable);
+            preparedStatement.setString(3, payload);
+            preparedStatement.setString(4, attackType);
+            preparedStatement.setString(5, htmlString);
+            preparedStatement.setBlob(6, screenshot);
+            preparedStatement.execute();
+        
+        } catch (SQLException e) {
+            System.out.println("SQLException error in addResult()");
+            System.out.println("Error message: " + e.getMessage());
+        }
+    }
+
+    // convert a screenshot file to a BLOB for database insertion
+    public Blob convertScreenshotToBlob(String screenshotFileName) {
+        File vulnerableScreenshot = new File(screenshotFileName);
+        Blob screenshotBlob = null;
+        try {
+            byte[] screenshotBytes = Files.readAllBytes(vulnerableScreenshot.toPath());
+            screenshotBlob = new SerialBlob(screenshotBytes);
+            System.out.println("Screenshot converted to byte array successfully!");
+        } catch(IOException e) {
+            System.out.println("IOException error in convertScreenshotToBlob() when performing 'readAllBytes() operation'");
+            System.out.println("Error message: " + e.getMessage());
+        } catch (SerialException e) {
+            System.out.println("SerialException error in convertScreenshotToBlob() when performing 'new SerialBlob(screenshotBytes)'");
+            System.out.println("Error message: " + e.getMessage());
+        } catch (SQLException e) {
+            System.out.println("SQLException error in convertScreenshotToBlob() when performing 'new SerialBlob(screenshotBytes)'");
+            System.out.println("Error message: " + e.getMessage());
+        }
+        return screenshotBlob;
+    }
+
 }
