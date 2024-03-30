@@ -1,11 +1,14 @@
 package backend.classes;
 
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+
+import javax.sql.rowset.serial.SerialBlob;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
@@ -115,5 +118,26 @@ public class MySQLConnection {
             System.out.println("Error message: " + e.getMessage());
         }
         return null;
+    }
+
+    // Create a single task for the worker node to complete
+    public void createTask(int jobID, String nodeIP, byte[] blobData){
+        Connection conn = this.createConnection();
+        try {
+            Blob blob = new SerialBlob(blobData);
+            PreparedStatement preparedStatement = conn.prepareStatement("""
+                INSERT INTO Task (job_id, node_ip, completed, date_started, test_cases)
+                VALUES (?, ?, false, NOW(), ?)"""
+            );
+            preparedStatement.setInt(1, jobID);
+            preparedStatement.setString(2, nodeIP);
+            preparedStatement.setBlob(3, blob);
+            preparedStatement.execute();
+
+        } catch (SQLException e) {
+            System.out.println("SQLException error in getSelectResults()");
+            System.out.println("Error message: " + e.getMessage());
+        }
+        
     }
 }

@@ -1,5 +1,6 @@
 package backend.classes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
@@ -58,6 +59,23 @@ public class EC2Client {
                 System.out.println();
             }
         }
+    }
+
+    public List<String> getActiveInstances(){
+        List<String> ips = new ArrayList<String>();
+        AmazonEC2 client = this.client;
+        DescribeInstancesRequest request = new DescribeInstancesRequest();
+        DescribeInstancesResult result = client.describeInstances(request); 
+
+        for (Reservation reservation : result.getReservations()){
+            for (Instance instance : reservation.getInstances()){
+               if (instance.getState().getName().equals("running")){
+                ips.add(instance.getPrivateIpAddress());
+               } 
+            }
+        }
+
+        return ips;
     }
 
     // Returns the name of an EC2 instance (which is stored within the instance's tags)
