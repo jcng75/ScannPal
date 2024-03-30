@@ -29,6 +29,7 @@ public class WorkerNode {
         goldenStatement.setString(1, privateIP);
 
         while (true){
+            System.out.println("(::) Checking for new tasks to complete... \n\n");
             Thread.sleep(5000);
             // Run the query to check for any new tasks from the database
             // ResultSet queryResults = mySQLConnection.getSelectResults(goldenQuery);
@@ -36,7 +37,10 @@ public class WorkerNode {
  
             while (queryResults.next()){
 
+                
                 int taskID = queryResults.getInt("task_id");
+
+                System.out.println("(!) New task found! Task ID: " + taskID + "\n\n");
                 
                 int jobID = queryResults.getInt("job_id");
                 
@@ -50,6 +54,15 @@ public class WorkerNode {
 
                 List<TestResult> testResults = TestResult.generateResults(testCases);
                 // If the testresult is vulnerable, save the results
+
+                PreparedStatement startTaskQuery = conn.prepareStatement("""
+                    UPDATE Task
+                    SET date_started = NOW()
+                    WHERE task_id = ?;
+                """);
+
+                startTaskQuery.setInt(1, taskID);
+                startTaskQuery.execute();
 
                 // pass the taskID when running analysis, so that it can be used when inserting into Result table
                 ResultAnalysis.runAnalysis(testResults, taskID);
