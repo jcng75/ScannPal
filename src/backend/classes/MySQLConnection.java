@@ -72,9 +72,13 @@ public class MySQLConnection {
         
             while (selectResults.next()) {
                 for (int i = 1; i <= count; i++) {
-                    System.out.print(rsMetaData.getColumnName(i) + ": " + selectResults.getString(i) + "\n");
+                    String columnValue = selectResults.getString(i);
+                    if (columnValue != null && columnValue.length() > 115) {
+                        columnValue = columnValue.substring(0, 115) + "...";
+                    }
+                    System.out.print(rsMetaData.getColumnName(i) + ": " + columnValue + "\n");
                 }
-                System.out.println();
+                System.out.println("\n");
             }
             selectResults.close();
             selectStatement.close();
