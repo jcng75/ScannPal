@@ -147,21 +147,24 @@ public interface ResultAnalysis {
 
         // store results into database
         // we have taskID from parameter
-        MySQLConnection connection = new MySQLConnection();
         boolean vulnerable = injectedResult.getVulnerable();
-        String attackPayload = injectedResult.getInjectTestCase().getPayload();
-        String attackType = injectedResult.getInjectTestCase().getAttackType();
-        String htmlString = injectedResult.getHtmlResult();
         
-        Blob screenshotBlob = null;
-        // store the screenshot as a BLOB if the TestResult is vulnerable
         if (vulnerable) {
+            MySQLConnection connection = new MySQLConnection();
+            // get the payload, attack type, and html string to be inserted into the database
+            String attackPayload = injectedResult.getInjectTestCase().getPayload();
+            String attackType = injectedResult.getInjectTestCase().getAttackType();
+            String htmlString = injectedResult.getHtmlResult();
+        
+            // store the screenshot as a BLOB
+            Blob screenshotBlob = null;
             String resultPhotoFileName = injectedResult.getComparisonPhoto();
             screenshotBlob = connection.convertScreenshotToBlob(resultPhotoFileName);
+            System.out.println("Printing screenshotBlob for debugging: " + screenshotBlob);
+            
+            // save the results to the Result table
+            connection.addResult(taskID, vulnerable, attackPayload, attackType, htmlString, screenshotBlob);
         }
-
-        // save the results to the Result table
-        connection.addResult(taskID, vulnerable, attackPayload, attackType, htmlString, screenshotBlob);
 
         System.out.println("\n");
     }
