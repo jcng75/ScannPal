@@ -31,14 +31,20 @@ public class Main {
 
         MySQLConnection conn = new MySQLConnection();
 
-        //conn.runUpdate("DELETE FROM Job");
-        //conn.runUpdate("DELETE FROM Task");
+        // conn.runUpdate("DELETE FROM Result");
+        // conn.runUpdate("DELETE FROM Task");
+        // conn.runUpdate("DELETE FROM Job");
 
-        String selectQuery = "SELECT * FROM Job";
-        conn.displaySelectAsTable(selectQuery);
+        String selectQuery;
 
-        selectQuery = "SELECT * FROM Task";
-        conn.displaySelectAsTable(selectQuery);
+        // selectQuery = "SELECT * FROM Job";
+        // conn.displaySelectAsTable(selectQuery);
+
+        // selectQuery = "SELECT * FROM Task";
+        // conn.displaySelectAsTable(selectQuery);
+
+        selectQuery = "SELECT * FROM Result";
+        conn.displaySelectAsList(selectQuery);
 
     }
 }
