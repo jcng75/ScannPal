@@ -5,8 +5,12 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.UnhandledAlertException;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.io.FileHandler;
 
 public class TakeScreenshot extends TestAction {
@@ -39,9 +43,27 @@ public class TakeScreenshot extends TestAction {
    }
 
    public void execute(){
-      File src = ((TakesScreenshot)MyWebDriver.getDriver()).getScreenshotAs(OutputType.FILE);
+
+      File src = null;
+      
+
+      WebDriver driver = MyWebDriver.getDriver();
+      try {
+
+         src = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+
+      } catch (UnhandledAlertException e){
+
+         Alert alert = driver.switchTo().alert();
+         alert.dismiss();
+         
+         src = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+
+      }
+
       String filePath = "photos/" + fileName;
       File newFile = new File(filePath);
+
       try {
          FileHandler.copy(src, newFile);
       } catch (IOException e) {
