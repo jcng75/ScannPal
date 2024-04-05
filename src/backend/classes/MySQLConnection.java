@@ -1,7 +1,9 @@
 package backend.classes;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.sql.Blob;
 import java.sql.Connection;
@@ -72,9 +74,13 @@ public class MySQLConnection {
         
             while (selectResults.next()) {
                 for (int i = 1; i <= count; i++) {
-                    System.out.print(rsMetaData.getColumnName(i) + ": " + selectResults.getString(i) + "\n");
+                    String columnValue = selectResults.getString(i);
+                    if (columnValue != null && columnValue.length() > 115) {
+                        columnValue = columnValue.substring(0, 115) + "...";
+                    }
+                    System.out.print(rsMetaData.getColumnName(i) + ": " + columnValue + "\n");
                 }
-                System.out.println();
+                System.out.println("\n");
             }
             selectResults.close();
             selectStatement.close();
@@ -185,6 +191,61 @@ public class MySQLConnection {
             System.out.println("Error message: " + e.getMessage());
         }
         return screenshotBlob;
+    }
+
+    // convert BLOB back to screenshot file
+    public void convertBlobToScreenshot(Blob screenshotBlob, String outputFilePath) {
+        try {
+            // Get the input stream from the BLOB
+            InputStream inputStream = screenshotBlob.getBinaryStream();
+
+            // Create a file to save the screenshot
+            File outputFile = new File(outputFilePath);
+
+            // Read the BLOB data and write it to the output file
+            try (FileOutputStream outputStream = new FileOutputStream(outputFile)) {
+                // Get the length of the BLOB data and use it as the buffer size
+                long blobLength = screenshotBlob.length();
+                int bufferSize = (int) Math.ceil(blobLength);
+
+                byte[] buffer = new byte[bufferSize];
+                int bytesRead;
+
+                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                    outputStream.write(buffer, 0, bytesRead);
+                }
+                System.out.println("Screenshot saved to: " + outputFile.getAbsolutePath());
+            } catch (IOException e) {
+                System.err.println("Error writing screenshot to file: " + e.getMessage());
+            }
+        } catch (SQLException e) {
+            System.err.println("Error retrieving BLOB data: " + e.getMessage());
+        }
+    }
+
+    public void testAddScreenshotToResult() {
+        Connection conn = this.createConnection();
+        Blob screenshotBlob = this.convertScreenshotToBlob("photos/TestCase6--InjectedCase3--SQL--2024-04-01--20-46-14.png");
+        
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement("""
+                UPDATE Result 
+                SET screenshot = ? 
+                WHERE result_id = 5179
+            """);
+            preparedStatement.setBlob(1, screenshotBlob);
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            System.out.println("Error in test() when adding screenshot to Result table");
+            System.out.println("Error message: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+    }
+
+    public void testBlobToScreenshot() {
+        Blob screenshotBlob = this.convertScreenshotToBlob("photos/TestCase6--InjectedCase3--SQL--2024-04-01--20-46-14.png");
+        this.convertBlobToScreenshot(screenshotBlob, "photos/test.png");
     }
 
 }
