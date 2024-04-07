@@ -14,10 +14,10 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.io.FileHandler;
 
 import backend.scan.MyWebDriver;
+import backend.utility.HeuristicsCheck;
 
 public class TakeScreenshot extends TestAction {
 
-   private static final boolean UnhandledAlertException = false;
    String fileName;
    
    public TakeScreenshot(String fileName){
@@ -49,25 +49,26 @@ public class TakeScreenshot extends TestAction {
 
       File src = null;
       
+      HeuristicsCheck hc = new HeuristicsCheck();
 
       WebDriver driver = MyWebDriver.getDriver();
 
          
       try {
-         src = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 
+         src = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
       
       } catch (UnhandledAlertException e){
-      
-         Alert alert = driver.switchTo().alert();
-         alert.dismiss();
+         while (hc.isAlertPresent()){
+            Alert alert = driver.switchTo().alert();
+            alert.dismiss();
+         }
+         src = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE); 
       
       } catch (NoAlertPresentException noE){
          src = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
       }
       
-
-
       String filePath = "photos/" + fileName;
       File newFile = new File(filePath);
 
@@ -78,4 +79,5 @@ public class TakeScreenshot extends TestAction {
       }
       return;
    } 
+
 }
