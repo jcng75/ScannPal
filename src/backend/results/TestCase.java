@@ -1,10 +1,12 @@
 package backend.results;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.UnhandledAlertException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -15,7 +17,6 @@ import backend.seleniumActions.TakeScreenshot;
 import backend.seleniumActions.TestAction;
 import backend.seleniumActions.VisitUrl;
 import backend.utility.HeuristicsCheck;
-import io.netty.handler.codec.http.HttpContentEncoder.Result;
 
 import java.io.Serializable;
 
@@ -178,6 +179,7 @@ public class TestCase implements Serializable {
 
     public TestResult runTestCase(TestCase baseTestCase, TestCase injectedTestCase, String fileName){ 
         System.out.println("\n(+) Running Test Case: " + fileName + "\n");  
+        HeuristicsCheck hc = new HeuristicsCheck();
         int clickButtonCounter = 0;
         String fullFileName = "";
         String htmlResult = "";
@@ -191,7 +193,16 @@ public class TestCase implements Serializable {
                     takeScreenshot.execute();
                     fullFileName = takeScreenshot.getFileName();
                     // save screenshot string
-                    htmlResult = MyWebDriver.getDriver().getPageSource();
+                    try { 
+                        htmlResult = MyWebDriver.getDriver().getPageSource();
+                    } catch (UnhandledAlertException e) {
+                        while (hc.isAlertPresent()){
+                            Alert alert = MyWebDriver.getDriver().switchTo().alert();
+                            alert.dismiss();
+                        }
+                        htmlResult = MyWebDriver.getDriver().getPageSource();
+                    }
+
                     ClickButton currentClickButton = (ClickButton) testAction;
                     try {
                         boolean correctAlertMessage = currentClickButton.getAlertMessage().equals("1") || 
