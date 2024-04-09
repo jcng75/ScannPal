@@ -85,8 +85,8 @@ public class WorkerNode {
                 completeTaskQuery.execute();
 
                 PreparedStatement checkJob = conn.prepareStatement("""
-                    SELECT * FROM Job
-                    WHERE job_id = ?;
+                    SELECT * FROM Task
+                    WHERE job_id = ? and completed = false;
                 """);
 
                 checkJob.setInt(1, jobID);
@@ -148,6 +148,8 @@ public class WorkerNode {
                 conn.createTask(jobID, key, serializedList);
             }
         }
+
+        System.out.println("(+) New tasks created!");
     }
     
 }
