@@ -14,7 +14,7 @@ import backend.aws.MySQLConnection;
 // For Local Tests
 public class Main {
     public static void main(String args[]) throws IOException, ClassNotFoundException {
-        // System.setProperty("webdriver.chrome.driver", "chromedriver-mac-x64/chromedriver");
+        System.setProperty("webdriver.chrome.driver", "chromedriver-mac-x64/chromedriver");
 
         // TestHttpRequest tRequest = new TestHttpRequest("http://localhost/login.php"); 
         // int responseCode = tRequest.getRequest();
@@ -40,10 +40,10 @@ public class Main {
         String selectQuery;
 
         selectQuery = "SELECT * FROM Job";
-        conn.displaySelectAsTable(selectQuery);
+        conn.displaySelectAsList(selectQuery);
 
-        selectQuery = "SELECT * FROM Task";
-        conn.displaySelectAsTable(selectQuery);
+        // selectQuery = "SELECT * FROM Task";
+        // conn.displaySelectAsList(selectQuery);
 
         // selectQuery = "SELECT * FROM Result";
         // conn.displaySelectAsList(selectQuery);
