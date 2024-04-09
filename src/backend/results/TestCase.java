@@ -25,7 +25,7 @@ public class TestCase implements Serializable {
     private boolean isInjected;
     private String attackType;
     private String payload;
-    private int caseNumber;
+    // private int caseNumber;
 
     public TestCase() {
         this.testActions = new ArrayList<TestAction>();
