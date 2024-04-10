@@ -1,0 +1,106 @@
+body {
+    margin: 0;
+    font-family: Mooli;
+}
+
+p {
+    margin: 0;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.section {
+    height: 100vh;
+}
+
+img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.flexbox {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.header-section {
+    margin-bottom: 30px;
+}
+
+.header {
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.input-section {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    width: 320px;
+}
+
+.label-wrapper {
+    margin-bottom: 10px;
+}
+
+.textbox {
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(220, 220, 220);
+
+    font-family: Mooli;
+    font-size: 14px;
+    padding: 10px;
+    width: 300px;
+    outline: none;
+}
+
+.button-wrapper {
+    margin-top: 20px;
+}
+
+.account-button {
+    background-color: black;
+    color: white;
+    font-family: Mooli;
+    font-size: 14px;
+
+    border: none;
+    padding: 10px 16px;
+
+    cursor: pointer;
+    width: 100%;
+
+    transition: opacity 0.15s;
+}
+
+.account-button:hover {
+    opacity: 0.8;
+}
+
+.account-button:active {
+    opacity: 0.6;
+}
+
+
+.footer-section {
+    margin-top: 50px;
+}
+
+.footer {
+    color: gray;
+}
+
+.account-link {
+    color: black;
+    text-decoration: none;
+}
