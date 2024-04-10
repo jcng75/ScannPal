@@ -39,8 +39,11 @@ public class Main {
 
         String selectQuery;
 
-        selectQuery = "SELECT * FROM Job";
-        conn.displaySelectAsList(selectQuery);
+        selectQuery = "SELECT * FROM User";
+        conn.displaySelectAsTable(selectQuery);
+
+        // selectQuery = "SELECT * FROM Job";
+        // conn.displaySelectAsList(selectQuery);
 
         // selectQuery = "SELECT * FROM Task";
         // conn.displaySelectAsList(selectQuery);
