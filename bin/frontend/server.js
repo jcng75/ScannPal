@@ -25,6 +25,10 @@ app.get('/login', function(req, res) {
   res.render('pages/login');
 });
 
+app.get('/register', function(req, res) {
+  res.render('pages/register');
+});
+
 app.get('/test', function(req, res) {
   res.render('pages/test', {
     jumboTitle: "NEW EJS TITLE"

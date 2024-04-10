@@ -1,9 +1,8 @@
-<!-- Testing -->
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title>Login - ScannPal</title>
+        <title>Register - ScannPal</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" type="text/css" href="/styles/account.css">
 
@@ -13,7 +12,7 @@
     </head>
     <body>
         <div class="grid">
-            <div class="section" style="background-color: lightpink;">
+            <div class="section">
                 <img src="/images/image.jpg">
             </div>
             <div class="section" style="background-color: rgb(245, 245, 245);">
@@ -21,7 +20,7 @@
 
                     <!-- Header Section -->
                     <div class="header-section">
-                        <p class="header">Welcome back!</p>
+                        <p class="header">Register an account!</p>
                     </div>
 
                     <!-- Email Input Section -->
@@ -48,11 +47,23 @@
                         </div>
                     </div>
 
-                    <!-- Password Button -->
+                    <!-- Password Confirmation Section -->
+                    <div class="input-section">
+                        <div class="label-wrapper">
+                            <label for="password-confirm">
+                                Confirm Password
+                            </label>
+                        </div>
+                        <div class="input-wrapper">
+                            <input class="textbox" id="password-confirm" type="password">
+                        </div>
+                    </div>
+
+                    <!-- Create Account Button -->
                     <div class="input-section">
                         <div class="button-wrapper">
-                            <button class="sign-in-button">
-                                Sign In
+                            <button class="account-button">
+                                Create Account
                             </button>
                         </div>
                     </div>
@@ -60,9 +71,9 @@
                     <!-- Footer Section -->
                     <div class="footer-section">
                         <p class="footer">
-                            Don't have an account already? 
-                            <a class="sign-up-link" href="">
-                                Sign up
+                            Already have an account? 
+                            <a class="account-link" href="/login">
+                                Sign in here
                             </a>
                         </p>
                     </div>
