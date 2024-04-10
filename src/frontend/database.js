@@ -1,5 +1,8 @@
 import mysql from 'mysql';
 import dotenv from 'dotenv';
+import bcrypt from 'bcrypt';
+const saltRounds = 10;
+
 dotenv.config({path:'../../.env'});
 
 function createConnection() {
@@ -44,10 +47,26 @@ function runQuery(sql) {
 
 }
 
+// how to call function:
+// const password_hash = await hash("goodyear");
+async function hash(password) {
+    try {
+        const salt = await bcrypt.genSalt(saltRounds);
+        console.log(`Salt: ${salt}`);
+
+        const hash = await bcrypt.hash(password, salt);
+        console.log(`Hash: ${hash}`);
+
+        return hash;
+    } catch (err) {
+        console.error(`Error hashing password: ${err.message}`);
+    }
+}
+
 function createUser(firstName, lastName, email, password) {
     const conn = createConnection();
 
-    conn.connect(function(err) {
+    conn.connect(async function(err) {
         if (err) {
             console.error(`Error connecting to MySQL database: ${err.message}`);
             throw err;
@@ -56,12 +75,11 @@ function createUser(firstName, lastName, email, password) {
         console.log("Connected to MySQL database!");
 
         // perform password hashing here...
-        password_hash = password;
-        
-        var sql = `INSERT INTO User (fname, lname, email, password_hash, creation_date) VALUES 
+        const password_hash = await hash(password);
+        const sql = `INSERT INTO User (fname, lname, email, password_hash, creation_date) VALUES 
                     (??, ??, ??, ??, NOW()
                 );`;
-        var inserts = [firstName, lastName, email, password_hash];
+        const inserts = [firstName, lastName, email, password_hash];
         sql = mysql.format(sql, inserts);
         conn.query(sql, function(err, results) {
             if (err) {
