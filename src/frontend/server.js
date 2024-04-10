@@ -14,20 +14,39 @@ app.set('views', 'views');
 app.use(express.static(__dirname + '/public'));
 
 app.get('/', function(req, res) {
-  res.render('pages/index');
+  res.render('pages/index', {
+    pageTitle: 'Welcome'
+  });
 });
 
 app.get('/about', function(req, res) {
-  res.render('pages/about');
+  res.render('pages/about', {
+    pageTitle: 'About'
+  });
 });
 
 app.get('/login', function(req, res) {
-  res.render('pages/login');
+  res.render('pages/login', {
+    pageTitle: 'Login'
+  });
 });
+
+const user = {
+  first_name: 'Justin',
+  last_name: 'Ng'
+}
+
+app.get('/home', function(req, res) {
+  res.render('pages/home', {
+    pageTitle: 'Home',
+    user: user
+  });
+})
 
 app.get('/test', function(req, res) {
   res.render('pages/test', {
-    jumboTitle: "NEW EJS TITLE"
+    pageTitle: 'Test',
+    jumboTitle: 'EJS IS COOL'
   });
 });
 
