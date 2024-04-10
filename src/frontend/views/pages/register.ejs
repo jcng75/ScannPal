@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="utf-8">
-        <title>Register - ScannPal</title>
+        <%- include('../partials/head'); %>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" type="text/css" href="/styles/account.css">
 
@@ -23,12 +22,37 @@
                         <p class="header">Register an account!</p>
                     </div>
 
+                    <!-- First Name -->
+                    <div class="input-section">
+                        <div class="label-wrapper">
+                            <label for="firstname-input">
+                                First Name
+                            </label>
+                        </div>
+                        <div class="input-wrapper">
+                            <input class="textbox" id="firstname-input" type="text">
+                        </div>
+                    </div>
+
+                    <!-- Last Name -->
+                    <div class="input-section">
+                        <div class="label-wrapper">
+                            <label for="lastname-input">
+                                Last Name
+                            </label>
+                        </div>
+                        <div class="input-wrapper">
+                            <input class="textbox" id="lastname-input" type="text">
+                        </div>
+                    </div>
+
                     <!-- Email Input Section -->
                     <div class="input-section">
                         <div class="label-wrapper">
                             <label for="email-input">
                                 Email
                             </label>
+                            <i class="bi bi-envelope-at-fill"></i>
                         </div>
                         <div class="input-wrapper">
                             <input class="textbox" id="email-input" type="text">
@@ -41,6 +65,7 @@
                             <label for="password-input">
                                 Password
                             </label>
+                            <i class="bi bi-key-fill"></i>
                         </div>
                         <div class="input-wrapper">
                             <input class="textbox" id="password-input" type="password">
@@ -53,6 +78,7 @@
                             <label for="password-confirm">
                                 Confirm Password
                             </label>
+                            <i class="bi bi-key-fill"></i>
                         </div>
                         <div class="input-wrapper">
                             <input class="textbox" id="password-confirm" type="password">
@@ -63,7 +89,7 @@
                     <div class="input-section">
                         <div class="button-wrapper">
                             <button class="account-button">
-                                Create Account
+                                Create Account <i class="bi bi-person-fill-add"></i>
                             </button>
                         </div>
                     </div>
