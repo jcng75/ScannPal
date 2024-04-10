@@ -1,7 +1,6 @@
 import express from "express";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-import path from "path";
 
 const app = express();
 const port = 3000;
@@ -31,6 +30,12 @@ app.get('/login', function(req, res) {
   });
 });
 
+app.get('/register', function(req, res) {
+  res.render('pages/register', {
+    pageTitle: 'Register'
+  });
+});
+
 const user = {
   first_name: 'Justin',
   last_name: 'Ng'
@@ -41,7 +46,7 @@ app.get('/home', function(req, res) {
     pageTitle: 'Home',
     user: user
   });
-})
+});
 
 app.get('/test', function(req, res) {
   res.render('pages/test', {
