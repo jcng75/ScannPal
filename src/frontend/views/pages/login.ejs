@@ -2,8 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="utf-8">
-        <title>Login - ScannPal</title>
+        <%- include('../partials/head'); %>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" type="text/css" href="/styles/account.css">
 
@@ -30,6 +29,7 @@
                             <label for="email-input">
                                 Email
                             </label>
+                            <i class="bi bi-envelope-at-fill"></i>
                         </div>
                         <div class="input-wrapper">
                             <input class="textbox" id="email-input" type="text">
@@ -42,6 +42,7 @@
                             <label for="password-input">
                                 Password
                             </label>
+                            <i class="bi bi-key-fill"></i>
                         </div>
                         <div class="input-wrapper">
                             <input class="textbox" id="password-input" type="password">
@@ -52,7 +53,7 @@
                     <div class="input-section">
                         <div class="button-wrapper">
                             <button class="account-button">
-                                Sign In
+                                Sign In <i class="bi bi-box-arrow-in-right"></i>
                             </button>
                         </div>
                     </div>
