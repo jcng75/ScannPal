@@ -1,9 +1,11 @@
 import express from "express";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import dotenv from 'dotenv';
 
 const app = express();
-const port = 3000;
+dotenv.config({path:'../../.env'});
+const port = process.env.PORT;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -11,6 +13,10 @@ app.set('view engine', 'ejs');
 app.set('views', 'views');
 
 app.use(express.static(__dirname + '/public'));
+
+// API Middlewares
+app.use(express.json()); // to accept data in JSON format
+app.use(express.urlencoded({ extended: true })); // to decode data that is sent through an html form
 
 app.get('/', function(req, res) {
   res.render('pages/index', {
@@ -30,10 +36,18 @@ app.get('/login', function(req, res) {
   });
 });
 
+app.post('/login', function(req, res) {
+  res.send(req.body);
+});
+
 app.get('/register', function(req, res) {
   res.render('pages/register', {
     pageTitle: 'Register'
   });
+});
+
+app.post('/register', function(req, res) {
+  res.send(req.body);
 });
 
 const user = {

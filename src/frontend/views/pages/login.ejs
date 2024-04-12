@@ -3,7 +3,6 @@
 <html lang="en">
     <head>
         <%- include('../partials/head'); %>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" type="text/css" href="/styles/account.css">
 
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,40 +22,42 @@
                         <p class="header">Welcome back!</p>
                     </div>
 
-                    <!-- Email Input Section -->
-                    <div class="input-section">
-                        <div class="label-wrapper">
-                            <label for="email-input">
-                                Email
-                            </label>
-                            <i class="bi bi-envelope-at-fill"></i>
+                    <form action="/login" method="post">
+                        <!-- Email Input Section -->
+                        <div class="input-section">
+                            <div class="label-wrapper">
+                                <label for="email-input">
+                                    Email
+                                </label>
+                                <i class="bi bi-envelope-at-fill"></i>
+                            </div>
+                            <div class="input-wrapper">
+                                <input class="textbox" name="email" id="email-input" type="text">
+                            </div>
                         </div>
-                        <div class="input-wrapper">
-                            <input class="textbox" id="email-input" type="text">
-                        </div>
-                    </div>
 
-                    <!-- Password Input Section -->
-                    <div class="input-section">
-                        <div class="label-wrapper">
-                            <label for="password-input">
-                                Password
-                            </label>
-                            <i class="bi bi-key-fill"></i>
+                        <!-- Password Input Section -->
+                        <div class="input-section">
+                            <div class="label-wrapper">
+                                <label for="password-input">
+                                    Password
+                                </label>
+                                <i class="bi bi-key-fill"></i>
+                            </div>
+                            <div class="input-wrapper">
+                                <input class="textbox" name="password" id="password-input" type="password">
+                            </div>
                         </div>
-                        <div class="input-wrapper">
-                            <input class="textbox" id="password-input" type="password">
-                        </div>
-                    </div>
 
-                    <!-- Password Button -->
-                    <div class="input-section">
-                        <div class="button-wrapper">
-                            <button class="account-button">
-                                Sign In <i class="bi bi-box-arrow-in-right"></i>
-                            </button>
+                        <!-- Password Button -->
+                        <div class="input-section">
+                            <div class="button-wrapper">
+                                <button type="submit" class="account-button">
+                                    Sign In <i class="bi bi-box-arrow-in-right"></i>
+                                </button>
+                            </div>
                         </div>
-                    </div>
+                    </form>
 
                     <!-- Footer Section -->
                     <div class="footer-section">
