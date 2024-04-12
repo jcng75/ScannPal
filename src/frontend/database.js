@@ -40,9 +40,23 @@ function runQuery(sql) {
                 console.error(`Error executing query '${sql}': ${err.message}`);
                 throw err;
             }
-            console.log(JSON.stringify(results, null, 2));
+            
+            // display results here ...
+            console.log(`Running ${sql}\n`);
+            
+            // get column names
+            const columns = Object.keys(results[0]);
+
+            results.forEach((row) => {
+                columns.forEach((col) => {
+                    console.log(`${col}: ${row[col]}`);
+                });
+                console.log();
+            });
+
+            conn.end();
         });
-      
+    
     });
 
 }
@@ -76,11 +90,15 @@ function createUser(firstName, lastName, email, password) {
 
         // perform password hashing here...
         const password_hash = await hash(password);
-        const sql = `INSERT INTO User (fname, lname, email, password_hash, creation_date) VALUES 
-                    (??, ??, ??, ??, NOW()
-                );`;
+        
+        // format the sql query
+        let sql = `INSERT INTO User (fname, lname, email, password_hash, creation_date) VALUES (?, ?, ?, ?, NOW());`;
         const inserts = [firstName, lastName, email, password_hash];
         sql = mysql.format(sql, inserts);
+
+        console.log(sql);
+        
+        // run the query
         conn.query(sql, function(err, results) {
             if (err) {
                 console.error(`Error executing query '${sql}': ${err.message}`);
@@ -92,3 +110,6 @@ function createUser(firstName, lastName, email, password) {
       
     });
 }
+
+// createUser('Adam', 'Ramasre', 'aramasre1@pride.hofstra.edu', 'goodyear');
+// runQuery("SELECT * FROM User");
