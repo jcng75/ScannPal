@@ -7,9 +7,22 @@ p {
     margin: 0;
 }
 
-.grid {
+/* .grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
+}
+*/
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr; /* Single column */
+}
+
+/* For desktop: */
+@media only screen and (min-width: 765px) {
+    .grid {
+        grid-template-columns: 1fr 1fr; /* Two columns */
+    }
 }
 
 .section {
