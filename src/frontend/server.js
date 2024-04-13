@@ -50,9 +50,17 @@ app.post('/register', function(req, res) {
   res.send(req.body);
 });
 
+app.get('/logout', function(req, res) {
+  res.render('pages/logout', {
+    pageTitle: 'Logout',
+  });
+});
+
 const user = {
   first_name: 'Justin',
-  last_name: 'Ng'
+  last_name: 'Ng',
+  last_scan: '4/12/2024',
+  total_scans: 3
 }
 
 app.get('/home', function(req, res) {
