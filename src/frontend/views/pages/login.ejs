@@ -1,0 +1,76 @@
+<!-- Testing -->
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%- include('../partials/head'); %>
+        <link rel="stylesheet" type="text/css" href="/styles/account.css">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Mooli&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <div class="grid">
+            <div class="section" style="background-color: lightpink;">
+                <img src="/images/image.jpg">
+            </div>
+            <div class="section" style="background-color: rgb(245, 245, 245);">
+                <div class="flexbox">
+
+                    <!-- Header Section -->
+                    <div class="header-section">
+                        <p class="header">Welcome back!</p>
+                    </div>
+
+                    <form action="/login" method="post">
+                        <!-- Email Input Section -->
+                        <div class="input-section">
+                            <div class="label-wrapper">
+                                <label for="email-input">
+                                    Email
+                                </label>
+                                <i class="bi bi-envelope-at-fill"></i>
+                            </div>
+                            <div class="input-wrapper">
+                                <input class="textbox" name="email" id="email-input" type="text">
+                            </div>
+                        </div>
+
+                        <!-- Password Input Section -->
+                        <div class="input-section">
+                            <div class="label-wrapper">
+                                <label for="password-input">
+                                    Password
+                                </label>
+                                <i class="bi bi-key-fill"></i>
+                            </div>
+                            <div class="input-wrapper">
+                                <input class="textbox" name="password" id="password-input" type="password">
+                            </div>
+                        </div>
+
+                        <!-- Password Button -->
+                        <div class="input-section">
+                            <div class="button-wrapper">
+                                <button type="submit" class="account-button">
+                                    Sign In <i class="bi bi-box-arrow-in-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Footer Section -->
+                    <div class="footer-section">
+                        <p class="footer">
+                            Don't have an account already? 
+                            <a class="account-link" href="/register">
+                                Sign up
+                            </a>
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
