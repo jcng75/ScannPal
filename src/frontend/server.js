@@ -4,8 +4,8 @@ import { dirname } from 'path';
 import dotenv from 'dotenv';
 
 const app = express();
-dotenv.config({path:'../../.env'});
-const port = process.env.PORT;
+dotenv.config({path:'C:\Users\adamr\Documents\ScannPal\.env'});
+const port = 3000//process.env.PORT;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -75,6 +75,16 @@ app.get('/test', function(req, res) {
     pageTitle: 'Test',
     jumboTitle: 'EJS IS COOL'
   });
+});
+
+app.get('/payment', function(req, res) {
+  res.render('pages/payment', {
+    pageTitle: 'Payment'
+  });
+});
+
+app.post('/login', function(req, res) {
+  res.send(req.body);
 });
 
 app.listen(port, () => {

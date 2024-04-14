@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('../partials/head'); %>
+</head>
+<body class="container-fluid">
+
+<header>
+  <%- include('../partials/navbar'); %>
+</header>
+
+<main>
+    <br><h1 class="text-center">Welcome to our Payment Page</h1>
+    <h4 class="text-center">Here you can purchase a detail plan</h2>
+
+<div class="container text-center">
+    
+    <p>To proceed with your payment, please click the button below:</p>
+    
+    <form action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post">
+        <input type="hidden" name="cmd" value="_xclick">
+        <input type="hidden" name="business" value="sb-klahk30318517@business.example.com">
+        <input type="hidden" name="item_name" value="Lifetime Money Supply">
+        <input type="hidden" name="amount" value="10.00">
+        <input type="hidden" name="currency_code" value="USD">
+        <input type="hidden" name="return" value="localhost:3000/home">
+        <input type="hidden" name="cancel_return" value="localhost:3000/home">
+        <input type="hidden" name="notify_url" value="localhost:3000/home">
+        <!-- Replace the client ID and secret below -->
+        <input type="hidden" name="client_id" value="AYj-FaMxmc63igrmlhy0L60I8goWh-l7Y8IoSV8Nnhl2x5zynsQ7D4Xo0mz9TdqknlICVSjeXuCKLq37">
+        
+        <!-- Replace the password below -->
+        
+        <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_buynow_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online">
+    </form>
+</div>
+</main>
+
+<footer>
+  <%- include('../partials/footer'); %>
+</footer>
+
+</body>
+</html>
