@@ -9,22 +9,48 @@
   <%- include('../partials/header'); %>
 </header>
 
+
+<style>
+  /* Custom CSS for additional styling */
+  .jumbotron.bg-teal {
+    background-color: #17a2b8; /* Teal */
+    color: #fff; /* White text */
+  }
+  .jumbotron.bg-blueish {
+    background-color: #007bff; /* Blue */
+    color: #fff; /* White text */
+  }
+  .jumbotron.bg-grayish {
+    background-color: #6c757d; /* Gray */
+    color: #fff; /* White text */
+  }
+  .jumbotron.bg-redish{
+    background-color: #dc3545; /* Light Red */
+    color: #fff; /* White text */
+  }
+
+</style>
+
 <main>
   <div class="container">
     <div class="row">
-      <h2 class="display-2 text-center pt-3 pb-3">
-        Welcome to ScannPal!
-      </h2>
+      <div class="jumbotron bg-light">
+        <h2 class="display-2 text-center pt-3 p-3">
+          Welcome to ScannPal!
+        </h2>
+      </div>
     </div>
     <div class="row ">
-        <div class="col-md-6 jumbotron bg-info ">    
-            <h4 class="display-4 text-center">What is ScannPal?</h4>
-            <p class="fs-18">Made by Matteo, Justin, Adam<br>
-              This application utlizes Amazon Web Services to delegate tasks to multiple virtual machines to speed up tasks<br>
-              DO NOT SCAN WEBSITES WITHOUT PERMISSION!
-                
-            </p>
+      <div class="col-md-6">
+        <div class="jumbotron bg-teal p-4">
+          <h4 class="display-5 text-center pb-4">What is ScannPal?</h4>
+          <ul class="list-group">
+            <li class="list-group-item">Made by Matteo, Justin, Adam</li>
+            <li class="list-group-item">This application utilizes Amazon Web Services to delegate tasks to multiple virtual machines to speed up tasks</li>
+            <li class="list-group-item">DO NOT SCAN WEBSITES WITHOUT PERMISSION!</li>
+          </ul>
         </div>
+      </div>
         <div class="col-md-6">    
             
         </div>
@@ -34,21 +60,25 @@
         <div class="col-md-6">    
             
         </div>
-        <div class="col-md-6 jumbotron"> 
-            <h4 class="display-4">How To Use</h4>
+        <div class="col-md-6">
+          <div class="jumbotron bg-blueish p-4">
+            <h4 class="display-5 mb-4 text-center">How To Use</h4>
             <ul class="list-group">
-                <li class="list-group-item">You can start a scan in the Scan Page with a valid username, password, and URL</li>
-                <li class="list-group-item">You can visit <a>View Scans</a> to see results of past scans</li>
+              <li class="list-group-item">You can start a scan in the Scan Page with a valid username, password, and URL</li>
+              <li class="list-group-item">You can visit <a href="#">View Scans</a> to see results of past scans</li>
             </ul>
+          </div>
         </div>
 
 
     </div>
     <div class="row">
-        <div class="col-md-6 jumbotron">    
-            <h4 class="display-4">Mission</h4>
-            <p>Our mission is to give website owners the ability to seamlessly secure their websites. We hope that our application can make the internet a safer place for all.</p>
+      <div class="col-md-6">
+        <div class="jumbotron bg-grayish p-4">
+          <h4 class="display-5 mb-4">Mission</h4>
+          <p>Our mission is to give website owners the ability to seamlessly secure their websites. We hope that our application can make the internet a safer place for all.</p>
         </div>
+      </div>
         <div class="col-md-6">    
             
         </div>
@@ -58,21 +88,25 @@
         <div class="col-md-6">    
             
         </div>
-        <div class="col-md-6 jumbotron"> 
-            <h4 class="display-4">Inspiration</h4>
-            <ul>
-                <li>Nessus Vulnerability Scanner</li>
-                <li>Metasploit</li>
+        <div class="col-md-6">
+          <div class="jumbotron bg-redish p-4">
+            <h4 class="display-5 mb-4">Inspiration</h4>
+            <ul class="list-group">
+              <li class="list-group-item">Nessus Vulnerability Scanner</li>
+              <li class="list-group-item">Metasploit</li>
             </ul>
+          </div>
         </div>
 
 
     </div>
 </main>
+<!--
 
-<footer>
-  <%- include('../partials/footer'); %>
-</footer>
-
+  <footer>
+    <%- include('../partials/footer'); %>
+  </footer>
+  
+-->
 </body>
 </html>
