@@ -2,7 +2,9 @@ import express from "express";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import dotenv from 'dotenv';
+import {validateHash, getUser, emailExists} from './database.js';
 
+let user = {};
 const app = express();
 dotenv.config({path:'../../.env'});
 const port = process.env.PORT;
@@ -32,12 +34,48 @@ app.get('/about', function(req, res) {
 
 app.get('/login', function(req, res) {
   res.render('pages/login', {
-    pageTitle: 'Login'
+    pageTitle: 'Login',
+    error: false
   });
 });
 
-app.post('/login', function(req, res) {
-  res.send(req.body);
+app.post('/login', async function(req, res) {
+  const email = req.body.email.trim();
+  const password = req.body.password.trim();
+
+  if (email === "" || password === "") { // if email is empty
+    return;
+  }
+
+  const validEmail = await emailExists(email);
+  if (!validEmail) { // if email is not in database
+    // pop up invalid login alert
+    res.render('pages/login', {
+      pageTitle: 'Login',
+      error: true
+    });
+    return;
+  }
+
+  // if the email does exist, then compare the user-entered password to the stored hash
+  const isValidHash = await validateHash(email, password);
+
+  if (isValidHash) {
+      const userData = await getUser(email);
+      user = {
+        first_name: userData.fname,
+        last_name: userData.lname
+      }
+      res.redirect("/home");
+  } else { // if the password doesn't match the hash
+      // pop up invalid login alert
+      res.render('pages/login', {
+        pageTitle: 'Login',
+        error: true
+      });
+      return;
+  }
+
 });
 
 app.get('/register', function(req, res) {
@@ -49,11 +87,6 @@ app.get('/register', function(req, res) {
 app.post('/register', function(req, res) {
   res.send(req.body);
 });
-
-const user = {
-  first_name: 'Justin',
-  last_name: 'Ng'
-}
 
 app.get('/home', function(req, res) {
   res.render('pages/home', {
