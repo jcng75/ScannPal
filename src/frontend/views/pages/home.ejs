@@ -4,17 +4,8 @@
   <%- include('../partials/head'); %>
 
   <style>
-    .nav-item {
-      font-size: 18pt;
-    }
-    .navbar-brand {
-      font-size: 20pt;
-    }
-    .navbar-brand {
-      font-size: 20pt;
-    }
-    .btn {
-      font-size: 15pt;
+    body {
+      background-image: linear-gradient(130deg, #66ffff, #ff99ff);
     }
   </style>
 </head>
@@ -28,7 +19,7 @@
 <div class="row pb-5">
   <div class="col-4"></div>
     <div class="col-4">
-      <div class="jumbotron-fluid bg-light p-3 text-center">
+      <div class="jumbotron-fluid p-3 text-center">
         <h1 class="display-4">Welcome back, <%= user.first_name %>!</h1>
       </div>
       <p class="text text-md-center fs-5">
@@ -134,7 +125,6 @@
       </table>
       <a class="link" href="/scan">Start a New Scan</a>
     </div>
-  <div class="col-*-*"></div>
 </div>
 
 </main>
