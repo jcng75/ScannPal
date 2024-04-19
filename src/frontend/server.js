@@ -1,13 +1,42 @@
 import express from "express";
+import session from "express-session";
+import expressMySQLSession from "express-mysql-session";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import dotenv from 'dotenv';
-import {validateHash, getUser, emailExists} from './database.js';
+import {validateHash, getUser, getName, emailExists, createUser} from './database.js';
 
-let user = {};
-const app = express();
+const MySQLStore = expressMySQLSession(session);
 dotenv.config({path:'../../.env'});
-const port = process.env.PORT;
+
+const app = express();
+const IN_PROD = process.env.NODE_ENV === "production";
+
+// Session store options
+const options = {
+  host: process.env.MYSQL_HOST,
+  port: process.env.MYSQL_PORT,
+  user: process.env.MYSQL_USERNAME,
+  password: process.env.MYSQL_PASSWORD,
+  database: process.env.MYSQL_DB
+};
+
+const sessionStore = new MySQLStore(options);
+
+app.use(session({
+  name: process.env.SESS_NAME,
+  secret: process.env.SESS_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  store: sessionStore,
+  cookie: {
+    maxAge: parseInt(process.env.SESS_LIFETIME),
+    sameSite: true, // strict
+    secure: IN_PROD
+  }
+}));
+
+const port = process.env.SERVER_PORT;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -20,9 +49,41 @@ app.use(express.static(__dirname + '/public'));
 app.use(express.json()); // to accept data in JSON format
 app.use(express.urlencoded({ extended: true })); // to decode data that is sent through an html form
 
-app.get('/', function(req, res) {
+const redirectLogin = (req, res, next) => {
+  if (!req.session.userId) {
+    res.redirect('/login');
+  } else {
+    next();
+  }
+}
+
+const redirectHome = (req, res, next) => {
+  if (req.session.userId) {
+    res.redirect('/home');
+  } else {
+    next();
+  }
+}
+
+// routes
+app.get('/', redirectHome, function(req, res) {
+  const { userId } = req.session;
+  console.log(userId);
   res.render('pages/index', {
     pageTitle: 'Welcome'
+  });
+});
+
+app.get('/home', redirectLogin, async function(req, res) {
+  console.log(req.session);
+  const userId = req.session.userId;
+  const userData = await getName(userId);
+  const user = {
+    first_name: userData.fname,
+  }
+  res.render('pages/home', {
+    pageTitle: 'Home',
+    user: user
   });
 });
 
@@ -32,67 +93,76 @@ app.get('/about', function(req, res) {
   });
 });
 
-app.get('/login', function(req, res) {
+app.get('/login', redirectHome, function(req, res) {
   res.render('pages/login', {
     pageTitle: 'Login',
     error: false
   });
 });
 
-app.post('/login', async function(req, res) {
+app.post('/login', redirectHome, async function(req, res) {
   const email = req.body.email.trim();
   const password = req.body.password.trim();
 
-  if (email === "" || password === "") { // if email is empty
-    return;
-  }
+  // if the email is not in the database
+  const isValidEmail = await emailExists(email);
 
-  const validEmail = await emailExists(email);
-  if (!validEmail) { // if email is not in database
+  if (!isValidEmail) {
     // pop up invalid login alert
-    res.render('pages/login', {
+    return res.render('pages/login', {
       pageTitle: 'Login',
       error: true
     });
-    return;
   }
 
   // if the email does exist, then compare the user-entered password to the stored hash
   const isValidHash = await validateHash(email, password);
 
-  if (isValidHash) {
-      const userData = await getUser(email);
-      user = {
-        first_name: userData.fname,
-        last_name: userData.lname
-      }
-      res.redirect("/home");
-  } else { // if the password doesn't match the hash
-      // pop up invalid login alert
-      res.render('pages/login', {
-        pageTitle: 'Login',
-        error: true
-      });
-      return;
+  if (!isValidHash) {
+     // if the password doesn't match the hash
+     // pop up invalid login alert
+    return res.render('pages/login', {
+      pageTitle: 'Login',
+      error: true
+    });
   }
+
+  // made it past all of the errors here ...
+  const userData = await getUser(email);
+  
+  if (userData.user_id) {
+    req.session.userId = userData.user_id;
+    return res.redirect('/home');
+  }
+
+  // if error occurs during login
+  res.redirect('/login');
 
 });
 
-app.get('/register', function(req, res) {
+app.get('/register', redirectHome, function(req, res) {
   res.render('pages/register', {
     pageTitle: 'Register'
   });
 });
 
-app.post('/register', function(req, res) {
-  res.send(req.body);
-});
+app.post('/register', redirectHome, async function(req, res) {
+  const firstName = req.body.fname;
+  const lastName = req.body.lname;
+  const email = req.body.email;
+  const password = req.body.password;
 
-app.get('/home', function(req, res) {
-  res.render('pages/home', {
-    pageTitle: 'Home',
-    user: user
-  });
+  createUser(firstName, lastName, email, password);
+
+  const userData = await getUser(email);
+
+  if (userData.user_id) {
+    req.session.userId = userData.user_id;
+    return res.redirect('/home');
+  }
+
+  // if error occurs during registration
+  res.redirect('/register');
 });
 
 app.get('/test', function(req, res) {
@@ -100,6 +170,19 @@ app.get('/test', function(req, res) {
     pageTitle: 'Test',
     jumboTitle: 'EJS IS COOL'
   });
+});
+
+app.get('/logout', redirectLogin, function(req, res) {
+  req.session.destroy(err => {
+    if (err) {
+      return res.redirect('/home');
+    }
+
+    res.clearCookie(process.env.SESS_NAME);
+    res.render('pages/logout', {
+      pageTitle: 'Logout'
+    });
+  })
 });
 
 app.listen(port, () => {
