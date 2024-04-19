@@ -84,7 +84,7 @@ function getQueryResults(sql) {
 // generates a bcrypt password hash for a user-entered password
 // how to call function:
 // const password_hash = await hash("goodyear");
-export async function hash(password) {
+async function hash(password) {
     const saltRounds = 10;
     try {
         const salt = await bcrypt.genSalt(saltRounds);
@@ -118,8 +118,6 @@ export function createUser(firstName, lastName, email, password) {
         let sql = `INSERT INTO User (fname, lname, email, password_hash, creation_date) VALUES (?, ?, ?, ?, NOW());`;
         const inserts = [firstName, lastName, email, password_hash];
         sql = mysql.format(sql, inserts);
-
-        console.log(sql);
         
         // run the query
         conn.query(sql, function(err, results) {
@@ -217,8 +215,39 @@ export async function getUser(email) {
             } 
 
             // format the sql query
-            let sql = `SELECT fname, lname FROM User where email = ?;`;
+            let sql = `SELECT user_id, fname, lname FROM User where email = ?;`;
             const inserts = [email];
+            sql = mysql.format(sql, inserts);
+
+            conn.query(sql, function(err, results) {
+                if (err) {
+                    console.error(`Error executing query '${sql}': ${err.message}`);
+                    reject(err);
+                    return;
+                }
+                resolve(results[0]);
+            });
+
+            conn.end();
+        });
+    });
+}
+
+// returns user information as an object
+export async function getName(userId) {
+    const conn = createConnection();
+
+    return new Promise((resolve, reject) => {
+        conn.connect(function(err) {
+            if (err) {
+                console.error(`Error connecting to MySQL database: ${err.message}`);
+                reject(err);
+                return;
+            } 
+
+            // format the sql query
+            let sql = `SELECT fname FROM User where user_id = ?;`;
+            const inserts = [userId];
             sql = mysql.format(sql, inserts);
 
             conn.query(sql, function(err, results) {
