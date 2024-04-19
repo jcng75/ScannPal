@@ -3,7 +3,7 @@ const email = document.getElementById("email-input");
 const password = document.getElementById("password-input");
 
 form.addEventListener("submit", e => {
-    // e.preventDefault();
+    e.preventDefault();
 
     validateInputs();
 });
@@ -32,16 +32,23 @@ const setSuccess = (element) => {
 const validateInputs = () => {
     const emailValue = email.value.trim();
     const passwordValue = password.value.trim();
+    let isValid = true;
 
     if (emailValue === "") {
         setError(email, "Email is required");
+        isValid = false;
     } else {
         setSuccess(email);
     }
 
     if (passwordValue === "") {
         setError(password, "Password is required");
+        isValid = false;
     } else {
         setSuccess(password);
+    }
+
+    if (isValid) {
+        form.submit();
     }
 }

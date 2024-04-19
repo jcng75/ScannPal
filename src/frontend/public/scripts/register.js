@@ -6,7 +6,7 @@ const password = document.getElementById("password-input");
 const passwordConfirm = document.getElementById("password-confirm");
 
 form.addEventListener("submit", e => {
-    // e.preventDefault();
+    e.preventDefault();
 
     validateInputs();
 });
@@ -94,22 +94,28 @@ const validateInputs = () => {
     const passwordValue = password.value.trim();
     const passwordConfirmValue = passwordConfirm.value.trim();
 
+    let isValid = true;
+
     if (firstNameValue === "") {
         setError(firstName, "First name is required");
+        isValid = false;
     } else {
         setSuccess(firstName);
     }
 
     if (lastNameValue === "") {
         setError(lastName, "Last name is required");
+        isValid = false;
     } else {
         setSuccess(lastName);
     }
 
     if (emailValue === "") {
         setError(email, "Email is required");
+        isValid = false;
     } else if (!isValidEmail(emailValue)) { // not a valid email
         setError(email, "Not a valid email");
+        isValid = false;
     } else {
         setSuccess(email);
     }
@@ -117,19 +123,28 @@ const validateInputs = () => {
     const errors = isValidPassword(passwordValue);
     if (passwordValue === "") {
         setError(password, "Password is required");
+        isValid = false;
     } else if (passwordValue.length < 12) {
         setError(password, "Password must contain at least 12 characters");
+        isValid = false;
     } else if(errors !== "valid password") {
         setError(password, errors);
+        isValid = false;
     } else {
         setSuccess(password);
     }
 
     if (passwordConfirmValue === "") {
         setError(passwordConfirm, "Please confirm your password");
+        isValid = false;
     } else if (passwordValue !== passwordConfirmValue) {
         setError(passwordConfirm, "Passwords do not match");
+        isValid = false;
     } else {
         setSuccess(passwordConfirm);
+    }
+
+    if (isValid) {
+        form.submit();
     }
 };
