@@ -26,58 +26,72 @@ function createConnection() {
 }
 
 // print the results of a SQL query
-function displayQuery(sql) {
+async function displayQuery(sql) {
     const conn = createConnection();
 
-    conn.connect(function(err) {
-        if (err) {
-            console.error(`Error connecting to MySQL database: ${err.message}`);
-            throw err;
-        } 
-        
-        console.log("Connected to MySQL database!");
-        conn.query(sql, function(err, results) {
+    return new Promise((resolve, reject) => {
+        conn.connect(function(err) {
             if (err) {
-                console.error(`Error executing query '${sql}': ${err.message}`);
-                throw err;
-            }
+                console.error(`Error connecting to MySQL database: ${err.message}`);
+                reject(err);
+                return;
+            } 
             
-            // display results here ...
-            console.log(`Running ${sql}\n`);
-            
-            // get column names
-            const columns = Object.keys(results[0]);
+            // console.log("Connected to MySQL database!");
+            conn.query(sql, function(err, results) {
+                if (err) {
+                    console.error(`Error executing query '${sql}': ${err.message}`);
+                    reject(err);
+                    return;
+                }
+                
+                // display results here ...
+                console.log(`Running ${sql} ...`);
 
-            results.forEach((row) => {
-                columns.forEach((col) => {
-                    console.log(`${col}: ${row[col]}`);
-                });
-                console.log();
+                if (results.length === 0) {
+                    console.log("Table is empty\n");
+                }
+                else {
+                    // get column names
+                    const columns = Object.keys(results[0]);
+
+                    results.forEach((row) => {
+                        columns.forEach((col) => {
+                            console.log(`${col}: ${row[col]}`);
+                        });
+                        console.log();
+                    });
+                }
             });
-        });
 
-        conn.end();
+            conn.end();
+            resolve();
+        });
     });
 }
 
 // return the results of a SQL query as an object
-function getQueryResults(sql) {
+async function getQueryResults(sql) {
     const conn = createConnection();
     
-    conn.connect(function(err) {
-        if (err) {
-            console.error(`Error connecting to MySQL database: ${err.message}`);
-            throw err;
-        } 
-        conn.query(sql, function(err, results) {
+    return new Promise((resolve, reject) => {
+        conn.connect(function(err) {
             if (err) {
-                console.error(`Error executing query '${sql}': ${err.message}`);
-                throw err;
-            }
-            return results;
-        });
+                console.error(`Error connecting to MySQL database: ${err.message}`);
+                reject(err);
+                return;
+            } 
+            conn.query(sql, function(err, results) {
+                if (err) {
+                    console.error(`Error executing query '${sql}': ${err.message}`);
+                    reject(err);
+                    return;
+                }
+                resolve(results);
+            });
 
-        conn.end();
+            conn.end();
+        });
     });
 }
 
