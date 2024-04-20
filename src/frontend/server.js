@@ -5,8 +5,8 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import dotenv from 'dotenv';
 import { validateHash, getUser, getName, emailExists, createUser } from './database.js';
-import { updateSettings } from '../../src/frontend/public/scripts/settings.js';
-import { runChecks } from '../../src/frontend/public/scripts/scan.js';
+import { updateSettings } from './settings.js';
+import { runChecks } from './scan.js';
 
 dotenv.config({path:'../../.env'});
 
@@ -50,12 +50,6 @@ app.use(express.static(__dirname + '/public'));
 // API Middlewares
 app.use(express.json()); // to accept data in JSON format
 app.use(express.urlencoded({ extended: true })); // to decode data that is sent through an html form
-
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
 
 const redirectLogin = (req, res, next) => {
   if (!req.session.userId) {
