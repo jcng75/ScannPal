@@ -4,13 +4,19 @@ import expressMySQLSession from "express-mysql-session";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import dotenv from 'dotenv';
-import {validateHash, getUser, getName, emailExists, createUser} from './database.js';
+import { validateHash, getUser, getName, emailExists, createUser } from './database.js';
+import { updateSettings } from '../../src/frontend/public/scripts/settings.js';
+import { runChecks } from '../../src/frontend/public/scripts/scan.js';
 
-const MySQLStore = expressMySQLSession(session);
 dotenv.config({path:'../../.env'});
 
 const app = express();
+const port = process.env.SERVER_PORT;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 const IN_PROD = process.env.NODE_ENV === "production";
+
+const MySQLStore = expressMySQLSession(session);
 
 // Session store options
 const options = {
@@ -36,10 +42,6 @@ app.use(session({
   }
 }));
 
-const port = process.env.SERVER_PORT;
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
@@ -48,6 +50,12 @@ app.use(express.static(__dirname + '/public'));
 // API Middlewares
 app.use(express.json()); // to accept data in JSON format
 app.use(express.urlencoded({ extended: true })); // to decode data that is sent through an html form
+
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 const redirectLogin = (req, res, next) => {
   if (!req.session.userId) {
@@ -163,6 +171,68 @@ app.post('/register', redirectHome, async function(req, res) {
 
   // if error occurs during registration
   res.redirect('/register');
+});
+
+const testData = {
+  first_name: 'Justin',
+  last_name: 'Ng',
+  last_scan: '4/12/2024',
+  total_scans: 3
+}
+
+app.get('/scan', redirectLogin, function(req, res) {
+  res.render('pages/scan', {
+    pageTitle: 'Scan',
+    user: testData
+  });
+});
+
+app.post('/scan', redirectLogin, function(req, res) {
+  let bodyReq = req.body;
+  let errors = runChecks(bodyReq);
+  if (errors.length > 0){
+    console.log(errors);
+    res.render('pages/scan', {
+      pageTitle: 'Scan',
+      user: testData,
+      errors: errors
+    })
+  } else {
+    let success = 'You have successfully started a scan.'
+    res.render('pages/scan', {
+      pageTitle: 'Scan',
+      user: testData,
+      success: success
+    })
+  }
+});
+
+app.get('/settings', redirectLogin, function(req, res) {
+  res.render('pages/settings', {
+    pageTitle: 'Settings',
+    user: testData,
+  });
+});
+
+app.post('/settings', function(req, res) {
+  let bodyReq = req.body;
+  let selectOption  = bodyReq.selectOption;
+  let errors = updateSettings(selectOption, bodyReq);
+  if (errors.length > 0){
+    console.log(errors);
+    res.render('pages/settings', {
+      pageTitle: 'Settings',
+      user: testData,
+      errors: errors
+    })
+  } else {
+    let success = 'You have successfully updated your settings.'
+    res.render('pages/settings', {
+      pageTitle: 'Settings',
+      user: testData,
+      success: success
+    })
+  }
 });
 
 app.get('/test', function(req, res) {
