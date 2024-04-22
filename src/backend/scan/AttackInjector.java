@@ -147,17 +147,17 @@ public class AttackInjector {
         List<String> toReturn = new ArrayList<String>();
         if (payloadType.equals("SQL")){
             String sqliFile = "payloads" + File.separator + "sqli.txt";
-            toReturn = getRandomLines(sqliFile, 1);
+            toReturn = getRandomLines(sqliFile, 3);
 
         }
         else if(payloadType.equals("CMD")){
             String cmdFile = "payloads" + File.separator + "cmd.txt";
-            toReturn = getRandomLines(cmdFile, 1);
+            toReturn = getRandomLines(cmdFile, 3);
 
         }
         else if(payloadType.equals("XSS")){
             String xssFile = "payloads" + File.separator + "xss.txt";
-            toReturn = getRandomLines(xssFile, 1);
+            toReturn = getRandomLines(xssFile, 3);
 
         }
         return toReturn;
