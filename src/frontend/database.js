@@ -277,3 +277,38 @@ export async function getName(userId) {
         });
     });
 }
+
+// updates a user's password in the database
+export async function updatePassword(userID, newPassword) {
+    const conn = createConnection();
+
+    return new Promise((resolve, reject) => {
+        conn.connect(async function(err) {
+            if (err) {
+                console.error(`Error connecting to MySQL database: ${err.message}`);
+                reject(err);
+            } 
+
+            // perform password hashing here...
+            const password_hash = await hash(newPassword);
+            
+            // format the sql query
+            let sql = `UPDATE User SET password_hash = ? WHERE user_id = ?`;
+            const inserts = [password_hash, userID];
+            sql = mysql.format(sql, inserts);
+            
+            // run the query
+            conn.query(sql, function(err, results) {
+                if (err) {
+                    console.error(`Error executing query: ${err.message}`);
+                    reject(err);
+                }
+                console.log("Successfully added new user to the database!");
+                console.log(JSON.stringify(results, null, 2));
+            });
+
+            conn.end();
+            resolve();
+        });
+    });
+}
