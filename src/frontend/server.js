@@ -7,6 +7,7 @@ import dotenv from 'dotenv';
 import { validateHash, getUser, getName, emailExists, createUser } from './database.js';
 import { updateSettings } from './settings.js';
 import { runChecks } from './scan.js';
+import { getJobs, getResults, createImageUrl } from './results.js';
 
 dotenv.config({path:'../../.env'});
 
@@ -227,6 +228,17 @@ app.post('/settings', function(req, res) {
       success: success
     })
   }
+});
+
+app.get('/results', async function(req, res) {
+  const result = await getResults(16);
+  const binary = result[1].screenshot;
+  const imageUrl = createImageUrl(binary);
+
+  res.render('pages/results', {
+    pageTitle: 'Results',
+    imageUrl
+  });
 });
 
 app.get('/test', function(req, res) {
