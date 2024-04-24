@@ -5,7 +5,7 @@ import bcrypt from 'bcrypt';
 dotenv.config({path:'../../.env'});
 
 // create a connection to the MySQL database
-function createConnection() {
+export function createConnection() {
     const host = process.env.MYSQL_HOST;
     const user = process.env.MYSQL_USERNAME;
     const password = process.env.MYSQL_PASSWORD;
@@ -287,7 +287,8 @@ export async function updatePassword(userID, newPassword) {
             if (err) {
                 console.error(`Error connecting to MySQL database: ${err.message}`);
                 reject(err);
-            } 
+                return;
+            }
 
             // perform password hashing here...
             const password_hash = await hash(newPassword);
@@ -302,6 +303,7 @@ export async function updatePassword(userID, newPassword) {
                 if (err) {
                     console.error(`Error executing query: ${err.message}`);
                     reject(err);
+                    return;
                 }
                 console.log("Successfully added new user to the database!");
                 console.log(JSON.stringify(results, null, 2));
