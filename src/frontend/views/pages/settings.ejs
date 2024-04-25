@@ -93,12 +93,13 @@
       </form>
     </div>
     <div class="col-6 pt-3">
-      <form class="bg-light border border-rounded p-5 text fs-18">
+      <form class="bg-light border border-rounded p-5 text fs-18" method="post" action="/settings">
         <div class="text-center pb-2">
           <h1 class="display-5">General Settings</h1>
         </div>
         <div class="mb-3 text-center">
-          <button type="submit" class="btn btn-danger p-4" id="account"> Delete Account </button>
+            <input type="text" style="display: none;" id="delete" name="delete" value="">
+            <button type="submit" class="btn btn-danger p-4" id="account"> Delete Account </button>
         </div> 
       </form>
       <div class="container-fluid bg-light p-5 border mt-3">
