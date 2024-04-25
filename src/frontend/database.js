@@ -277,3 +277,166 @@ export async function getName(userId) {
         });
     });
 }
+
+// returns user information as an object based on userId
+export async function getUserData(userId) {
+    const conn = createConnection();
+
+    return new Promise((resolve, reject) => {
+        conn.connect(function(err) {
+            if (err) {
+                console.error(`Error connecting to MySQL database: ${err.message}`);
+                reject(err);
+                return;
+            } 
+
+            // format the sql query
+            let sql = `SELECT email, fname, lname, password_hash FROM User where user_id = ?;`;
+            const inserts = [userId];
+            sql = mysql.format(sql, inserts);
+
+            conn.query(sql, function(err, results) {
+                if (err) {
+                    console.error(`Error executing query '${sql}': ${err.message}`);
+                    reject(err);
+                    return;
+                }
+                resolve(results[0]);
+            });
+
+            conn.end();
+        });
+    });
+}
+
+// updates a user's password in the database
+export async function updatePassword(userID, newPassword) {
+    const conn = createConnection();
+
+    return new Promise((resolve, reject) => {
+        conn.connect(async function(err) {
+            if (err) {
+                console.error(`Error connecting to MySQL database: ${err.message}`);
+                reject(err);
+            } 
+
+            // perform password hashing here...
+            const password_hash = await hash(newPassword);
+
+            // format the sql query
+            let sql = `UPDATE User SET password_hash = ? WHERE user_id = ?`;
+            const inserts = [password_hash, userID];
+            sql = mysql.format(sql, inserts);
+
+            // run the query
+            conn.query(sql, function(err, results) {
+                if (err) {
+                    console.error(`Error executing query: ${err.message}`);
+                    reject(err);
+                }
+                console.log("Successfully updated user in the database!");
+                console.log(JSON.stringify(results, null, 2));
+            });
+
+            conn.end();
+            resolve();
+        });
+    });
+}
+
+// updates a user's email in the database
+export async function updateEmail(userID, newEmail) {
+    const conn = createConnection();
+
+    return new Promise((resolve, reject) => {
+        conn.connect(async function(err) {
+            if (err) {
+                console.error(`Error connecting to MySQL database: ${err.message}`);
+                reject(err);
+            } 
+
+            // format the sql query
+            let sql = `UPDATE User SET email = ? WHERE user_id = ?`;
+            const inserts = [newEmail, userID];
+            sql = mysql.format(sql, inserts);
+
+            // run the query
+            conn.query(sql, function(err, results) {
+                if (err) {
+                    console.error(`Error executing query: ${err.message}`);
+                    reject(err);
+                }
+                console.log("Successfully updated user in the database!");
+                console.log(JSON.stringify(results, null, 2));
+            });
+
+            conn.end();
+            resolve();
+        });
+    });
+}
+
+// updates a user's first name in the database
+export async function updateFirstName(userID, newfn) {
+    const conn = createConnection();
+
+    return new Promise((resolve, reject) => {
+        conn.connect(async function(err) {
+            if (err) {
+                console.error(`Error connecting to MySQL database: ${err.message}`);
+                reject(err);
+            } 
+
+            // format the sql query
+            let sql = `UPDATE User SET fname = ? WHERE user_id = ?`;
+            const inserts = [newfn, userID];
+            sql = mysql.format(sql, inserts);
+
+            // run the query
+            conn.query(sql, function(err, results) {
+                if (err) {
+                    console.error(`Error executing query: ${err.message}`);
+                    reject(err);
+                }
+                console.log("Successfully updated user in the database!");
+                console.log(JSON.stringify(results, null, 2));
+            });
+
+            conn.end();
+            resolve();
+        });
+    });
+}
+
+// updates a user's first name in the database
+export async function updateLastName(userID, newln) {
+    const conn = createConnection();
+
+    return new Promise((resolve, reject) => {
+        conn.connect(async function(err) {
+            if (err) {
+                console.error(`Error connecting to MySQL database: ${err.message}`);
+                reject(err);
+            } 
+
+            // format the sql query
+            let sql = `UPDATE User SET lname = ? WHERE user_id = ?`;
+            const inserts = [newln, userID];
+            sql = mysql.format(sql, inserts);
+
+            // run the query
+            conn.query(sql, function(err, results) {
+                if (err) {
+                    console.error(`Error executing query: ${err.message}`);
+                    reject(err);
+                }
+                console.log("Successfully updated user in the database!");
+                console.log(JSON.stringify(results, null, 2));
+            });
+
+            conn.end();
+            resolve();
+        });
+    });
+}
+
