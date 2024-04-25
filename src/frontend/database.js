@@ -5,7 +5,7 @@ import bcrypt from 'bcrypt';
 dotenv.config({path:'../../.env'});
 
 // create a connection to the MySQL database
-function createConnection() {
+export function createConnection() {
     const host = process.env.MYSQL_HOST;
     const user = process.env.MYSQL_USERNAME;
     const password = process.env.MYSQL_PASSWORD;
