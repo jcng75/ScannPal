@@ -3,3 +3,5 @@ lib/aws-java-sdk-1.12.671.jar
 src/backend/classes/ImageComparer.java
 src/backend/classes/ImageDifferenceHighlighter.java
 ScannPal.jar
+ScannPalWorkerNode.jar
+ScannPalMainNode.jar
