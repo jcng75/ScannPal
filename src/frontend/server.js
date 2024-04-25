@@ -4,10 +4,11 @@ import expressMySQLSession from "express-mysql-session";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import dotenv from 'dotenv';
-import { validateHash, getUser, getName, emailExists, createUser } from './database.js';
-import { updateSettings } from './settings.js';
+import { validateHash, getUser, getName, emailExists, createUser, getUserData } from './database.js';
+import { verifySettings, updateSettings } from './settings.js';
 import { runChecks } from './scan.js';
 import { getJobs, getResults, createImageUrl } from './results.js';
+import { getActiveScans, getUserResults } from "./home.js";
 
 dotenv.config({path:'../../.env'});
 
@@ -80,9 +81,17 @@ app.get('/', redirectHome, function(req, res) {
 app.get('/home', redirectLogin, async function(req, res) {
   console.log(req.session);
   const userId = req.session.userId;
+  // console.log(userId);
   const userData = await getName(userId);
+  const results = await getUserResults(userId);
+  // console.log(results);
+  // console.log(results.length);
+  const activeScans = await getActiveScans(userId);
+  console.log(activeScans);
   const user = {
     first_name: userData.fname,
+    results: results,
+    scans: activeScans
   }
   res.render('pages/home', {
     pageTitle: 'Home',
@@ -145,7 +154,8 @@ app.post('/login', redirectHome, async function(req, res) {
 
 app.get('/register', redirectHome, function(req, res) {
   res.render('pages/register', {
-    pageTitle: 'Register'
+    pageTitle: 'Register',
+    error: false
   });
 });
 
@@ -185,48 +195,73 @@ app.get('/scan', redirectLogin, function(req, res) {
 app.post('/scan', redirectLogin, function(req, res) {
   let bodyReq = req.body;
   let errors = runChecks(bodyReq);
-  if (errors.length > 0){
+  if (errors.length > 0) {
     console.log(errors);
     res.render('pages/scan', {
       pageTitle: 'Scan',
       user: testData,
       errors: errors
-    })
+    });
   } else {
     let success = 'You have successfully started a scan.'
     res.render('pages/scan', {
       pageTitle: 'Scan',
-      user: testData,
+      user: user,
       success: success
-    })
+    });
   }
 });
 
-app.get('/settings', redirectLogin, function(req, res) {
+app.get('/settings', redirectLogin, async function(req, res) {
+  const userId = req.session.userId;
+  const userData = await getUserData(userId);
+  const user = {
+    first_name: userData.fname,
+    last_name: userData.lname,
+    email: userData.email
+  }
   res.render('pages/settings', {
     pageTitle: 'Settings',
-    user: testData,
+    user: user
   });
 });
 
-app.post('/settings', function(req, res) {
-  let bodyReq = req.body;
-  let selectOption  = bodyReq.selectOption;
-  let errors = updateSettings(selectOption, bodyReq);
-  if (errors.length > 0){
-    console.log(errors);
+app.post('/settings', async function(req, res) {
+  if (req.body.delete === "") {
+    console.log('Delete the account.');
+    res.redirect('/login');
+  }
+  const bodyReq = req.body;
+  const selectOption  = bodyReq.selectOption;
+  const userId = req.session.userId;
+  let userData = await getUserData(userId);
+  let errors = await verifySettings(selectOption, bodyReq, userData);
+  let user;
+  if (errors.length > 0) {
+    user = {
+      first_name: userData.fname,
+      last_name: userData.lname,
+      email: userData.email
+    }
     res.render('pages/settings', {
       pageTitle: 'Settings',
-      user: testData,
+      user: user,
       errors: errors
-    })
+    });
   } else {
-    let success = 'You have successfully updated your settings.'
+    await updateSettings(selectOption, bodyReq, userId);
+    userData = await getUserData(userId);
+    user = {
+      first_name: userData.fname,
+      last_name: userData.lname,
+      email: userData.email
+    }
+    let success = 'You have successfully updated your settings';
     res.render('pages/settings', {
       pageTitle: 'Settings',
-      user: testData,
+      user: user,
       success: success
-    })
+    });
   }
 });
 
@@ -240,6 +275,7 @@ app.get('/results', async function(req, res) {
     imageUrl
   });
 });
+
 
 app.get('/test', function(req, res) {
   res.render('pages/test', {
