@@ -43,13 +43,16 @@ public class Main {
         // conn.displaySelectAsTable(selectQuery);
 
         selectQuery = "SELECT * FROM Job";
-        conn.displaySelectAsList(selectQuery);
-
-        selectQuery = "SELECT * FROM Task";
         conn.displaySelectAsTable(selectQuery);
 
-        selectQuery = "SELECT * FROM Result";
-        conn.displaySelectAsList(selectQuery);
+        // selectQuery = "SELECT * FROM Task";
+        // conn.displaySelectAsTable(selectQuery);
+
+        // selectQuery = "SELECT * FROM Result";
+        // conn.displaySelectAsList(selectQuery);
+
+        // conn.runUpdate("ALTER TABLE Job ADD COLUMN website_link VARCHAR(255) AFTER user_id;");
+        // conn.runUpdate("UPDATE Job SET website_link = 'www.example.com' WHERE job_id = 19;");
 
     }
 }
