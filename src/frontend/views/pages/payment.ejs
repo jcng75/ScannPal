@@ -4,7 +4,11 @@
   <%- include('../partials/head'); %>
 </head>
 <body class="container-fluid">
-
+<style>
+  body {
+    background-image: linear-gradient(130deg, #66ffff, #ff99ff);
+  }
+</style>
 <header>
   <%- include('../partials/navbar'); %>
 </header>
@@ -12,6 +16,55 @@
 <main>
     <br><h1 class="text-center">Welcome to our Payment Page</h1>
     <h4 class="text-center">Here you can purchase a detail plan</h2>
+      <div class="container">
+        <div class="row">
+          <div class="jumbotron">
+            <h2 class="display-2 text-center pt-3 p-3">
+              Payment Plans
+            </h2>
+          </div>
+        </div>
+        <div class="row justify-content-center">
+            <!-- FIRST PLAN -->
+            <div class="col-md-3">
+                <div class="jumbotron bg-greenish p-4">
+                    <h4 class="display-5 text-center pb-4">Basic</h4>
+                    <ul class="list-group">
+                    <li class="list-group-item bg-light">5 Node Strength Scans</li>
+                    <li class="list-group-item bg-light">10 scans per month</li>
+                    
+                    </ul>
+                </div>
+            </div>
+            <!-- SECOND PLAN -->
+            <div class="col-md-3">
+                <div class="jumbotron bg-royal p-4">
+                    <h4 class="display-5 text-center pb-4">Advanced</h4>
+                    <ul class="list-group">
+                      <li class="list-group-item bg-light">10 Node Strength Scans</li>
+                      <li class="list-group-item bg-light">30 scans per month</li>
+                      <li class="list-group-item bg-light">Experimental Access</li>
+                      <li class="list-group-item bg-light">Reduced Bugs</li>
+                    </ul>
+                </div> 
+                    
+            </div>
+            <!-- THIRD PLAN -->
+            <div class="col-md-3">
+                <div class="jumbotron bg-deepred p-4">
+                    <h4 class="display-5 text-center pb-4">Premium</h4>
+                    <ul class="list-group">
+                      <li class="list-group-item bg-light">20 Node Strength Scans</li>
+                      <li class="list-group-item bg-light">60 scans per month</li>
+                      <li class="list-group-item bg-light">Experimental Access</li>
+                      <li class="list-group-item bg-light">No bugs</li>
+                      <li class="list-group-item bg-light">Thank you note</li>
+                    </ul>
+                </div> 
+                    
+            </div>
+            
+        </div>
 
 <div class="container text-center">
     
