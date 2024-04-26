@@ -26,7 +26,7 @@ export function createConnection() {
 }
 
 // print the results of a SQL query
-async function displayQuery(sql) {
+export async function displayQuery(sql) {
     const conn = createConnection();
 
     return new Promise((resolve, reject) => {
@@ -40,7 +40,7 @@ async function displayQuery(sql) {
             // console.log("Connected to MySQL database!");
             conn.query(sql, function(err, results) {
                 if (err) {
-                    console.error(`Error executing query '${sql}': ${err.message}`);
+                    console.error(`Error executing query: ${err.message}`);
                     reject(err);
                     return;
                 }
@@ -71,7 +71,7 @@ async function displayQuery(sql) {
 }
 
 // return the results of a SQL query as an object
-async function getQueryResults(sql) {
+export async function getQueryResults(sql) {
     const conn = createConnection();
     
     return new Promise((resolve, reject) => {
@@ -83,7 +83,7 @@ async function getQueryResults(sql) {
             } 
             conn.query(sql, function(err, results) {
                 if (err) {
-                    console.error(`Error executing query '${sql}': ${err.message}`);
+                    console.error(`Error executing query: ${err.message}`);
                     reject(err);
                     return;
                 }
@@ -136,7 +136,7 @@ export function createUser(firstName, lastName, email, password) {
         // run the query
         conn.query(sql, function(err, results) {
             if (err) {
-                console.error(`Error executing query '${sql}': ${err.message}`);
+                console.error(`Error executing query: ${err.message}`);
                 throw err;
             }
             console.log("Successfully added new user to the database!");
@@ -165,7 +165,7 @@ export async function emailExists(email) {
 
             conn.query(sql, function(err, res) {
                 if (err) {
-                    console.error(`Error executing query '${sql}': ${err.message}`);
+                    console.error(`Error executing query: ${err.message}`);
                     reject(err);
                     return;
                 }
@@ -196,7 +196,7 @@ export async function validateHash(email, password) {
             
             conn.query(sql, async function(err, results) {
                 if (err) {
-                    console.error(`Error executing query '${sql}': ${err.message}`);
+                    console.error(`Error executing query: ${err.message}`);
                     reject(err);
                     return;
                 }
@@ -235,7 +235,7 @@ export async function getUser(email) {
 
             conn.query(sql, function(err, results) {
                 if (err) {
-                    console.error(`Error executing query '${sql}': ${err.message}`);
+                    console.error(`Error executing query: ${err.message}`);
                     reject(err);
                     return;
                 }
@@ -266,7 +266,7 @@ export async function getName(userId) {
 
             conn.query(sql, function(err, results) {
                 if (err) {
-                    console.error(`Error executing query '${sql}': ${err.message}`);
+                    console.error(`Error executing query: ${err.message}`);
                     reject(err);
                     return;
                 }
@@ -297,7 +297,7 @@ export async function getUserData(userId) {
 
             conn.query(sql, function(err, results) {
                 if (err) {
-                    console.error(`Error executing query '${sql}': ${err.message}`);
+                    console.error(`Error executing query: ${err.message}`);
                     reject(err);
                     return;
                 }
@@ -318,21 +318,23 @@ export async function updatePassword(userID, newPassword) {
             if (err) {
                 console.error(`Error connecting to MySQL database: ${err.message}`);
                 reject(err);
-            } 
+                return;
+            }
 
             // perform password hashing here...
             const password_hash = await hash(newPassword);
-
+            
             // format the sql query
             let sql = `UPDATE User SET password_hash = ? WHERE user_id = ?`;
             const inserts = [password_hash, userID];
             sql = mysql.format(sql, inserts);
-
+            
             // run the query
             conn.query(sql, function(err, results) {
                 if (err) {
                     console.error(`Error executing query: ${err.message}`);
                     reject(err);
+                    return;
                 }
                 console.log("Successfully updated user in the database!");
                 console.log(JSON.stringify(results, null, 2));
@@ -353,6 +355,7 @@ export async function updateEmail(userID, newEmail) {
             if (err) {
                 console.error(`Error connecting to MySQL database: ${err.message}`);
                 reject(err);
+                return;
             } 
 
             // format the sql query
@@ -365,6 +368,7 @@ export async function updateEmail(userID, newEmail) {
                 if (err) {
                     console.error(`Error executing query: ${err.message}`);
                     reject(err);
+                    return;
                 }
                 console.log("Successfully updated user in the database!");
                 console.log(JSON.stringify(results, null, 2));
@@ -385,6 +389,7 @@ export async function updateFirstName(userID, newfn) {
             if (err) {
                 console.error(`Error connecting to MySQL database: ${err.message}`);
                 reject(err);
+                return;
             } 
 
             // format the sql query
@@ -397,6 +402,7 @@ export async function updateFirstName(userID, newfn) {
                 if (err) {
                     console.error(`Error executing query: ${err.message}`);
                     reject(err);
+                    return;
                 }
                 console.log("Successfully updated user in the database!");
                 console.log(JSON.stringify(results, null, 2));
@@ -417,6 +423,7 @@ export async function updateLastName(userID, newln) {
             if (err) {
                 console.error(`Error connecting to MySQL database: ${err.message}`);
                 reject(err);
+                return;
             } 
 
             // format the sql query
@@ -429,6 +436,7 @@ export async function updateLastName(userID, newln) {
                 if (err) {
                     console.error(`Error executing query: ${err.message}`);
                     reject(err);
+                    return;
                 }
                 console.log("Successfully updated user in the database!");
                 console.log(JSON.stringify(results, null, 2));
