@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Include necessary meta tags, stylesheets, etc. -->
+  <%- include('../partials/head'); %>
+  <!-- Custom styling -->
+  <style>
+    body {
+      background-image: linear-gradient(130deg, #66ffff, #ff99ff);
+    }
+
+    /* Custom shadow */
+    .box-shadow {
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+
+    .card {
+      border: none;
+      border-radius: 10px;
+    }
+
+    .plan-header {
+      color: #fff;
+      text-align: center;
+      padding: 15px;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+    }
+
+    /* Plan-specific colors */
+    .bg-greenish {
+      background-color: #00A86B; /* Green */
+    }
+    .bg-royal {
+      background-color: #4169E1; /* Royal Blue */
+    }
+    .bg-deepred {
+      background-color: #B22222; /* Deep Red */
+    }
+
+  </style>
+</head>
+<body class="container-fluid">
+
+<header>
+  <%- include('../partials/header'); %>
+</header>
+
+<main class="container my-5">
+  <div class="row justify-content-center">
+    <!-- FIRST PLAN -->
+    <div class="col-md-3 mb-4">
+      <div class="card box-shadow">
+        <div class="plan-header bg-greenish">Basic</div>
+        <div class="card-body text-center">
+          <h1 class="card-title pricing-card-title">$5<small class="text-muted">/mo</small></h1>
+          <ul class="list-unstyled mt-3 mb-4">
+            <li>5 scans per month</li>
+            <li>10 node strength</li>
+            <li>2 concurrent scans</li>
+          </ul>
+          <button type="button" class="w-100 btn btn-lg btn-outline-primary">Start Basic</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECOND PLAN -->
+    <div class="col-md-3 mb-4">
+      <div class="card box-shadow">
+        <div class="plan-header bg-royal">Advanced</div>
+        <div class="card-body text-center">
+          <h1 class="card-title pricing-card-title">$15<small class="text-muted">/mo</small></h1>
+          <ul class="list-unstyled mt-3 mb-4">
+            <li>10 Node Strength Scans</li>
+            <li>30 scans per month</li>
+            <li>Experimental Access</li>
+            <li>Reduced Bugs</li>
+          </ul>
+          <button type="button" class="w-100 btn btn-lg btn-outline-primary">Get Started</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- THIRD PLAN -->
+    <div class="col-md-3 mb-4">
+      <div class="card box-shadow">
+        <div class="plan-header bg-deepred">Premium</div>
+        <div class="card-body text-center">
+          <h1 class="card-title pricing-card-title">$30<small class="text-muted">/mo</small></h1>
+          <ul class="list-unstyled mt-3 mb-4">
+            <li>20 Node Strength Scans</li>
+            <li>60 scans per month</li>
+            <li>Experimental Access</li>
+            <li>No Bugs</li>
+            <li>Thank You Note</li>
+          </ul>
+          <button type="button" class="w-100 btn btn-lg btn-outline-primary">Go Premium</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="display-6 text-center mb-4">Compare plans</h2>
+
+    <div class="table-responsive">
+      <table class="table text-center">
+        <thead>
+          <tr>
+            <th style="width: 34%;"></th>
+            <th style="width: 22%;">Basic</th>
+            <th style="width: 22%;">Advanced</th>
+            <th style="width: 22%;">Premium</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row" class="text-start">Node Scans</th>
+            <td>5 scans</td>
+            <td>10 scans</td>
+            <td>20 scans</td>
+          </tr>
+          <tr>
+            <th scope="row" class="text-start">Concurrent Scans</th>
+            <td>2</td>
+            <td>4</td>
+            <td>8</td>
+          </tr>
+        </tbody>
+
+        <tbody>
+          <tr>
+            <th scope="row" class="text-start">Experimental Access</th>
+            <td>N</td>
+            <td>Y</td>
+            <td>Y</use></svg></td>
+          </tr>
+          <tr>
+            <th scope="row" class="text-start">No Bugs</th>
+            <td>lol</td>
+            <td>lol</td>
+            <td>Y</td>
+          </tr>
+          <tr>
+            <th scope="row" class="text-start">Thank you note</th>
+            <td>lol</td>
+            <td>lol</td>
+            <td>Y</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+</main>
+
+
+<!--
+  <footer>
+    <%- include('../partials/footer'); %>
+  </footer>
+-->
+</body>
+</html>
