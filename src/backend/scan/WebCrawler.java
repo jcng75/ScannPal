@@ -14,6 +14,7 @@ import backend.seleniumActions.EnterText;
 import backend.seleniumActions.TestAction;
 import backend.seleniumActions.VisitUrl;
 import backend.utility.DeleteFile;
+import backend.utility.HeuristicsCheck;
 
 
 public class WebCrawler {
@@ -114,11 +115,16 @@ public class WebCrawler {
                 nextQueue.addAll(updatedTC);
             }
         }
+    
+    // Return information
+    List<TestCase> resultList = new ArrayList<TestCase>(currentQueue);
+    // System.out.println(resultList);
+    return resultList;
+}
 
-        // Return information
-        List<TestCase> resultList = new ArrayList<TestCase>(currentQueue);
-        // System.out.println(resultList);
-        return resultList;
+    public String getParsedUrl(){
+        String parsedURL = HeuristicsCheck.parseURLHost(this.url);
+        return parsedURL;
     }
 
 }
