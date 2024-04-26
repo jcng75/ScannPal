@@ -107,7 +107,7 @@ public class WorkerNode {
         }
     }
 
-    public static void createTasks(HashMap<String, List<List<TestCase>>> splitCases, String currentEmail) throws SQLException{
+    public static void createTasks(HashMap<String, List<List<TestCase>>> splitCases, String currentEmail, String url) throws SQLException{
         
         // Create the job associated with all these tasks
         MySQLConnection conn = new MySQLConnection();
@@ -123,12 +123,13 @@ public class WorkerNode {
             userID = rs.getInt(1);
         }
 
-        String createJobQuery = String.format("""
-                INSERT INTO Job (user_id, completed, date_started )
-                VALUES (%d, false, NOW())
-                """, userID);
+        PreparedStatement createJobQuery = connection.prepareStatement("INSERT INTO Job (user_id, completed, date_started, website_link) VALUES (?, false, NOW(), ?);");
         
-        conn.runUpdate(createJobQuery);
+        createJobQuery.setInt(1, userID);
+        createJobQuery.setString(2, url);
+        createJobQuery.executeUpdate();
+
+        System.out.println("(+) New Job Has been Created!");
 
         // Get that job_id to associate with the test_cases
 

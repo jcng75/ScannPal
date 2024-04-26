@@ -37,6 +37,7 @@
           <thead>
             <tr>
               <th scope="col">ID</th>
+              <th scope="col">Website</th>
               <th scope="col">Time Started</th>
               <th scope="col">Time Completed</th>
               <th scope="col">Vulnerabilities Found</th>
@@ -46,6 +47,7 @@
           <% user.results.forEach(function(result){ %>
               <tr>
                 <th scope="row"><%= result.job_id %></th>
+                <td><%= result.website_link %></td>
                 <td><%= result.date_started %></td>
                 <td><%= result.date_completed %></td>
                 <td><%= result.vulnerabilities %></td>
@@ -73,7 +75,8 @@
              <thead>
                <tr>
                  <th scope="col" class="col-2">ID</th>
-                 <th scope="col">Time Started</th>
+                 <th scope="col">Date Started</th>
+                 <th scope="col"> Website </th>
                  <th scope="col">Number Of Tasks</th>
                  <th scope="col" class="col-3">Percentage</th>
                </tr>
@@ -83,10 +86,16 @@
                 <tr>
                   <th scope="row"><%= scan.job_id %></th>
                   <td><%= scan.date_started %></td>
+                  <td><%= scan.website_link %></td>
                   <td><%= scan.number_of_tasks %></td>
                   <td>
                     <div class="progress">
-                      <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar" style="width: '<%= scan.completed_percentage %>%'" aria-valuenow="" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" 
+                      role="progressbar"
+                      style="width: <%= scan.completed_percentage %>%;"
+                      aria-valuenow="" 
+                      aria-valuemin="0" 
+                      aria-valuemax="100"></div>
                     </div>
                   </td>
                 </tr>

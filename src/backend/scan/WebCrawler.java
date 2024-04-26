@@ -14,6 +14,7 @@ import backend.seleniumActions.EnterText;
 import backend.seleniumActions.TestAction;
 import backend.seleniumActions.VisitUrl;
 import backend.utility.DeleteFile;
+import backend.utility.HeuristicsCheck;
 
 
 public class WebCrawler {
@@ -21,11 +22,15 @@ public class WebCrawler {
     String url;
     String username;
     String password;
+    String userID;
+    String passID;
 
-    public WebCrawler(String url, String username, String password){
+    public WebCrawler(String url, String username, String password, String userID, String passID){
         setUrl(url);
         setUsername(username);
+        setUsernameID(userID);
         setPassword(password);
+        setPasswordID(passID);
     }
 
     public void setUrl(String url){
@@ -35,17 +40,25 @@ public class WebCrawler {
     public void setUsername(String user){
         this.username = user;
     }
+     
+    public void setUsernameID(String userID){
+        this.userID = userID;
+    }
 
     public void setPassword(String password){
         this.password = password;
     }
 
+    public void setPasswordID(String passwordID){
+        this.passID = passwordID;
+    }
+
     private void loginUser(){
         // Enter username field
-        EnterText enterUser = new EnterText("username" , username);
+        EnterText enterUser = new EnterText(userID , username);
         enterUser.execute();
         // Enter password field
-        EnterText enterPass = new EnterText("password", password);
+        EnterText enterPass = new EnterText(passID, password);
         enterPass.execute();
         // Click on login button
         ClickButton loginButton = new ClickButton("Login");
@@ -102,11 +115,16 @@ public class WebCrawler {
                 nextQueue.addAll(updatedTC);
             }
         }
+    
+    // Return information
+    List<TestCase> resultList = new ArrayList<TestCase>(currentQueue);
+    // System.out.println(resultList);
+    return resultList;
+}
 
-        // Return information
-        List<TestCase> resultList = new ArrayList<TestCase>(currentQueue);
-        // System.out.println(resultList);
-        return resultList;
+    public String getParsedUrl(){
+        String parsedURL = HeuristicsCheck.parseURLHost(this.url);
+        return parsedURL;
     }
 
 }

@@ -102,7 +102,7 @@ public class HeuristicsCheck {
         }
     }
 
-    public String parseURLHost(String url){
+    public static String parseURLHost(String url){
         try {
             URL fullUrl = new URL(url);
             String startUrl = fullUrl.getHost();
