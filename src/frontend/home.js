@@ -17,12 +17,13 @@ export async function getUserResults(userID) {
             let sql = `SELECT j.job_id, 
                             j.date_started,
                             j.date_completed,
+                            j.website_link,
                             SUM(CASE WHEN r.is_vulnerable = 1 THEN 1 ELSE 0 END) AS vulnerabilities
                  FROM Result r
                 INNER JOIN Task t ON r.task_id = t.task_id
                 INNER JOIN Job j ON t.job_id = j.job_id
                 INNER JOIN User u ON j.user_id = u.user_id
-                WHERE u.user_id = ?
+                WHERE u.user_id = ? AND j.completed = 1
                 GROUP BY j.job_id
                 ORDER BY j.date_completed
                 LIMIT 3;
@@ -60,6 +61,7 @@ export async function getActiveScans(userID) {
             let sql = `SELECT j.job_id,
                             j.date_started,
                             COUNT(t.task_id) AS number_of_tasks,
+                            j.website_link,
                             SUM(CASE WHEN t.completed = 1 THEN 1 ELSE 0 END) AS completed_tasks,
                             (SUM(CASE WHEN t.completed = 1 THEN 1 ELSE 0 END) / COUNT(t.task_id)) * 100 AS completed_percentage
                 FROM Job j
