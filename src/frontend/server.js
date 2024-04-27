@@ -72,14 +72,14 @@ const redirectHome = (req, res, next) => {
 // routes
 app.get('/', redirectHome, function(req, res) {
   const { userId } = req.session;
-  console.log(userId);
+  // console.log(userId);
   res.render('pages/index', {
     pageTitle: 'Welcome'
   });
 });
 
 app.get('/home', redirectLogin, async function(req, res) {
-  console.log(req.session);
+  // console.log(req.session);
   const userId = req.session.userId;
   // console.log(userId);
   const userData = await getName(userId);
@@ -178,17 +178,9 @@ app.post('/register', redirectHome, async function(req, res) {
   res.redirect('/register');
 });
 
-const testData = {
-  first_name: 'Justin',
-  last_name: 'Ng',
-  last_scan: '4/12/2024',
-  total_scans: 3
-}
-
 app.get('/scan', redirectLogin, function(req, res) {
   res.render('pages/scan', {
     pageTitle: 'Scan',
-    user: testData
   });
 });
 
@@ -265,6 +257,24 @@ app.post('/settings', async function(req, res) {
   }
 });
 
+app.get('/payment', function(req, res) {
+  res.render('pages/payment', {
+    pageTitle: 'Payment'
+  });
+});
+
+app.get('/plans', function(req, res) {
+  res.render('pages/plans', {
+    pageTitle: 'Payment Plans',
+  });
+});
+
+app.get('/guidelines', function(req, res) {
+  res.render('pages/guidelines', {
+    pageTitle: 'Scan Guidelines',
+  })
+})
+
 app.get('/results', async function(req, res) {
   const result = await getResults(16);
   const binary = result[1].screenshot;
@@ -273,14 +283,6 @@ app.get('/results', async function(req, res) {
   res.render('pages/results', {
     pageTitle: 'Results',
     imageUrl
-  });
-});
-
-
-app.get('/test', function(req, res) {
-  res.render('pages/test', {
-    pageTitle: 'Test',
-    jumboTitle: 'EJS IS COOL'
   });
 });
 
