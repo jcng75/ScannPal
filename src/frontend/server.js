@@ -83,6 +83,12 @@ app.get('/payment', function(req, res) {
   });
 });
 
+app.get('/plans', function(req, res) {
+  res.render('pages/plans', {
+    pageTitle: 'Payment Plans',
+  });
+});
+
 app.post('/login', function(req, res) {
   res.send(req.body);
 });

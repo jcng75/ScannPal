@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <%- include('../partials/head'); %>
+  <link rel="stylesheet" href="styles/payment.css">
 </head>
 <body class="container">
 
@@ -10,20 +11,22 @@
 </header>
 
 <main>
-<div class="row">
-  <div class="col-sm-8">
-    <div class="jumbotron">
-      <h1>This is great</h1>
-      <p>Welcome to templating using EJS</p>
-    </div>
+  <div class="container-fluid text-center p-5">
+    
+      <div class="jumbotron bg-teal p-4 rounded-4">
+        <h4 class="display-5 pb-4">What did we use to build ScannPal?</h4>
+        <p>
+          ScannPal was built using Amazon Web Services (AWS), utilizing services such as EC2, VPC, RDS, S3.
+          We utilized the Java Selenium Framework to perform automated testing.
+          We hosted the website using Node.js and styled it with the Bootstrap Framework.
+          We connected the web server to the front-end using EJS.
+        </p>
+        <br>
+        <p>Developed by Justin, Matteo, and Adam.</p>
+      </div>
   </div>
 
-  <div class="col-sm-4">
-    <div class="well">
-      <h3>Look I'm A Sidebar!</h3>
-    </div>
-  </div>
-</div>
+  
 </main>
 
 <footer>
@@ -32,3 +35,4 @@
 
 </body>
 </html>
+
