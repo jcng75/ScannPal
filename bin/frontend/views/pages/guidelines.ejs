@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('../partials/head'); %>
+<style>
+    body {
+        background-image: linear-gradient(130deg, #66ffff, #ff99ff);
+      }
+</style>
+</head>
+<body class="container">
+
+<main>
+    <div class="container text-center p-3">
+        <h1 class="display-6">Scanning Guidelines</h1>
+    </div>
+    </div>
+    <div class="container-fluid text-center">
+        <div class="jumbotron">
+          <p>
+            <h1 class="display-6">How to Perform a Scan</h1>
+            Visiting the Scan Page, you would enter the following parameters: <br>
+            <label class="red">1) Website URL:</label> The website url should be the login page where we would enter your user credentials into. <br>
+            Examples of Acceptable Inputs: https://example.com/login https://www.example.com/login  example.com/login <br> 
+            <label class="bold">Please ensure that the website scanned is online and available when scanning!</label> <br> 
+            <label class="red">2) Username/Password:</label> We require that your website should be tested via a valid login to the website.  
+            <br> This way, we can log in acting as a user to scan the website autonomously. <br>
+            <label class="red">3) Username/Password ID/Name Field:</label> In order to correctly identify which input field to supply the username and password to,
+            <br> we require that you provide us with the HTML ID or Name value of each text field. <br>
+            <label class="red">4) Depth:</label> The depth field is provided for the user to control how deep of a scan they would like to do.  Please note that
+            the higher the depth field is, the longer it would take for the scan to complete. <br>
+        </p>
+        <p>
+            <h1 class="display-6">Rules and Regulations</h1>
+            <p class="red">
+                When scanning the given website, ensure that you have legal right to scan the website provided. <br>
+                Any vulnerabilities found within your website are stored within our database and will NOT be used at any capacity by us. <br>
+                If you choose to delete your account, resulting scan information will still remain in our database as evidence for any illegal web vulnerability scanning.
+            </p>
+        </p>
+        </div>
+    </div>
+</main>
+
+<footer>
+  <%- include('../partials/footer'); %>
+</footer>
+
+</body>
+</html>

@@ -7,9 +7,22 @@ p {
     margin: 0;
 }
 
-.grid {
+/* .grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
+}
+*/
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr; /* Single column */
+}
+
+/* For desktop: */
+@media only screen and (min-width: 765px) {
+    .grid {
+        grid-template-columns: 1fr 1fr; /* Two columns */
+    }
 }
 
 .section {
@@ -33,7 +46,7 @@ img {
 }
 
 .header-section {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .header {
@@ -44,7 +57,7 @@ img {
 .input-section {
     display: flex;
     flex-direction: column;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     width: 320px;
 }
 
@@ -60,15 +73,15 @@ img {
     font-family: Mooli;
     font-size: 14px;
     padding: 10px;
-    width: 300px;
-    outline: none;
+    width: 320px;
+    /* outline: none; */
 }
 
 .button-wrapper {
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
-.sign-in-button {
+.account-button {
     background-color: black;
     color: white;
     font-family: Mooli;
@@ -83,24 +96,43 @@ img {
     transition: opacity 0.15s;
 }
 
-.sign-in-button:hover {
+.account-button:hover {
     opacity: 0.8;
 }
 
-.sign-in-button:active {
+.account-button:active {
     opacity: 0.6;
 }
 
-
 .footer-section {
-    margin-top: 50px;
+    margin-top: 10px;
 }
 
 .footer {
     color: gray;
 }
 
-.sign-up-link {
+.account-link {
     color: black;
     text-decoration: none;
+}
+
+/* For login/register form validation */
+.input-section .textbox:focus {
+    outline: 0;
+}
+
+.input-section.success .textbox {
+    border-color: #09c372;
+}
+
+.input-section.error .textbox {
+    border-color: #ff3860;
+}
+
+.input-section .error {
+    margin-top: 2px;
+    color: #ff3860;
+    font-family: Mooli;
+    font-size: 12px;
 }

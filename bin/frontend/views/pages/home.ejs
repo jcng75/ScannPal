@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('../partials/head'); %>
+
+  <style>
+    body {
+      background-image: linear-gradient(130deg, #66ffff, #ff99ff);
+    }
+  </style>
+</head>
+<body class="container-fluid">
+
+<header>
+  <%- include('../partials/navbar'); %>
+</header>
+
+<main>
+<div class="row pb-5">
+  <div class="col-4"></div>
+    <div class="col-4">
+      <div class="jumbotron-fluid p-3 text-center">
+        <h1 class="display-4">Welcome back, <%= user.first_name %>!</h1>
+      </div>
+      <p class="text text-md-center fs-5">
+        <i class="bi bi-search"></i>
+        What would you like to accomplish today?
+      </p>
+    </div>
+
+  <div class="row text-center">
+    <div class="col-5 ms-5">
+      <h1 class="display-6">View Most Recent Scans</h1>
+      <% if (locals.user.results.length > 0) { %>
+        <h1 class=""> Your last completed scan was: <label class="red small"><%= user.results[0].date_completed %></label></h1>
+        <table class="table table-dark">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Website</th>
+              <th scope="col">Time Started</th>
+              <th scope="col">Time Completed</th>
+              <th scope="col">Vulnerabilities Found</th>
+            </tr>
+          </thead>
+          <tbody>
+          <% user.results.forEach(function(result){ %>
+              <tr>
+                <th scope="row"><%= result.job_id %></th>
+                <td><%= result.website_link %></td>
+                <td><%= result.date_started %></td>
+                <td><%= result.date_completed %></td>
+                <td><%= result.vulnerabilities %></td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        <a class="link big" href="/results">View All Results</a>
+      <% } else { %>
+        <h1 class="display-6"> 
+          <label class="red"> 
+            You have not completed any scans. 
+            <i class="bi bi-emoji-frown"></i>
+        </label>
+      </h1>
+       <% } %>
+    </div>
+    <div class="col-1"></div>
+    <div class="col-5">
+      <h1 class="display-6">Currently Active Scans</h1>
+        <% if (locals.user.scans.length > 0) { %>
+          <h1 class="display-6 mb-2"> You are currently running <label class="red"><%= user.scans.length %></label>
+           scans!</h1>
+           <table class="table table-dark">
+             <thead>
+               <tr>
+                 <th scope="col" class="col-2">ID</th>
+                 <th scope="col">Date Started</th>
+                 <th scope="col"> Website </th>
+                 <th scope="col">Number Of Tasks</th>
+                 <th scope="col" class="col-3">Percentage</th>
+               </tr>
+             </thead>
+              <% user.scans.forEach(function(scan){ %>
+              <tbody>
+                <tr>
+                  <th scope="row"><%= scan.job_id %></th>
+                  <td><%= scan.date_started %></td>
+                  <td><%= scan.website_link %></td>
+                  <td><%= scan.number_of_tasks %></td>
+                  <td>
+                    <div class="progress">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar" style='width:<%= scan.completed_percentage %>%' aria-valuenow="" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+              <% }) %>
+                 </td>
+               </tr>
+             </tbody>
+           </table>
+        <% } else { %>
+          <h1 class="display-6"> 
+            <label class="red"> You are not running any scans. <br>
+                  <a class="link" style="text-decoration-line: none" href="/scan">Start a New Scan Today! <i class="bi bi-pc-display-horizontal"></i></a>
+            </label>
+          </h1>
+        <% } %>
+
+    </div>
+</div>
+
+</main>
+
+<footer>
+  <%- include('../partials/footer'); %>
+</footer>
+
+</body>
+</html>
