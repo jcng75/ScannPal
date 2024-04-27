@@ -302,6 +302,12 @@ app.get('/plans', function(req, res) {
   });
 });
 
+app.get('/guidelines', redirectLogin, function(req, res) {
+  res.render('pages/guidelines', {
+    pageTitle: 'Scan Guidelines',
+  });
+});
+
 app.get('/logout', redirectLogin, function(req, res) {
   req.session.destroy(err => {
     if (err) {
