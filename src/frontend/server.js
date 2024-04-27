@@ -290,10 +290,15 @@ app.get('/results', async function(req, res) {
   });
 });
 
-app.get('/test', function(req, res) {
-  res.render('pages/test', {
-    pageTitle: 'Test',
-    jumboTitle: 'EJS IS COOL'
+app.get('/payment', redirectLogin, function(req, res) {
+  res.render('pages/payment', {
+    pageTitle: 'Payment'
+  });
+});
+
+app.get('/plans', function(req, res) {
+  res.render('pages/plans', {
+    pageTitle: 'Payment Plans',
   });
 });
 
