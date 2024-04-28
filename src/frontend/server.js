@@ -150,7 +150,8 @@ app.post('/login', redirectHome, async function(req, res) {
 
 app.get('/register', redirectHome, function(req, res) {
   res.render('pages/register', {
-    pageTitle: 'Register'
+    pageTitle: 'Register',
+    error: null
   });
 });
 
@@ -160,17 +161,22 @@ app.post('/register', redirectHome, async function(req, res) {
   const email = req.body.email;
   const password = req.body.password;
 
-  createUser(firstName, lastName, email, password);
+  await createUser(firstName, lastName, email, password);
 
   const userData = await getUser(email);
 
   if (userData.user_id) {
-    req.session.userId = userData.user_id;
-    return res.redirect('/home');
+    return res.render('pages/register',  {
+      pageTitle: 'Register',
+      error: false
+    });
   }
 
   // if error occurs during registration
-  res.redirect('/register');
+  return res.render('pages/register',  {
+    pageTitle: 'Register',
+    error: true
+  });
 });
 
 const testData = {
