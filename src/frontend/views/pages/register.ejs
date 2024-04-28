@@ -23,6 +23,19 @@
                     </div>
 
                     <form id="register-form" action="/register" method="post">
+
+                        <% if (error === true) { %>
+                            <div class="alert alert-danger text-center p-2">
+                                <i class="bi bi-exclamation-triangle-fill"></i> Error creating account. Try again!
+                            </div>
+                        <% } else if (error === false) { %>
+                            <div class="alert alert-success text-center p-2">
+                                <i class="bi bi-check-circle-fill"></i> Account successfully created!
+                                <br>
+                                <a class="success-link" href="/login">Login here</a>
+                            </div>
+                        <% } %>
+
                         <!-- First Name -->
                         <div class="input-section">
                             <div class="label-wrapper">
