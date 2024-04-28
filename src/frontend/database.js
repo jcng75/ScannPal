@@ -117,33 +117,38 @@ async function hash(password) {
 export function createUser(firstName, lastName, email, password) {
     const conn = createConnection();
 
-    conn.connect(async function(err) {
-        if (err) {
-            console.error(`Error connecting to MySQL database: ${err.message}`);
-            throw err;
-        } 
-        
-        console.log("Connected to MySQL database!");
-
-        // perform password hashing here...
-        const password_hash = await hash(password);
-        
-        // format the sql query
-        let sql = `INSERT INTO User (fname, lname, email, password_hash, creation_date) VALUES (?, ?, ?, ?, NOW());`;
-        const inserts = [firstName, lastName, email, password_hash];
-        sql = mysql.format(sql, inserts);
-        
-        // run the query
-        conn.query(sql, function(err, results) {
+    return new Promise((resolve, reject) => {
+        conn.connect(async function(err) {
             if (err) {
-                console.error(`Error executing query: ${err.message}`);
-                throw err;
-            }
-            console.log("Successfully added new user to the database!");
-            console.log(JSON.stringify(results, null, 2));
-        });
+                console.error(`Error connecting to MySQL database: ${err.message}`);
+                reject(err);
+                return;
+            } 
+            
+            console.log("Connected to MySQL database!");
 
-        conn.end();
+            // perform password hashing here...
+            const password_hash = await hash(password);
+            
+            // format the sql query
+            let sql = `INSERT INTO User (fname, lname, email, password_hash, creation_date) VALUES (?, ?, ?, ?, NOW());`;
+            const inserts = [firstName, lastName, email, password_hash];
+            sql = mysql.format(sql, inserts);
+            
+            // run the query
+            conn.query(sql, function(err, results) {
+                if (err) {
+                    console.error(`Error executing query: ${err.message}`);
+                    reject(err);
+                    return;
+                }
+                console.log("Successfully added new user to the database!");
+                console.log(JSON.stringify(results, null, 2));
+            });
+
+            conn.end();
+            resolve();
+        });
     });
 }
 
