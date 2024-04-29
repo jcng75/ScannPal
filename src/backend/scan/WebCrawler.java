@@ -13,7 +13,6 @@ import backend.seleniumActions.ClickButton;
 import backend.seleniumActions.EnterText;
 import backend.seleniumActions.TestAction;
 import backend.seleniumActions.VisitUrl;
-import backend.utility.DeleteFile;
 import backend.utility.HeuristicsCheck;
 
 
@@ -71,9 +70,6 @@ public class WebCrawler {
         String s = String.format("\n(+) Begin crawling for website: %s", url + "\n");
         System.out.println(s);
 
-        // System.out.println("(-) Clearing Photos Directory...");
-        // DeleteFile.clearDir("photos");
-        
         WebDriver driver = MyWebDriver.getDriver();
         VisitUrl visitUrl = new VisitUrl(this.url);
         visitUrl.execute();
