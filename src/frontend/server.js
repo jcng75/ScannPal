@@ -6,7 +6,7 @@ import { dirname } from 'path';
 import dotenv from 'dotenv';
 import { validateHash, getUser, getName, emailExists, createUser, getUserData } from './database.js';
 import { verifySettings, updateSettings } from './settings.js';
-import { runChecks } from './scan.js';
+import { runChecks, runScan } from './scan.js';
 import { getCompletedJobs, getResults, createImageUrl } from './results.js';
 import { getActiveScans, getUserResults } from './home.js';
 
@@ -179,35 +179,36 @@ app.post('/register', redirectHome, async function(req, res) {
   });
 });
 
-const testData = {
-  first_name: 'Justin',
-  last_name: 'Ng',
-  last_scan: '4/12/2024',
-  total_scans: 3
-}
-
 app.get('/scan', redirectLogin, function(req, res) {
   res.render('pages/scan', {
-    pageTitle: 'Scan',
-    user: testData
+    pageTitle: 'Scan'
   });
 });
 
-app.post('/scan', redirectLogin, function(req, res) {
+app.post('/scan', redirectLogin, async function(req, res) {
   let bodyReq = req.body;
   let errors = runChecks(bodyReq);
   if (errors.length > 0) {
     console.log(errors);
     res.render('pages/scan', {
       pageTitle: 'Scan',
-      user: testData,
       errors: errors
     });
   } else {
+    let scanError = await runScan(bodyReq);
+    
+    if (scanError){
+      errors = ['There was an error scanning your page.  Please ensure you the parameters you specified are valid.']
+      res.render('pages/scan', {
+        pageTitle: 'Scan',
+        errors: errors
+      });
+      return;
+    }
+    
     let success = 'You have successfully started a scan.'
     res.render('pages/scan', {
       pageTitle: 'Scan',
-      user: user,
       success: success
     });
   }
