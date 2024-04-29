@@ -136,3 +136,7 @@ img {
     font-family: Mooli;
     font-size: 12px;
 }
+
+.success-link {
+    color: #0a3622;
+}
