@@ -163,9 +163,15 @@ public interface ResultAnalysis {
             // store the screenshot as a BLOB
             Blob screenshotBlob = null;
             String resultPhotoFileName = injectedResult.getComparisonPhoto();
-            String photosDir = "photos/" + resultPhotoFileName;
-            screenshotBlob = connection.convertScreenshotToBlob(photosDir);
-            System.out.println("Printing screenshotBlob for debugging: " + screenshotBlob);
+            String photoFilePath = "photos/" + resultPhotoFileName;
+            screenshotBlob = connection.convertScreenshotToBlob(photoFilePath);
+            // System.out.println("Printing screenshotBlob for debugging: " + screenshotBlob);
+
+            if (screenshotBlob == null) {
+                String injectedPhotoFileName = injectedResult.getPhotoName();
+                photoFilePath = "photos/" + injectedPhotoFileName;
+                screenshotBlob = connection.convertScreenshotToBlob(photoFilePath);
+            }
             
             // save the results to the Result table
             connection.addResult(taskID, vulnerable, attackPayload, attackType, htmlString, screenshotBlob);
