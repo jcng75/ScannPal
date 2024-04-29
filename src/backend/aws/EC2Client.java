@@ -69,7 +69,7 @@ public class EC2Client {
 
         for (Reservation reservation : result.getReservations()){
             for (Instance instance : reservation.getInstances()){
-               if (instance.getState().getName().equals("running") && !getName(instance).equals("DVWAInstance")){
+               if (instance.getState().getName().equals("running") && !getName(instance).equals("WebServer") && !getName(instance).equals("DVWAInstance")){
                 ips.add(instance.getPrivateIpAddress());
                } 
             }
