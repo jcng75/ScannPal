@@ -6,7 +6,7 @@ import { dirname } from 'path';
 import dotenv from 'dotenv';
 import { validateHash, getUser, getName, emailExists, createUser, getUserData } from './database.js';
 import { verifySettings, updateSettings } from './settings.js';
-import { runChecks } from './scan.js';
+import { runChecks, runScan } from './scan.js';
 import { getCompletedJobs, getResults, createImageUrl } from './results.js';
 import { getActiveScans, getUserResults } from './home.js';
 
@@ -194,14 +194,13 @@ app.post('/scan', redirectLogin, function(req, res) {
     console.log(errors);
     res.render('pages/scan', {
       pageTitle: 'Scan',
-      user: testData,
       errors: errors
     });
   } else {
+    let scan = runScan(bodyReq);
     let success = 'You have successfully started a scan.'
     res.render('pages/scan', {
       pageTitle: 'Scan',
-      user: user,
       success: success
     });
   }
