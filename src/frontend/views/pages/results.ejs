@@ -1,13 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-    <%- include('../partials/head'); %>
+        <%- include('../partials/head'); %>
+        <link rel="stylesheet" type="text/css" href="/styles/results.css">
     </head>
     <body>
         <header>
             <%- include('../partials/navbar'); %>
         </header>
-        <p>This is the results page!</p>
-        <img src="<%= imageUrl %>" alt="Image from Base64 Data">
+        <h2>Here are your scan results! <i class="bi bi-clipboard-data-fill"></i></h2>
+        <div class="table-container">
+            <table class="table table-dark table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">Scan ID</th>
+                    <th scope="col">Website</th>
+                    <th scope="col">Time Started</th>
+                    <th scope="col">Time Completed</th>
+                    <th scope="col">Number of Vulnerabilities</th>
+                    <th scope="col">Result Details</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <% jobs.forEach(function(job) { %>
+                        <tr class="expandable-row">
+                            <td scope="row"><%= job.job_id %></td>
+                            <td><%= job.website_link %></td>
+                            <td><%= job.date_started %></td>
+                            <td><%= job.date_completed %></td>
+                            <td><%= job.num_results %></td>
+                            <td>
+                                <button 
+                                    data-bs-toggle="collapse" 
+                                    data-bs-target="#results-info-<%= job.job_id %>"
+                                    aria-expanded="false" 
+                                    aria-controls="resultsInfo"
+                                >
+                                    <i class="bi bi-plus-lg"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <!-- Add more rows as needed -->
+                        <tr id="results-info-<%= job.job_id %>" class="collapse" id="resultsInfo">
+                            <td colspan="6">
+                                <!-- Additional information goes here -->
+                                <h3 class="result-header">Results for Scan # <%= job.job_id %></h3>
+                                <hr style="margin-top: 0px;">
+                                <% if (results[job.job_id] && results[job.job_id].length > 0) { %>
+                                    <% results[job.job_id].forEach(function(result) { %>
+                                        <div class="grid">
+                                            <div class="grid-section">
+                                                <p>Result # <%= result.result_id %></p>
+                                                <p>Attack type: <%= result.attack_type %></p>
+                                                <p>Payload used: <%= result.payload %></p>
+                                                <p>HTML string: <%= result.html_string %></p>
+                                            </div>
+                                            <div class="grid-section">
+                                                <div class="image-flex">
+                                                    <% if (result.screenshot !== null) { %>
+                                                        <h4 class="image-title">Screenshot Result</h4>
+                                                        <img 
+                                                            class="result-image" 
+                                                            src="<%= result.base64data %>" 
+                                                            alt="base64 image data"
+                                                        >
+                                                    <% } else { %>
+                                                        <h4>There is no screenshot for this result!</h4>
+                                                     <% } %>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                    <% }); %>
+                                  <% } else { %>
+                                    <p>There are no results for this job!</p>
+                                  <% } %>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
     </body>
 </html>

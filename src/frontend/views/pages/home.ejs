@@ -90,7 +90,12 @@
                   <td><%= scan.number_of_tasks %></td>
                   <td>
                     <div class="progress">
-                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar" style='width:<%= scan.completed_percentage %>%' aria-valuenow="" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" 
+                      role="progressbar"
+                      style="width: <%= scan.completed_percentage %>%;"
+                      aria-valuenow="" 
+                      aria-valuemin="0" 
+                      aria-valuemax="100"></div>
                     </div>
                   </td>
                 </tr>

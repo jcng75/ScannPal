@@ -1,14 +1,14 @@
-import express from "express";
-import session from "express-session";
-import expressMySQLSession from "express-mysql-session";
+import express from 'express';
+import session from 'express-session';
+import expressMySQLSession from 'express-mysql-session';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import dotenv from 'dotenv';
 import { validateHash, getUser, getName, emailExists, createUser, getUserData } from './database.js';
 import { verifySettings, updateSettings } from './settings.js';
 import { runChecks } from './scan.js';
-import { getJobs, getResults, createImageUrl } from './results.js';
-import { getActiveScans, getUserResults } from "./home.js";
+import { getCompletedJobs, getResults, createImageUrl } from './results.js';
+import { getActiveScans, getUserResults } from './home.js';
 
 dotenv.config({path:'../../.env'});
 
@@ -72,22 +72,18 @@ const redirectHome = (req, res, next) => {
 // routes
 app.get('/', redirectHome, function(req, res) {
   const { userId } = req.session;
-  // console.log(userId);
+  console.log(userId);
   res.render('pages/index', {
     pageTitle: 'Welcome'
   });
 });
 
 app.get('/home', redirectLogin, async function(req, res) {
-  // console.log(req.session);
+  console.log(req.session);
   const userId = req.session.userId;
-  // console.log(userId);
   const userData = await getName(userId);
   const results = await getUserResults(userId);
-  // console.log(results);
-  // console.log(results.length);
   const activeScans = await getActiveScans(userId);
-  console.log(activeScans);
   const user = {
     first_name: userData.fname,
     results: results,
@@ -154,8 +150,7 @@ app.post('/login', redirectHome, async function(req, res) {
 
 app.get('/register', redirectHome, function(req, res) {
   res.render('pages/register', {
-    pageTitle: 'Register',
-    error: false
+    pageTitle: 'Register'
   });
 });
 
@@ -178,29 +173,37 @@ app.post('/register', redirectHome, async function(req, res) {
   res.redirect('/register');
 });
 
+const testData = {
+  first_name: 'Justin',
+  last_name: 'Ng',
+  last_scan: '4/12/2024',
+  total_scans: 3
+}
+
 app.get('/scan', redirectLogin, function(req, res) {
   res.render('pages/scan', {
     pageTitle: 'Scan',
+    user: testData
   });
 });
 
 app.post('/scan', redirectLogin, function(req, res) {
   let bodyReq = req.body;
   let errors = runChecks(bodyReq);
-  if (errors.length > 0){
+  if (errors.length > 0) {
     console.log(errors);
     res.render('pages/scan', {
       pageTitle: 'Scan',
       user: testData,
       errors: errors
-    })
+    });
   } else {
     let success = 'You have successfully started a scan.'
     res.render('pages/scan', {
       pageTitle: 'Scan',
       user: user,
       success: success
-    })
+    });
   }
 });
 
@@ -219,7 +222,7 @@ app.get('/settings', redirectLogin, async function(req, res) {
 });
 
 app.post('/settings', async function(req, res) {
-  if (req.body.delete === ""){
+  if (req.body.delete === "") {
     console.log('Delete the account.');
     res.redirect('/login');
   }
@@ -229,7 +232,7 @@ app.post('/settings', async function(req, res) {
   let userData = await getUserData(userId);
   let errors = await verifySettings(selectOption, bodyReq, userData);
   let user;
-  if (errors.length > 0){
+  if (errors.length > 0) {
     user = {
       first_name: userData.fname,
       last_name: userData.lname,
@@ -239,7 +242,7 @@ app.post('/settings', async function(req, res) {
       pageTitle: 'Settings',
       user: user,
       errors: errors
-    })
+    });
   } else {
     await updateSettings(selectOption, bodyReq, userId);
     userData = await getUserData(userId);
@@ -253,11 +256,41 @@ app.post('/settings', async function(req, res) {
       pageTitle: 'Settings',
       user: user,
       success: success
-    })
+    });
   }
 });
 
-app.get('/payment', function(req, res) {
+app.get('/results', async function(req, res) {
+  // get the list of completed jobs to be displayed
+  const jobs = await getCompletedJobs(req.session.userId);
+
+  // create a results object which will store the results associated with each job/scan
+  const results = {};
+
+  // for each completed job, get its results and populate the results object
+  for (const job of jobs) {
+      results[job.job_id] = await getResults(job.job_id);
+
+      // if the result has screenshot data, add a new field called base64data,
+      // which will be used to display the images on the results page
+      const jobResults = results[job.job_id];
+      for (const jobResult of jobResults) {
+          const binaryData = jobResult.screenshot;
+          if (binaryData !== null) {
+              const imageUrl = createImageUrl(binaryData);
+              jobResult.base64data = imageUrl;
+          }
+      } 
+  }
+
+  res.render('pages/results', {
+    pageTitle: 'Results',
+    jobs,
+    results
+  });
+});
+
+app.get('/payment', redirectLogin, function(req, res) {
   res.render('pages/payment', {
     pageTitle: 'Payment'
   });
@@ -269,20 +302,9 @@ app.get('/plans', function(req, res) {
   });
 });
 
-app.get('/guidelines', function(req, res) {
+app.get('/guidelines', redirectLogin, function(req, res) {
   res.render('pages/guidelines', {
     pageTitle: 'Scan Guidelines',
-  })
-})
-
-app.get('/results', async function(req, res) {
-  const result = await getResults(16);
-  const binary = result[1].screenshot;
-  const imageUrl = createImageUrl(binary);
-
-  res.render('pages/results', {
-    pageTitle: 'Results',
-    imageUrl
   });
 });
 

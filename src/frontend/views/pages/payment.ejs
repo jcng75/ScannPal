@@ -2,91 +2,114 @@
 <html lang="en">
 <head>
   <%- include('../partials/head'); %>
+  <link rel="stylesheet" href="styles/payment.css">
 </head>
 <body class="container-fluid">
-<style>
-  body {
-    background-image: linear-gradient(130deg, #66ffff, #ff99ff);
-  }
-</style>
+
 <header>
   <%- include('../partials/navbar'); %>
 </header>
 
 <main>
-    <br><h1 class="text-center">Welcome to our Payment Page</h1>
-    <h4 class="text-center">Here you can purchase a detail plan</h2>
-      <div class="container">
-        <div class="row">
-          <div class="jumbotron">
-            <h2 class="display-2 text-center pt-3 p-3">
-              Payment Plans
-            </h2>
+  <div class="container">
+    <div class="row">
+      <div class="jumbotron">
+        <h2 class="display-2 text-center pt-3 p-3">
+          Payment Plans
+        </h2>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <!-- FIRST PLAN -->
+      <div class="col-md-3 mb-4">
+        <div class="card box-shadow">
+          <div class="plan-header bg-greenish">Basic</div>
+          <div class="card-body text-center">
+            <h1 class="card-title pricing-card-title">$5<small class="text-muted">/mo</small></h1>
+            <ul class="list-unstyled mt-3 mb-4">
+              <li>10 Scans</li>
+              <li>10 Usable Nodes</li>
+              <li>2 Concurrent Scans</li>
+            </ul>
+            <form action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post">
+              <input type="hidden" name="cmd" value="_xclick">
+              <input type="hidden" name="business" value="sb-klahk30318517@business.example.com">
+              <input type="hidden" name="item_name" value="Basic Scan Plan">
+              <input type="hidden" name="amount" value="5.00">
+              <input type="hidden" name="currency_code" value="USD">
+              <!-- <input type="hidden" name="return" value="localhost:3000/home">
+              <input type="hidden" name="cancel_return" value="localhost:3000/home">
+              <input type="hidden" name="notify_url" value="localhost:3000/home"> -->
+              <!-- <input type="hidden" name="client_id" value="AYj-FaMxmc63igrmlhy0L60I8goWh-l7Y8IoSV8Nnhl2x5zynsQ7D4Xo0mz9TdqknlICVSjeXuCKLq37"> -->
+              <input type="submit" class="w-100 btn btn-lg btn-outline-primary" value="Go Basic" border="0" name="submit" alt="PayPal - The safer, easier way to pay online">
+            </form>
+          </div>
+          <!-- src="https://www.paypalobjects.com/en_US/i/btn/btn_buynow_LG.gif" -->
+        </div>
+      </div>
+  
+      <!-- SECOND PLAN -->
+      <div class="col-md-3 mb-4">
+        <div class="card box-shadow">
+          <div class="plan-header bg-royal">Advanced</div>
+          <div class="card-body text-center">
+            <h1 class="card-title pricing-card-title">$15<small class="text-muted">/mo</small></h1>
+            <ul class="list-unstyled mt-3 mb-4">
+              <li>35 Scans</li>
+              <li>25 Usable Nodes</li>
+              <li>5 Concurrent Scans</li>
+              <li>Experimental Access</li>
+            </ul>
+            <form action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post">
+              <input type="hidden" name="cmd" value="_xclick">
+              <input type="hidden" name="business" value="sb-klahk30318517@business.example.com">
+              <input type="hidden" name="item_name" value="Advanced Scan Plan">
+              <input type="hidden" name="amount" value="15.00">
+              <input type="hidden" name="currency_code" value="USD">
+              <!-- <input type="hidden" name="return" value="localhost:3000/home">
+              <input type="hidden" name="cancel_return" value="localhost:3000/home">
+              <input type="hidden" name="notify_url" value="localhost:3000/home"> -->
+              <!-- <input type="hidden" name="client_id" value="AYj-FaMxmc63igrmlhy0L60I8goWh-l7Y8IoSV8Nnhl2x5zynsQ7D4Xo0mz9TdqknlICVSjeXuCKLq37"> -->
+              <input type="submit" class="w-100 btn btn-lg btn-outline-primary" value="Go Advanced" border="0" name="submit" alt="PayPal - The safer, easier way to pay online">
+            </form>
           </div>
         </div>
-        <div class="row justify-content-center">
-            <!-- FIRST PLAN -->
-            <div class="col-md-3">
-                <div class="jumbotron bg-greenish p-4">
-                    <h4 class="display-5 text-center pb-4">Basic</h4>
-                    <ul class="list-group">
-                    <li class="list-group-item bg-light">5 Node Strength Scans</li>
-                    <li class="list-group-item bg-light">10 scans per month</li>
-                    
-                    </ul>
-                </div>
-            </div>
-            <!-- SECOND PLAN -->
-            <div class="col-md-3">
-                <div class="jumbotron bg-royal p-4">
-                    <h4 class="display-5 text-center pb-4">Advanced</h4>
-                    <ul class="list-group">
-                      <li class="list-group-item bg-light">10 Node Strength Scans</li>
-                      <li class="list-group-item bg-light">30 scans per month</li>
-                      <li class="list-group-item bg-light">Experimental Access</li>
-                      <li class="list-group-item bg-light">Reduced Bugs</li>
-                    </ul>
-                </div> 
-                    
-            </div>
-            <!-- THIRD PLAN -->
-            <div class="col-md-3">
-                <div class="jumbotron bg-deepred p-4">
-                    <h4 class="display-5 text-center pb-4">Premium</h4>
-                    <ul class="list-group">
-                      <li class="list-group-item bg-light">20 Node Strength Scans</li>
-                      <li class="list-group-item bg-light">60 scans per month</li>
-                      <li class="list-group-item bg-light">Experimental Access</li>
-                      <li class="list-group-item bg-light">No bugs</li>
-                      <li class="list-group-item bg-light">Thank you note</li>
-                    </ul>
-                </div> 
-                    
-            </div>
-            
+      </div>
+  
+      <!-- THIRD PLAN -->
+      <div class="col-md-3 mb-4">
+        <div class="card box-shadow">
+          <div class="plan-header bg-deepred">Premium</div>
+          <div class="card-body text-center">
+            <h1 class="card-title pricing-card-title">$30<small class="text-muted">/mo</small></h1>
+            <ul class="list-unstyled mt-3 mb-4">
+              <li>100 Scans</li>
+              <li>50 Usable Nodes</li>
+              <li>15 Concurrent Scans</li>
+              <li>Experimental Access</li>
+              <li>24/7 Technical Support</li>
+              <li>+ more</li>
+            </ul>
+            <form action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post">
+              <input type="hidden" name="cmd" value="_xclick">
+              <input type="hidden" name="business" value="sb-klahk30318517@business.example.com">
+              <input type="hidden" name="item_name" value="Premium Scan Plan">
+              <input type="hidden" name="amount" value="30.00">
+              <input type="hidden" name="currency_code" value="USD">
+              <!-- <input type="hidden" name="return" value="localhost:3000/home">
+              <input type="hidden" name="cancel_return" value="localhost:3000/home">
+              <input type="hidden" name="notify_url" value="localhost:3000/home"> -->
+              <!-- <input type="hidden" name="client_id" value="AYj-FaMxmc63igrmlhy0L60I8goWh-l7Y8IoSV8Nnhl2x5zynsQ7D4Xo0mz9TdqknlICVSjeXuCKLq37"> -->
+              <input type="submit" class="w-100 btn btn-lg btn-outline-primary" value="Go Premium" border="0" name="submit" alt="PayPal - The safer, easier way to pay online">
+            </form>
+          </div>
         </div>
+      </div>
+    </div>
 
-<div class="container text-center">
-    
-    <p>To proceed with your payment, please click the button below:</p>
-    
-    <form action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post">
-        <input type="hidden" name="cmd" value="_xclick">
-        <input type="hidden" name="business" value="sb-klahk30318517@business.example.com">
-        <input type="hidden" name="item_name" value="Lifetime Money Supply">
-        <input type="hidden" name="amount" value="10.00">
-        <input type="hidden" name="currency_code" value="USD">
-        <input type="hidden" name="return" value="localhost:3000/home">
-        <input type="hidden" name="cancel_return" value="localhost:3000/home">
-        <input type="hidden" name="notify_url" value="localhost:3000/home">
-        <!-- Replace the client ID and secret below -->
-        <input type="hidden" name="client_id" value="AYj-FaMxmc63igrmlhy0L60I8goWh-l7Y8IoSV8Nnhl2x5zynsQ7D4Xo0mz9TdqknlICVSjeXuCKLq37">
-        
-        <!-- Replace the password below -->
-        
-        <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_buynow_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online">
-    </form>
-</div>
+  <div class="container text-center">
+      <a href="/plans" class="link" style="text-decoration-line: none" target="_blank">Compare</a>
+  </div>
 </main>
 
 <footer>
