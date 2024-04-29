@@ -187,7 +187,7 @@ app.get('/scan', redirectLogin, function(req, res) {
   });
 });
 
-app.post('/scan', redirectLogin, function(req, res) {
+app.post('/scan', redirectLogin, async function(req, res) {
   let bodyReq = req.body;
   let errors = runChecks(bodyReq);
   if (errors.length > 0) {
@@ -197,7 +197,17 @@ app.post('/scan', redirectLogin, function(req, res) {
       errors: errors
     });
   } else {
-    let scan = runScan(bodyReq);
+    let scanError = await runScan(bodyReq);
+    
+    if (scanError){
+      errors = ['There was an error scanning your page.  Please ensure you the parameters you specified are valid.']
+      res.render('pages/scan', {
+        pageTitle: 'Scan',
+        errors: errors
+      });
+      return;
+    }
+    
     let success = 'You have successfully started a scan.'
     res.render('pages/scan', {
       pageTitle: 'Scan',
