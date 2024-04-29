@@ -71,8 +71,8 @@ public class WebCrawler {
         String s = String.format("\n(+) Begin crawling for website: %s", url + "\n");
         System.out.println(s);
 
-        System.out.println("(-) Clearing Photos Directory...");
-        DeleteFile.clearDir("photos");
+        // System.out.println("(-) Clearing Photos Directory...");
+        // DeleteFile.clearDir("photos");
         
         WebDriver driver = MyWebDriver.getDriver();
         VisitUrl visitUrl = new VisitUrl(this.url);
