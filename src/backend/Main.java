@@ -45,14 +45,19 @@ public class Main {
         selectQuery = "SELECT * FROM Job";
         conn.displaySelectAsTable(selectQuery);
 
-        // selectQuery = "SELECT * FROM Task";
-        // conn.displaySelectAsTable(selectQuery);
+        selectQuery = "SELECT * FROM Task";
+        conn.displaySelectAsTable(selectQuery);
 
         // selectQuery = "SELECT * FROM Result";
         // conn.displaySelectAsList(selectQuery);
 
+        // selectQuery = "SELECT * FROM sessions";
+        // conn.displaySelectAsTable(selectQuery);
+
         // conn.runUpdate("ALTER TABLE Job ADD COLUMN website_link VARCHAR(255) AFTER user_id;");
         // conn.runUpdate("UPDATE Job SET website_link = 'www.example.com' WHERE job_id = 19;");
-
+        // conn.runUpdate("DELETE FROM Job WHERE job_id = 2;");
+        // conn.runUpdate("ALTER TABLE Result AUTO_INCREMENT = 1;");
+        // conn.runUpdate("UPDATE Job SET completed = true, date_completed = NOW() WHERE job_id = 5;");
     }
 }
