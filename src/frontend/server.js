@@ -195,7 +195,10 @@ app.post('/scan', redirectLogin, async function(req, res) {
       errors: errors
     });
   } else {
-    let scanError = await runScan(bodyReq);
+    const userId = req.session.userId;
+    const userData = await getUserData(userId);
+    let email = userData.email;
+    let scanError = await runScan(bodyReq, email);
     
     if (scanError){
       errors = ['There was an error scanning your page.  Please ensure you the parameters you specified are valid.']
