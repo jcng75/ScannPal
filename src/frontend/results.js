@@ -75,10 +75,17 @@ export async function getResults(jobId) {
             }
 
             // format the sql query
-            let sql = `SELECT r.* FROM Result r
+            let sql = `SELECT 
+                    r.result_id, 
+                    r.attack_type, 
+                    r.payload, 
+                    LEFT(r.html_string, 1100) as truncated_html_string,
+                    r.screenshot
+                FROM Result r
                 INNER JOIN Task t ON r.task_id = t.task_id
                 INNER JOIN Job j ON t.job_id = j.job_id
-                WHERE j.job_id = ?;
+                WHERE j.job_id = ?
+                LIMIT 30;
             `;
             const inserts = [jobId];
             sql = mysql.format(sql, inserts);
@@ -110,6 +117,9 @@ export function createImageUrl(binaryData) {
 export function createImage(binaryData) {
     fs.writeFileSync('output-image.png', binaryData);
 }
+
+// const result = await getResults(8);
+// console.log(result[1]);
 
 // const result = await getResults(16);
 // console.log(result[1]);
