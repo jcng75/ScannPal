@@ -114,7 +114,7 @@ async function hash(password) {
 }
 
 // add a new user to the User table
-export function createUser(firstName, lastName, email, password) {
+export async function createUser(firstName, lastName, email, password) {
     const conn = createConnection();
 
     return new Promise((resolve, reject) => {
